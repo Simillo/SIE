@@ -5,28 +5,26 @@
         .box-logo
         .content-box
           md-field
-            label Email ou CPF
+            label Senha
             md-input(
-              v-model='emailOrCpf'
+              type='password',
+              v-model='password'
               required)
           div
             a Não possui conta?
           div
-            md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(@click.prevent='next') Próximo
+            md-button.md-raised.md-primary.no-margin.float-right.pull-bottom Entrar
 </template>
 
 <script>
 export default {
-  name: 'Home',
+  name: 'Auth',
   data () {
     return {
-      emailOrCpf: ''
+      password: ''
     }
   },
   methods: {
-    next () {
-      console.log(this.emailOrCpf)
-    }
   }
 }
 </script>
