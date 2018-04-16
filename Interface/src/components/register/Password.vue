@@ -30,9 +30,7 @@ export default {
   },
   data () {
     return {
-      envelope: {
-        BirthDate: null
-      }
+      envelope: {}
     }
   },
   methods: {
@@ -40,6 +38,9 @@ export default {
       console.log(this.envelope)
       this.$router.push('password')
     }
+  },
+  created () {
+    console.log(this.$store)
   }
 }
 </script>

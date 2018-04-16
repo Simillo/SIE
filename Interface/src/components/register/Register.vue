@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     next () {
-      console.log(this.envelope)
+      this.$store = this.envelope
       this.$router.push('password')
     },
     toggleIWannaBe () {
