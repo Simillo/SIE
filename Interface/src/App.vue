@@ -32,10 +32,10 @@ html, body {
   position: absolute;
   height: 100%;
   width: 100%;
-  .middle-box {
+  .box-middle {
     display: table-cell;
     vertical-align: middle;
-    .inner-box {
+    .box-inner {
       -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -46,10 +46,13 @@ html, body {
       margin-left: auto;
       margin-right: auto;
       padding: 50px;
-      .logo-box {
+      .box-logo {
         background: url('http://via.placeholder.com/100x50');
         width: 100px;
         height: 50px;
+      }
+      .content-box {
+        margin-top: 50px;
       }
     }
   }
