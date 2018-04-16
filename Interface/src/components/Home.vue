@@ -1,5 +1,7 @@
 <template lang='pug'>
   .box
+    .middle-box
+      .inner-box
 </template>
 
 <script>
