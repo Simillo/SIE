@@ -2,6 +2,7 @@
   .box
     .middle-box
       .inner-box
+        .logo-box
 </template>
 
 <script>

@@ -41,10 +41,16 @@ html, body {
       box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       background: #fff;
       border: 1px solid #ccc;
-      width: 400px;
-      min-height: 500px;
+      width: 350px;
+      min-height: 450px;
       margin-left: auto;
       margin-right: auto;
+      padding: 50px;
+      .logo-box {
+        background: url('http://via.placeholder.com/100x50');
+        width: 100px;
+        height: 50px;
+      }
     }
   }
 }
