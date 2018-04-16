@@ -27,10 +27,19 @@
         v-model='envelope.BirthDate',
         required)
       label Data de nascimento
+    md-field
+      label Eu sou...
+      md-select#sex(
+        v-model='envelope.Sex',
+        name='sex')
+        md-option(value='1') Homem
+        md-option(value='2') Mulher
+        md-option(value='3') Outro
     div
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
-      md-button.md-raised.md-primary.no-margin.float-right.pull-bottom Entrar
+      md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
+        @click.prevent='next()') Próximo
 </template>
 
 <script>
@@ -49,6 +58,10 @@ export default {
     }
   },
   methods: {
+    next () {
+      console.log(this.envelope)
+      this.$router.push('password')
+    }
   }
 }
 </script>
