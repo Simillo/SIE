@@ -76,13 +76,13 @@ export default {
 <style lang='scss'>
 .md-switch.md-theme-default:not(.md-checked) {
   .md-switch-container {
-    background-color: rgb(47, 209, 47);
+    background-color: rgb(227, 238, 23);
   }
   .md-switch-thumb {
-    background-color: rgb(0, 157, 0)!important;
+    background-color: rgb(168, 177, 3)!important;
   }
   .md-ripple-wave {
-    background-color: rgb(0, 157, 0)!important;
+    background-color: rgb(168, 177, 3)!important;
   }
 }
 </style>
