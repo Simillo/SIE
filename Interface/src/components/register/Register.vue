@@ -26,7 +26,7 @@
     md-datepicker(
         v-model='envelope.BirthDate',
         required)
-        label Data de nascimento
+      label Data de nascimento
     div
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       envelope: {
-        BirthDate: ''
+        BirthDate: null
       }
     }
   },
