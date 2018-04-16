@@ -16,7 +16,7 @@
 
 <script>
 
-import Box from './shared/Box.vue'
+import Box from '../shared/Box.vue'
 
 export default {
   components: {
@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      password: ''
+      envelope: {}
     }
   },
   methods: {

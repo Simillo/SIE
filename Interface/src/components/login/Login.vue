@@ -7,14 +7,15 @@
         v-model='emailOrCpf'
         required)
     div
-      a(to='/register') Não possui conta?
+      router-link(to='/register')
+        a Não possui conta?
     div
       md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
         @click.prevent='next()') Próximo
 </template>
 
 <script>
-import Box from './shared/Box.vue'
+import Box from '../shared/Box.vue'
 
 export default {
   components: {

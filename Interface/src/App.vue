@@ -26,35 +26,6 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-
-.box {
-  display: table;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  .box-middle {
-    display: table-cell;
-    vertical-align: middle;
-    .box-inner {
-      position: relative;
-      background: #fff;
-      border: 1px solid #ccc;
-      width: 350px;
-      min-height: 450px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 50px;
-      .box-logo {
-        background: url('http://via.placeholder.com/100x50');
-        width: 100px;
-        height: 50px;
-      }
-      .content-box {
-        margin-top: 10px;
-      }
-    }
-  }
-}
 .no-margin {
   margin: 0 !important;
 }
