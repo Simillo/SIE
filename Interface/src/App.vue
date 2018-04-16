@@ -37,9 +37,6 @@ html, body {
     vertical-align: middle;
     .box-inner {
       position: relative;
-      -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-      -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-      box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       background: #fff;
       border: 1px solid #ccc;
       width: 350px;
@@ -60,6 +57,9 @@ html, body {
 }
 .no-margin {
   margin: 0 !important;
+}
+.float-left {
+  float: left!important;
 }
 .float-right {
   float: right!important;
