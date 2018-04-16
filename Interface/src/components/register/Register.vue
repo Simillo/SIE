@@ -1,5 +1,5 @@
 <template lang='pug'>
-  box(:height='"450px"')
+  box(:height='"500px"')
     md-switch.md-primary(
       v-model='envelope.Profile',
       @change='toggleIWannaBe') Quero ser {{profile}}
@@ -38,6 +38,18 @@
         md-option(value='1') Homem
         md-option(value='2') Mulher
         md-option(value='3') Outro
+    md-field
+      label Senha
+      md-input(
+        type='password',
+        v-model='envelope.Password',
+        required)
+    md-field
+      label Confirmar senha
+      md-input(
+        type='password',
+        v-model='envelope.ConfirmPassword',
+        required)
     div
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -64,7 +76,6 @@ export default {
   methods: {
     next () {
       this.$store = this.envelope
-      this.$router.push('password')
     },
     toggleIWannaBe () {
       this.profile = this.envelope.Profile ? 'professor' : 'estudante'
@@ -78,10 +89,7 @@ export default {
   .md-switch-container {
     background-color: #B39DDB
   }
-  .md-switch-thumb {
-    background-color: #7E57C2;
-  }
-  .md-ripple-wave {
+  .md-switch-thumb, .md-ripple-wave {
     background-color: #7E57C2;
   }
 }

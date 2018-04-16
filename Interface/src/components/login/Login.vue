@@ -8,9 +8,17 @@
         type='text',
         v-model='emailOrCpf'
         required)
-    div
+    md-field
+      label Senha
+      md-input(
+        type='password',
+        v-model='password'
+        required)
+    .float-left
       router-link(to='/register')
         a Não possui conta?
+    .float-right
+      a Esqueceu a senha?
     div
       md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
         @click.prevent='next()') Próximo
@@ -31,7 +39,6 @@ export default {
   methods: {
     next () {
       console.log('ok')
-      this.$router.push('auth')
     }
   }
 }
