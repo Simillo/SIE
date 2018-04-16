@@ -31,7 +31,9 @@ namespace SIE
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<SIEContext>(options => options.UseNpgsql(Configuration.GetConnectionString("sie")));
             services.AddLogging();
-            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddMvc()
+                .AddSessionStateTempDataProvider()
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -57,6 +59,7 @@ namespace SIE
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSession();
             app.UseCors("AllowAll");
             app.UseMvc();
         }
