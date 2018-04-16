@@ -10,11 +10,15 @@ export default {
 </script>
 
 <style lang='scss'>
-
 html, body {
   padding: 0;
   margin: 0;
   height: 100%;
+  background: #f6f8f9;
+  background: -moz-linear-gradient(-45deg, #f6f8f9 0%, #f6f8f9 52%, #e5ebee 63%, #e5ebee 71%, #e5ebee 78%, #d7dee3 85%, #e5ebee 93%, #e5ebee 93%, #f5f7f9 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #f6f8f9 0%,#f6f8f9 52%,#e5ebee 63%,#e5ebee 71%,#e5ebee 78%,#d7dee3 85%,#e5ebee 93%,#e5ebee 93%,#f5f7f9 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #f6f8f9 0%,#f6f8f9 52%,#e5ebee 63%,#e5ebee 71%,#e5ebee 78%,#d7dee3 85%,#e5ebee 93%,#e5ebee 93%,#f5f7f9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -32,7 +36,11 @@ html, body {
     display: table-cell;
     vertical-align: middle;
     .inner-box {
-      border: 1px solid #000;
+      -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+      box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+      background: #fff;
+      border: 1px solid #ccc;
       width: 400px;
       min-height: 500px;
       margin-left: auto;
