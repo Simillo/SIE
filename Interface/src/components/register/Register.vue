@@ -1,13 +1,32 @@
 <template lang='pug'>
   box
     md-field
-      label Senha
+      label Nome
       md-input(
-        type='password',
-        v-model='password'
+        type='text',
+        v-model='envelope.Name',
         required)
-    div
-      a Esqueceu a senha?
+    md-field
+      label E-mail
+      md-input(
+        type='email',
+        v-model='envelope.Email',
+        required)
+    md-field
+      label CPF
+      md-input(
+        type='text',
+        v-model='envelope.Cpf',
+        required)
+    md-field
+      label Instituição
+      md-input(
+        type='text',
+        v-model='envelope.Instituition')
+    md-datepicker(
+        v-model='envelope.BirthDate',
+        required)
+        label Data de nascimento
     div
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -24,7 +43,9 @@ export default {
   },
   data () {
     return {
-      envelope: {}
+      envelope: {
+        BirthDate: ''
+      }
     }
   },
   methods: {

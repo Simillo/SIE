@@ -1,5 +1,5 @@
 <template lang='pug'>
-  box
+  box(:hasClass='true')
     md-field
       label Email ou CPF
       md-input(

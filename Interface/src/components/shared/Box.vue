@@ -3,12 +3,18 @@
     .box-middle
       .box-inner.md-elevation-1
         .box-logo
-        .content-box
+        .content-box(:class='propClass')
             slot
 </template>
 
 <script>
 export default {
+  props: ['hasClass'],
+  data () {
+    return {
+      propClass: this.hasClass ? 'margin-top' : ''
+    }
+  }
 }
 </script>
 
@@ -25,8 +31,8 @@ export default {
       position: relative;
       background: #fff;
       border: 1px solid #ccc;
-      width: 350px;
-      min-height: 450px;
+      width: 375px;
+      min-height: 550px;
       margin-left: auto;
       margin-right: auto;
       padding: 50px;
@@ -35,10 +41,13 @@ export default {
         width: 100px;
         height: 50px;
       }
-      .content-box {
-        margin-top: 10px;
-      }
     }
   }
+  .md-field:not(:first-child) {
+    margin-top: -18px!important;
+  }
+}
+.margin-top {
+  margin-top: 50px;
 }
 </style>
