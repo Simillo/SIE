@@ -11,6 +11,12 @@ Vue.config.productionTip = false
 
 Vue.use(VueMaterial)
 
+Vue.directive('mask', {
+  bind (el, binding, vNode) {
+    console.log(el)
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -54,7 +54,7 @@
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
       md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
-        @click.prevent='next()') Próximo
+        @click.prevent='next()') Cadastrar
 </template>
 
 <script>
