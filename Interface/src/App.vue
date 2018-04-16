@@ -36,6 +36,7 @@ html, body {
     display: table-cell;
     vertical-align: middle;
     .box-inner {
+      position: relative;
       -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
       box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -52,9 +53,22 @@ html, body {
         height: 50px;
       }
       .content-box {
-        margin-top: 50px;
+        margin-top: 10px;
       }
     }
+  }
+}
+.no-margin {
+  margin: 0 !important;
+}
+.float-right {
+  float: right!important;
+}
+.pull-bottom {
+  position: absolute;
+  bottom: 50px;
+  &.float-right {
+    right: 50px;
   }
 }
 </style>

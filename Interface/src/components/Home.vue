@@ -9,6 +9,10 @@
             md-input(
               v-model='emailOrCpf'
               required)
+          div
+            a Não possui conta?
+          div
+            md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(@click.prevent='next') Próximo
 </template>
 
 <script>
@@ -17,6 +21,11 @@ export default {
   data () {
     return {
       emailOrCpf: ''
+    }
+  },
+  methods: {
+    next () {
+      console.log(this.emailOrCpf)
     }
   }
 }
