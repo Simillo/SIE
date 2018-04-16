@@ -3,13 +3,15 @@
     .box-middle
       .box-inner.md-elevation-1
         .box-logo
-        .content-box(:class='propClass')
+        .content-box(
+          :class='propClass',
+          :style='{"min-height": height}')
             slot
 </template>
 
 <script>
 export default {
-  props: ['hasClass'],
+  props: ['hasClass', 'height'],
   data () {
     return {
       propClass: this.hasClass ? 'margin-top' : ''
@@ -31,8 +33,7 @@ export default {
       position: relative;
       background: #fff;
       border: 1px solid #ccc;
-      width: 375px;
-      min-height: 550px;
+      width: 450px;
       margin-left: auto;
       margin-right: auto;
       padding: 50px;

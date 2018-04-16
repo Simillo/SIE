@@ -1,5 +1,8 @@
 <template lang='pug'>
-  box(:hasClass='true')
+  box(
+    :hasClass='true',
+    :height='"375px"'
+  )
     md-field
       label Senha
       md-input(

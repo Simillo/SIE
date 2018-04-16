@@ -1,5 +1,8 @@
 <template lang='pug'>
-  box
+  box(:height='"450px"')
+    md-switch.md-primary(
+      v-model='envelope.Profile',
+      @change='toggleIWannaBe') Quero ser {{profile}}
     md-field
       label Nome
       md-input(
@@ -54,17 +57,32 @@ export default {
     return {
       envelope: {
         BirthDate: null
-      }
+      },
+      profile: 'estudante'
     }
   },
   methods: {
     next () {
       console.log(this.envelope)
       this.$router.push('password')
+    },
+    toggleIWannaBe () {
+      this.profile = this.envelope.Profile ? 'professor' : 'estudante'
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang='scss'>
+.md-switch.md-theme-default:not(.md-checked) {
+  .md-switch-container {
+    background-color: rgb(47, 209, 47);
+  }
+  .md-switch-thumb {
+    background-color: rgb(0, 157, 0)!important;
+  }
+  .md-ripple-wave {
+    background-color: rgb(0, 157, 0)!important;
+  }
+}
 </style>
