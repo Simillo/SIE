@@ -28,6 +28,9 @@
 <script>
 import Box from '../shared/Box.vue'
 import Login from '../../domain/Login'
+import Person from '../../domain/Person'
+
+import PersonService from '../../services/PersonService'
 
 export default {
   components: {
@@ -38,9 +41,12 @@ export default {
       envelope: new Login()
     }
   },
+  async created () {
+    this.service = new PersonService(this.$resource)
+  },
   methods: {
     next () {
-      console.log('ok')
+      console.log(new Person())
     },
     validate () {
       console.log(this.envelope.emailOrCpf)

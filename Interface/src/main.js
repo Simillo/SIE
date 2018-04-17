@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import VueMaterial from 'vue-material'
+import VueResource from 'vue-resource'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import router from './router'
@@ -10,6 +11,9 @@ import router from './router'
 Vue.config.productionTip = false
 
 Vue.use(VueMaterial)
+Vue.use(VueResource)
+
+Vue.http.options.root = 'http://localhost/SIE/api'
 
 Vue.directive('mask', {
   bind (el, binding, vNode) {

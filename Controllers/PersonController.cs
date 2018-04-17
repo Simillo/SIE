@@ -24,9 +24,12 @@ namespace SIE.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Person person)
+        public dynamic Post([FromBody] Person person)
         {
-            return Ok();
+            return new
+            {
+
+            };
         }
     }
 }

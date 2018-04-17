@@ -25,7 +25,7 @@
       label Instituição
       md-input(
         type='text',
-        v-model='envelope.Instituition')
+        v-model='envelope.Institution')
     md-datepicker(
         v-model='envelope.BirthDate',
         required)
@@ -54,13 +54,15 @@
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
       md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
-        @click.prevent='next()') Cadastrar
+        @click.prevent='save') Cadastrar
 </template>
 
 <script>
 
 import Box from '../shared/Box.vue'
 import Person from '../../domain/Person'
+
+import PersonService from '../../services/PersonService'
 
 export default {
   components: {
@@ -72,9 +74,12 @@ export default {
       profile: 'estudante'
     }
   },
+  async created () {
+    this.service = new PersonService(this.$resource)
+  },
   methods: {
-    next () {
-      this.$store = this.envelope
+    async save () {
+      this.service.savePerson(this.envelope)
     },
     toggleIWannaBe () {
       this.profile = this.envelope.Profile ? 'professor' : 'estudante'
