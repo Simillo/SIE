@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Context;
+using SIE.Helpers;
 using SIE.Models;
 
 namespace SIE.Controllers
@@ -24,12 +26,11 @@ namespace SIE.Controllers
         }
 
         [HttpPost]
-        public dynamic Post([FromBody] Person person)
+        public IActionResult Post([FromBody] MPerson person)
         {
-            return new
-            {
-
-            };
+            if (!person.ModelValid())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Campos inválidos!"));
+            return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
         }
     }
 }

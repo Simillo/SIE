@@ -6,6 +6,7 @@ export default class {
     this.Institution = ''
     this.BirthDate = null
     this.Password = ''
+    this.ConfirmPassword = ''
     this.Sex = 0
   }
 }

@@ -28,7 +28,7 @@
 <script>
 import Box from '../shared/Box.vue'
 import Login from '../../domain/Login'
-import Person from '../../domain/Person'
+import MPerson from '../../domain/MPerson'
 
 import PersonService from '../../services/PersonService'
 
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     next () {
-      console.log(new Person())
+      console.log(new MPerson())
     },
     validate () {
       console.log(this.envelope.emailOrCpf)

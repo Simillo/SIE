@@ -60,7 +60,7 @@
 <script>
 
 import Box from '../shared/Box.vue'
-import Person from '../../domain/Person'
+import MPerson from '../../domain/MPerson'
 
 import PersonService from '../../services/PersonService'
 
@@ -70,7 +70,7 @@ export default {
   },
   data () {
     return {
-      envelope: new Person(),
+      envelope: new MPerson(),
       profile: 'estudante'
     }
   },

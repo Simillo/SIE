@@ -17,7 +17,7 @@ export default class {
       return res.json()
     } catch (ex) {
       console.log(ex)
-      throw new Error('Não foi possível salvar a pessoa')
+      throw new Error('Não foi possível salvar a pessoa.')
     }
   }
 }
