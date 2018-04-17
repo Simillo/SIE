@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using SIE.Models;
 
-namespace SIE.Models
+namespace SIE.Context
 {
     public class Person
     {

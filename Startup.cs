@@ -42,6 +42,7 @@ namespace SIE
                     builder =>
                     {
                         builder
+                            .WithOrigins("http://localhost:8080")
                             .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader();
