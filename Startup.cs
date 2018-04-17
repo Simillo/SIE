@@ -34,6 +34,8 @@ namespace SIE
             services.AddMvc()
                 .AddSessionStateTempDataProvider()
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.AddSession();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",

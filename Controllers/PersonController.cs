@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Context;
+using SIE.Models;
 
 namespace SIE.Controllers
 {
@@ -17,9 +18,15 @@ namespace SIE.Controllers
         }
         // GET api/values
         [HttpGet]
-        public dynamic Get()
+        public List<Person> Get()
         {
-            return _context.Person;
+            return _context.Person.ToList();
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Person person)
+        {
+            return Ok();
         }
     }
 }

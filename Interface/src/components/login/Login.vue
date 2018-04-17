@@ -6,14 +6,13 @@
       label Email ou CPF
       md-input(
         type='text',
-        v-model='envelope.emailOrCpf',
-        v-mask:emailOrCpf='',
+        v-model='envelope.EmailOrCpf',
         required)
     md-field
       label Senha
       md-input(
         type='password',
-        v-model='envelope.password',
+        v-model='envelope.Password',
         @change='validate',
         required)
     .float-left
@@ -28,18 +27,15 @@
 
 <script>
 import Box from '../shared/Box.vue'
-import mask from '../../directives/mask'
+import Login from '../../domain/Login'
 
 export default {
   components: {
     'box': Box
   },
-  directives: {
-    'mask': mask
-  },
   data () {
     return {
-      envelope: {}
+      envelope: new Login()
     }
   },
   methods: {

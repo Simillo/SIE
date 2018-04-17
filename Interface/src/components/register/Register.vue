@@ -60,6 +60,7 @@
 <script>
 
 import Box from '../shared/Box.vue'
+import Person from '../../domain/Person'
 
 export default {
   components: {
@@ -67,9 +68,7 @@ export default {
   },
   data () {
     return {
-      envelope: {
-        BirthDate: null
-      },
+      envelope: new Person(),
       profile: 'estudante'
     }
   },
