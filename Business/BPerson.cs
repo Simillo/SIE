@@ -1,4 +1,5 @@
 ﻿using System;
+using SIE.Auxiliary;
 using SIE.Context;
 using SIE.Models;
 
@@ -17,7 +18,7 @@ namespace SIE.Business
             {
                 Id = person.Id,
                 Name = person.Name,
-                Cpf = person.Cpf.Replace(".", "").Replace("-",""),
+                Cpf = person.Cpf.RCpf(),
                 Email = person.Email,
                 Institution = person.Institution,
                 BirthDate = person.BirthDate,

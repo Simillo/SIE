@@ -5,7 +5,7 @@ namespace SIE.Helpers
 {
     public class ResponseContent
     {
-        public static MResponseContent Create(object entity, HttpStatusCode status, string message)
+        public static MResponseContent Create(object entity, HttpStatusCode status, object message)
         {
             return new MResponseContent
             {

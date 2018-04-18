@@ -12,5 +12,6 @@ namespace SIE.Utils
         public UPerson(SIEContext context) => _context = context;
 
         public List<Person> GetByCpf(string cpf) => _context.Person.Where(p => p.Cpf == cpf).ToList();
+        public List<Person> GetByEmail(string email) => _context.Person.Where(p => p.Email == email).ToList();
     }
 }

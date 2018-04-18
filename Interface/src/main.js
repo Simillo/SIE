@@ -15,6 +15,19 @@ Vue.use(VueMaterial)
 Vue.use(VueResource)
 Vue.use(VueTheMask)
 
+Vue.material.locale = {
+  startYear: 1910,
+  endYear: 2018,
+  dateFormat: 'DD/MMM/YYYY',
+  days: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+  shortDays: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+  shorterDays: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+  months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Aug', 'Set', 'Out', 'Nov', 'Dez'],
+  shorterMonths: ['J', 'F', 'M', 'A', 'M', 'Ju', 'Ju', 'A', 'Se', 'O', 'N', 'D'],
+  firstDayOfAWeek: 0
+}
+
 Vue.http.options.root = 'http://localhost/SIE/api'
 
 /* eslint-disable no-new */

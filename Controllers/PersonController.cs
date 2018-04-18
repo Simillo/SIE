@@ -33,6 +33,10 @@ namespace SIE.Controllers
             if (!person.ModelValid())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Campos inválidos!"));
 
+            var personExistsResult = person.Exists(_uPerson);
+            if (personExistsResult.Any())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, personExistsResult));
+
             _bPerson.SaveOrUpdate(person);
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
         }
