@@ -1,6 +1,6 @@
 export default class {
   constructor (resource) {
-    this._resource = resource('person{/id}')
+    this._resource = resource('person{/id}{/cpf}')
   }
   async loadPersons () {
     try {
@@ -18,6 +18,16 @@ export default class {
     } catch (ex) {
       console.log(ex)
       throw new Error('Não foi possível salvar a pessoa.')
+    }
+  }
+
+  async canUseCpf (cpf) {
+    try {
+      const res = await this._resource.query({cpf})
+      return res.json()
+    } catch (ex) {
+      console.log(ex)
+      throw new Error('Não foi possível consultar o CPF.')
     }
   }
 }
