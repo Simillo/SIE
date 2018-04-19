@@ -1,4 +1,7 @@
-﻿using SIE.Context;
+﻿using System;
+using SIE.Auxiliary;
+using SIE.Context;
+using SIE.Models;
 
 namespace SIE.Business
 {
@@ -9,28 +12,43 @@ namespace SIE.Business
         {
             _context = context;
         }
-        public void SaveOrUpdate(Person person)
+        public void SaveOrUpdate(MPerson person)
         {
+            var cPerson = new Person
+            {
+                Id = person.Id,
+                Name = person.Name,
+                Cpf = person.Cpf.RCpf(),
+                Email = person.Email,
+                Institution = person.Institution,
+                BirthDate = person.BirthDate,
+                Sex = person.Sex,
+                Password = person.Password,
+                Profile = person.Profile
+            };
+
             if (person.Id > 0)
             {
-                person = _context.Person.Find(person.Id);
-                Update(person);
+                cPerson = _context.Person.Find(cPerson.Id);
+                Update(cPerson);
             }
             else
             {
-                Save(person);
+                Save(cPerson);
             }
+
+            _context.SaveChanges();
 
         }
 
         private void Save(Person person)
         {
-            _context.Add(person);
+            _context.Person.Add(person);
         }
 
         private void Update(Person person)
         {
-            _context.Update(person);
+            _context.Person.Update(person);
         }
     }
 }

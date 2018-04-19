@@ -5,57 +5,55 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using SIE.Auxiliary;
 using SIE.Business;
 using SIE.Context;
 using SIE.Helpers;
 using SIE.Models;
+using SIE.Utils;
 
 namespace SIE.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowAll")]
     public class PersonController : Controller
     {
-        private readonly SIEContext _context;
         private readonly BPerson _bPerson;
+        private readonly UPerson _uPerson;
         public PersonController(SIEContext context)
         {
-            _context = context;
-            _bPerson = new BPerson(_context);
-        }
-        // GET api/values
-        [HttpGet]
-        public List<Person> Get()
-        {
-            return _context.Person.ToList();
+            _bPerson = new BPerson(context);
+            _uPerson = new UPerson(context);
         }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult Post([FromBody] MPerson person)
         {
             if (!person.ModelValid())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Campos inválidos!"));
-            try
-            {
-                var cPerson = new Person
-                {
-                    Id = person.Id,
-                    Name = person.Name,
-                    Cpf = person.Cpf,
-                    Email = person.Email,
-                    Institution = person.Institution,
-                    BirthDate = person.BirthDate,
-                    Sex = person.Sex,
-                    Password = person.Password,
-                    Profile = person.Profile
-                };
-                _bPerson.SaveOrUpdate(cPerson);
-            }
-            catch (Exception)
-            {
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Problema ao salvar novo usuário!"));
-            }
+
+            var errors = new List<MModelError>();
+            person.ListErrors(_uPerson, ref errors);
+            if (errors.Any())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, errors));
+
+            _bPerson.SaveOrUpdate(person);
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
+        }
+
+        [HttpGet("{cpf}")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public IActionResult Get(string cpf)
+        {
+            if (!cpf.ValidCpf())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF inválido!"));
+
+            var res = _uPerson.GetByCpf(cpf.RCpf());
+            if (res.Count > 0)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF já está em uso!"));
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
         }
     }
 }

@@ -19,7 +19,9 @@
       label CPF
       md-input(
         type='text',
+        v-mask='"###.###.###-##"',
         v-model='envelope.Cpf',
+        @keyup='validCpf',
         required)
     md-field
       label Instituição
@@ -60,7 +62,7 @@
 <script>
 
 import Box from '../shared/Box.vue'
-import MPerson from '../../domain/MPerson'
+import Person from '../../domain/Person'
 
 import PersonService from '../../services/PersonService'
 
@@ -70,11 +72,15 @@ export default {
   },
   data () {
     return {
-      envelope: new MPerson(),
-      profile: 'estudante'
+      envelope: new Person(),
+      profile: 'estudante',
+      isValid: {
+        cpf: true
+      }
     }
   },
   async created () {
+    console.log(this.$material.locale.dateFormat)
     this.service = new PersonService(this.$resource)
   },
   methods: {
@@ -83,6 +89,15 @@ export default {
     },
     toggleIWannaBe () {
       this.profile = this.envelope.Profile ? 'professor' : 'estudante'
+    },
+    async validCpf () {
+      let cpf = this.envelope.Cpf
+      if (!cpf) return
+
+      cpf = cpf.replace(/[-.]/g, '')
+      if (cpf.length !== 11) return
+
+      this.service.canUseCpf(cpf)
     }
   }
 }
