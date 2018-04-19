@@ -37,16 +37,29 @@ namespace SIE.Models
             return Cpf.ValidCpf() && ValidEmail() && PasswordMatch();
         }
 
-        public List<string> Exists(UPerson uPerson)
+        public void ListErrors(UPerson uPerson, ref List<MModelError> errors)
         {
             var cpfInUse = uPerson.GetByCpf(Cpf.RCpf()).Count > 0;
             var emailInUse = uPerson.GetByCpf(Email).Count > 0;
-            var result = new List<string>();
             if (cpfInUse)
-                result.Add("CPF já está em uso!");
+            {
+                errors.Add(new MModelError
+                {
+                    MessageError = "CPF já está em uso!",
+                    HasError = true,
+                    Property = "Cpf"
+                });
+            }
+
             if (emailInUse)
-                result.Add("E-mail já está em uso!");
-            return result;
+            {
+                errors.Add(new MModelError
+                {
+                    MessageError = "E-mail já está em uso!",
+                    HasError = true,
+                    Property = "Cpf"
+                });
+            }
         }
     }
 }
