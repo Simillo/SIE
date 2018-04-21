@@ -35,7 +35,11 @@ namespace SIE
                 .AddSessionStateTempDataProvider()
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",

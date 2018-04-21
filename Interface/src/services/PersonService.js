@@ -1,6 +1,9 @@
 export default class {
-  constructor (resource) {
+  constructor (resource, http = null) {
     this._resource = resource('person{/id}{/cpf}')
+    if (http) {
+      this._http = http
+    }
   }
   async loadPersons () {
     try {
@@ -31,13 +34,17 @@ export default class {
     }
   }
 
-  // async login (login) {
-  //   try {
-  //     const res = await this._resource.
-  //     return res.json()
-  //   } catch (ex) {
-  //     console.log(ex)
-  //     throw new Error('Não foi possível autenticar.')
-  //   }
-  // }
+  async login (login) {
+    try {
+      const res = await this._http.post('person/Login', login, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      return res.json()
+    } catch (ex) {
+      console.log(ex)
+      throw new Error('Não foi possível autenticar.')
+    }
+  }
 }

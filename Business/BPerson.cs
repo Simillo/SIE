@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using SIE.Auxiliary;
 using SIE.Context;
 using SIE.Models;

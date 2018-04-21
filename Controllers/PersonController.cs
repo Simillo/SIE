@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -66,8 +68,35 @@ namespace SIE.Controllers
             if (person == null)
                 return Ok(null);
 
-            var session = new Session();
-            return Ok();
+            Authenticate(person);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
+        [Route("Teste")]
+        public IActionResult Teste()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("_id")))
+            {
+                return BadRequest("Not ok");
+            }
+
+            return Ok(new
+            {
+                Id = HttpContext.Session.GetString("_id"),
+                Nome = HttpContext.Session.GetString("_name"),
+                Cpf = HttpContext.Session.GetString("_cpf"),
+                Email = HttpContext.Session.GetString("_email"),
+            });
+        }
+
+        private void Authenticate(Person person)
+        {
+            HttpContext.Session.SetString("_id", person.Id.ToString());
+            HttpContext.Session.SetString("_name", person.Name);
+            HttpContext.Session.SetString("_cpf", person.Cpf);
+            HttpContext.Session.SetString("_email", person.Email);
         }
     }
 }

@@ -22,7 +22,7 @@
       a Esqueceu a senha?
     div
       md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
-        @click.prevent='next()') Entrar
+        @click.prevent='login()') Entrar
 </template>
 
 <script>
@@ -41,15 +41,12 @@ export default {
     }
   },
   async created () {
-    this.service = new PersonService(this.$resource)
+    this.service = new PersonService(this.$resource, this.$http)
   },
   methods: {
-    next () {
-      this.$http.post('person/Login', this.envelope, {
-        headers: {
-          'Content-type': 'application/json'
-        }
-      })
+    async login () {
+      const req = await this.service.login(this.envelope)
+      console.log(req)
     },
     validate () {
       console.log(this.envelope.Email)
