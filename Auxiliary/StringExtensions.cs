@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SIE.Auxiliary
 {
@@ -41,6 +38,12 @@ namespace SIE.Auxiliary
                 resto = 11 - resto;
             digito = digito + resto;
             return cpf.EndsWith(digito);
+        }
+
+        public static bool ValidEmail(this string email)
+        {
+            var e = new EmailAddressAttribute();
+            return e.IsValid(email);
         }
     }
 }

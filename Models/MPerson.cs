@@ -18,15 +18,9 @@ namespace SIE.Models
         public string Password { get; set; }
         public int Profile { get; set; }
 
-        private bool ValidEmail()
-        {
-            var email = new EmailAddressAttribute();
-            return email.IsValid(Email);
-        }
-
         public bool ModelValid()
         {
-            return Cpf.ValidCpf() && ValidEmail();
+            return Cpf.ValidCpf() && Email.ValidEmail();
         }
 
         public void ListErrors(UPerson uPerson, ref List<MModelError> errors)

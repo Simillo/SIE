@@ -1,6 +1,6 @@
 export default class {
   constructor () {
-    this.EmailOrCpf = ''
+    this.Email = ''
     this.Password = ''
   }
 }

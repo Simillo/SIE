@@ -62,7 +62,12 @@ namespace SIE.Controllers
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         public IActionResult Login([FromBody] MLogin login)
         {
-            return Ok("lol");
+            var person = _bPerson.Login(login);
+            if (person == null)
+                return Ok(null);
+
+            var session = new Session();
+            return Ok();
         }
     }
 }

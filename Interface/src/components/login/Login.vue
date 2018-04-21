@@ -3,10 +3,10 @@
     :hasClass='true',
     :height='"375px"')
     md-field
-      label Email ou CPF
+      label E-mail
       md-input(
-        type='text',
-        v-model='envelope.EmailOrCpf',
+        type='email',
+        v-model='envelope.Email',
         required)
     md-field
       label Senha
@@ -52,7 +52,7 @@ export default {
       })
     },
     validate () {
-      console.log(this.envelope.emailOrCpf)
+      console.log(this.envelope.Email)
     }
   }
 }

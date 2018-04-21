@@ -7,7 +7,7 @@ namespace SIE.Models
 {
     public class MLogin
     {
-        public string EmailOrCpf { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
     }
 }
