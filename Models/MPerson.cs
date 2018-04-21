@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using SIE.Auxiliary;
-using SIE.Context;
 using SIE.Utils;
 
 namespace SIE.Models
@@ -18,13 +16,7 @@ namespace SIE.Models
         public DateTime BirthDate { get; set; }
         public int Sex { get; set; }
         public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
         public int Profile { get; set; }
-
-        private bool PasswordMatch()
-        {
-            return Password == ConfirmPassword;
-        }
 
         private bool ValidEmail()
         {
@@ -34,7 +26,7 @@ namespace SIE.Models
 
         public bool ModelValid()
         {
-            return Cpf.ValidCpf() && ValidEmail() && PasswordMatch();
+            return Cpf.ValidCpf() && ValidEmail();
         }
 
         public void ListErrors(UPerson uPerson, ref List<MModelError> errors)

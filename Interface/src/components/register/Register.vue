@@ -46,12 +46,6 @@
         type='password',
         v-model='envelope.Password',
         required)
-    md-field
-      label Confirmar senha
-      md-input(
-        type='password',
-        v-model='envelope.ConfirmPassword',
-        required)
     div
       router-link(to='/')
         md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar

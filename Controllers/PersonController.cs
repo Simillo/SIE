@@ -55,5 +55,14 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF já está em uso!"));
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
         }
+
+        [HttpPost]
+        [Route("Login")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public IActionResult Login([FromBody] MLogin login)
+        {
+            return Ok("lol");
+        }
     }
 }

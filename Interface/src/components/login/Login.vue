@@ -45,7 +45,11 @@ export default {
   },
   methods: {
     next () {
-      console.log('ok')
+      this.$http.post('person/Login', this.envelope, {
+        headers: {
+          'Content-type': 'application/json'
+        }
+      })
     },
     validate () {
       console.log(this.envelope.emailOrCpf)

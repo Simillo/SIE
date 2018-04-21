@@ -30,4 +30,14 @@ export default class {
       throw new Error('Não foi possível consultar o CPF.')
     }
   }
+
+  // async login (login) {
+  //   try {
+  //     const res = await this._resource.
+  //     return res.json()
+  //   } catch (ex) {
+  //     console.log(ex)
+  //     throw new Error('Não foi possível autenticar.')
+  //   }
+  // }
 }
