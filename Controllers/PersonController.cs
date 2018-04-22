@@ -63,7 +63,7 @@ namespace SIE.Controllers
         {
             var person = _bPerson.SearchForPerson(login);
             if (person == null)
-                return Ok(null);
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, null));
 
             HttpContext.Session.Authenticate(person);
 
