@@ -11,16 +11,23 @@
 </template>
 
 <script>
+import bus from './bus'
+
 export default {
   name: 'App',
   data () {
     return {
-      showPopup: true,
+      showPopup: false,
       position: 'center',
       duration: 4000,
       isInfinity: false,
       msg: ''
     }
+  },
+  created () {
+    bus.$on('popup', res => {
+      this.togglePopup(res.body.message)
+    })
   },
   methods: {
     togglePopup (msg) {

@@ -8,6 +8,7 @@ import VueTheMask from 'vue-the-mask'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import router from './router'
+import bus from './bus'
 
 Vue.config.productionTip = false
 
@@ -30,7 +31,9 @@ Vue.material.locale = {
 
 Vue.http.interceptors.push((request, next) => {
   next(response => {
-    App.methods.togglePopup('asdasd')
+    if (response.status !== 200) {
+      bus.$emit('popup', response)
+    }
     if (response.status === 401) {
       router.push('/')
     }
