@@ -13,7 +13,6 @@
       md-input(
         type='password',
         v-model='envelope.Password',
-        @change='validate',
         required)
     .float-left
       router-link(to='/register')
@@ -46,10 +45,8 @@ export default {
   methods: {
     async login () {
       const res = await this.service.login(this.envelope)
-      if (res.entity.status === 200) this.$router.push('/dashboard')
-    },
-    validate () {
-      console.log(this.envelope.Email)
+      console.log(res)
+      // this.$router.push('/dashboard')
     }
   }
 }

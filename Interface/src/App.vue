@@ -26,7 +26,7 @@ export default {
   },
   created () {
     bus.$on('popup', res => {
-      this.togglePopup(res.body.message)
+      this.togglePopup(res.body.message || res.statusText)
     })
   },
   methods: {

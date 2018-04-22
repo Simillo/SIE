@@ -14,7 +14,7 @@ export default {
   },
   async created () {
     this.service = new DashboardService(this.$resource, this.$http)
-    const res = this.service.load()
+    const res = await this.service.load()
     console.log(res)
   }
 }
