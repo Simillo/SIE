@@ -6,45 +6,25 @@ export default class {
     }
   }
   async loadPersons () {
-    try {
-      const res = await this._resource.query()
-      return res.json()
-    } catch (ex) {
-      console.log(ex)
-      throw new Error('Não foi possível carregar as pessoas cadastradas!')
-    }
+    const res = await this._resource.query()
+    return res.json()
   }
   async savePerson (person) {
-    try {
-      const res = await this._resource.save(person)
-      return res.json()
-    } catch (ex) {
-      console.log(ex)
-      throw new Error('Não foi possível salvar a pessoa.')
-    }
+    const res = await this._resource.save(person)
+    return res.json()
   }
 
   async canUseCpf (cpf) {
-    try {
-      const res = await this._resource.query({cpf})
-      return res.json()
-    } catch (ex) {
-      console.log(ex)
-      throw new Error('Não foi possível consultar o CPF.')
-    }
+    const res = await this._resource.query({cpf})
+    return res.json()
   }
 
   async login (login) {
-    try {
-      const res = await this._http.post('person/Login', login, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      return res.json()
-    } catch (ex) {
-      console.log(ex)
-      throw new Error('Não foi possível autenticar.')
-    }
+    const res = await this._http.post('person/Login', login, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    return res.json()
   }
 }

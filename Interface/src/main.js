@@ -30,7 +30,7 @@ Vue.material.locale = {
 
 Vue.http.interceptors.push((request, next) => {
   next(response => {
-    App.data().showPopup = true
+    App.methods.togglePopup('asdasd')
     if (response.status === 401) {
       router.push('/')
     }

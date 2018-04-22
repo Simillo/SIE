@@ -6,19 +6,28 @@
       :md-active.sync='showPopup',
       md-persistent
     )
-      span teste
+      span {{msg}}
     router-view
 </template>
 
 <script>
 export default {
   name: 'App',
-  data: () => ({
-    showPopup: false,
-    position: 'center',
-    duration: 4000,
-    isInfinity: false
-  })
+  data () {
+    return {
+      showPopup: true,
+      position: 'center',
+      duration: 4000,
+      isInfinity: false,
+      msg: ''
+    }
+  },
+  methods: {
+    togglePopup (msg) {
+      this.msg = msg
+      this.showPopup = true
+    }
+  }
 }
 </script>
 
