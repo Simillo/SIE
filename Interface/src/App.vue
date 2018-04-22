@@ -1,11 +1,24 @@
 <template lang='pug'>
   #app
+    md-snackbar(
+      :md-position='position',
+      :md-duration='duration',
+      :md-active.sync='showPopup',
+      md-persistent
+    )
+      span teste
     router-view
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data: () => ({
+    showPopup: false,
+    position: 'center',
+    duration: 4000,
+    isInfinity: false
+  })
 }
 </script>
 

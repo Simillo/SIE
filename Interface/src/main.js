@@ -30,6 +30,7 @@ Vue.material.locale = {
 
 Vue.http.interceptors.push((request, next) => {
   next(response => {
+    App.data().showPopup = true
     if (response.status === 401) {
       router.push('/')
     }
