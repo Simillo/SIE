@@ -32,7 +32,6 @@ Vue.material.locale = {
 
 Vue.http.interceptors.push((request, next) => {
   next(response => {
-    console.log(response.request.headers)
     if (response.status !== 200) {
       bus.$emit('popup', response)
     }
