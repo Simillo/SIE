@@ -5,7 +5,7 @@
 
 <script>
 
-import PersonService from '../../services/PersonService'
+import DashboardService from '../../services/DashboardService'
 
 export default {
   data () {
@@ -13,7 +13,9 @@ export default {
     }
   },
   async created () {
-    this.service = new PersonService(this.$resource)
+    this.service = new DashboardService(this.$resource, this.$http)
+    const res = this.service.load()
+    console.log(res)
   }
 }
 </script>

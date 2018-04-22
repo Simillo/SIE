@@ -58,7 +58,7 @@ namespace SIE.Business
             _context.Person.Update(person);
         }
 
-        public Person Login(MLogin login)
+        public Person SearchForPerson(MLogin login)
         {
             if (!login.Email.ValidEmail()) return null;
 

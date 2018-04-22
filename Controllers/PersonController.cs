@@ -61,25 +61,13 @@ namespace SIE.Controllers
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         public IActionResult Login([FromBody] MLogin login)
         {
-            var person = _bPerson.Login(login);
+            var person = _bPerson.SearchForPerson(login);
             if (person == null)
                 return Ok(null);
 
             HttpContext.Session.Authenticate(person);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
-        }
-
-        [HttpGet]
-        [Route("Teste")]
-        public IActionResult Teste()
-        {
-            if (HttpContext.Session.IsAuth())
-            {
-                return Ok("ok");
-            }
-
-            return BadRequest("not ok");
         }
     }
 }

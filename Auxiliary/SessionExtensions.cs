@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SIE.Context;
 
 
 namespace SIE.Auxiliary
@@ -19,5 +20,13 @@ namespace SIE.Auxiliary
         }
 
         public static bool IsAuth(this ISession session) => !string.IsNullOrEmpty(session.GetString("_id"));
+
+        public static void Authenticate(this ISession session, Person person)
+        {
+            session.SetString("_id", person.Id.ToString());
+            session.SetString("_name", person.Name);
+            session.SetString("_cpf", person.Cpf);
+            session.SetString("_email", person.Email);
+        }
     }
 }

@@ -28,6 +28,14 @@ Vue.material.locale = {
   firstDayOfAWeek: 0
 }
 
+Vue.http.interceptors.push((request, next) => {
+  next(response => {
+    if (response.status === 401) {
+      router.push('/')
+    }
+  })
+})
+
 Vue.http.options.root = 'http://localhost/SIE/api'
 
 /* eslint-disable no-new */

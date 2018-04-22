@@ -45,8 +45,8 @@ export default {
   },
   methods: {
     async login () {
-      const req = await this.service.login(this.envelope)
-      console.log(req)
+      await this.service.login(this.envelope)
+      this.$router.push('/dashboard')
     },
     validate () {
       console.log(this.envelope.Email)
