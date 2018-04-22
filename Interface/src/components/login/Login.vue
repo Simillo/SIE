@@ -41,12 +41,13 @@ export default {
   },
   async created () {
     this.service = new PersonService(this.$resource, this.$http)
+    this.envelope.Email = 'simillonakai@gmail.com'
+    this.envelope.Password = '123'
   },
   methods: {
     async login () {
       const res = await this.service.login(this.envelope)
-      console.log(res)
-      // this.$router.push('/dashboard')
+      if (res.status === 200) this.$router.push('/dashboard')
     }
   }
 }

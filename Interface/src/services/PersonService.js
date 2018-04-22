@@ -22,6 +22,7 @@ export default class {
   async login (login) {
     const res = await this._http.post('person/Login', login, {
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json'
       }
     })

@@ -50,7 +50,8 @@ namespace SIE
                             .WithOrigins("http://localhost:8080")
                             .AllowAnyOrigin()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
 

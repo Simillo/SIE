@@ -9,7 +9,6 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import router from './router'
 import bus from './bus'
-// import auth from './auth'
 
 Vue.config.productionTip = false
 
@@ -31,7 +30,9 @@ Vue.material.locale = {
 }
 
 Vue.http.interceptors.push((request, next) => {
+  request.credentials = 'same-origin'
   next(response => {
+    console.log(document.cookie)
     if (response.status !== 200) {
       bus.$emit('popup', response)
     }
