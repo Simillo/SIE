@@ -31,8 +31,9 @@ Vue.material.locale = {
 
 Vue.http.interceptors.push((request, next) => {
   request.credentials = 'same-origin'
+  bus.$emit('start-spinner')
   next(response => {
-    console.log(document.cookie)
+    bus.$emit('end-spinner')
     if (response.status !== 200) {
       bus.$emit('popup', response)
     }

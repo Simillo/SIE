@@ -1,5 +1,7 @@
 <template lang='pug'>
   #app
+    .spinner(:class='spinner')
+      Spinner
     md-snackbar(
       :md-position='position',
       :md-duration='duration',
@@ -12,19 +14,30 @@
 
 <script>
 import bus from './bus'
+import Spinner from './components/shared/Spinner.vue'
 
 export default {
   name: 'App',
+  components: {
+    Spinner
+  },
   data () {
     return {
       showPopup: false,
       position: 'center',
       duration: 4000,
       isInfinity: false,
-      msg: ''
+      msg: '',
+      spinner: ''
     }
   },
   created () {
+    bus.$on('start-spinner', () => {
+      this.spinner = ''
+    })
+    bus.$on('end-spinner', () => {
+      this.spinner = 'hide'
+    })
     bus.$on('popup', res => {
       this.togglePopup(res.body.message || res.statusText)
     })
@@ -70,5 +83,15 @@ html, body {
   &.float-right {
     right: 50px;
   }
+}
+.hide {
+  display: none;
+}
+
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 9999;
 }
 </style>
