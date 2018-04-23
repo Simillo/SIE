@@ -5,8 +5,10 @@ import App from './App'
 import VueMaterial from 'vue-material'
 import VueResource from 'vue-resource'
 import VueTheMask from 'vue-the-mask'
+import NProgress from 'nprogress'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+import 'nprogress/nprogress.css'
 import router from './router'
 import bus from './bus'
 
@@ -32,8 +34,10 @@ Vue.material.locale = {
 Vue.http.interceptors.push((request, next) => {
   request.credentials = 'same-origin'
   bus.$emit('start-spinner')
+  NProgress.start()
   next(response => {
     bus.$emit('end-spinner')
+    NProgress.done()
     if (response.status !== 200) {
       bus.$emit('popup', response)
     }

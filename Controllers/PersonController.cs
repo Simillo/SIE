@@ -63,7 +63,7 @@ namespace SIE.Controllers
         {
             var person = _bPerson.SearchForPerson(login);
             if (person == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail ou senha incorretos!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail ou senha incorreto(s)!"));
 
             HttpContext.Session.Authenticate(person);
 

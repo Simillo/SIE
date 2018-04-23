@@ -2,26 +2,32 @@
   box(
     :hasClass='true',
     :height='"375px"')
-    md-field
-      label E-mail
-      md-input(
-        type='email',
-        v-model='envelope.Email',
-        required)
-    md-field
-      label Senha
-      md-input(
-        type='password',
-        v-model='envelope.Password',
-        required)
-    .float-left
-      router-link(to='/register')
-        a Não possui conta?
-    .float-right
-      a Esqueceu a senha?
-    div
-      md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
-        @click.prevent='login()') Entrar
+    form(
+      novalidate,
+      @submit.prevent='login',
+      @keypress.enter='login'
+      )
+      md-field(:class='messageClass')
+        label E-mail
+        md-input(
+          type='email',
+          v-model='envelope.Email',
+          required)
+        span.md-error E-mail inválido!
+      md-field
+        label Senha
+        md-input(
+          type='password',
+          v-model='envelope.Password',
+          required)
+      .float-left
+        router-link(to='/register')
+          a Não possui conta?
+      .float-right
+        a Esqueceu a senha?
+      div
+        md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
+          @click.prevent='login()') Entrar
 </template>
 
 <script>
@@ -36,7 +42,8 @@ export default {
   },
   data () {
     return {
-      envelope: new Login()
+      envelope: new Login(),
+      hasError: false
     }
   },
   async created () {
@@ -46,8 +53,20 @@ export default {
   },
   methods: {
     async login () {
-      const res = await this.service.login(this.envelope)
-      if (res.status === 200) this.$router.push('/dashboard')
+      try {
+        const res = await this.service.login(this.envelope)
+        this.hasError = false
+        if (res.status === 200) this.$router.push('/dashboard')
+      } catch (ex) {
+        this.hasError = true
+      }
+    }
+  },
+  computed: {
+    messageClass () {
+      return {
+        'md-invalid': this.hasError
+      }
     }
   }
 }

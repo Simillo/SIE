@@ -45,7 +45,7 @@ export default {
     }
   }
   .md-field:not(:first-child) {
-    margin-top: -18px!important;
+    margin-top: -10px!important;
   }
 }
 .margin-top {

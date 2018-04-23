@@ -74,7 +74,6 @@ export default {
     }
   },
   async created () {
-    console.log(this.$material.locale.dateFormat)
     this.service = new PersonService(this.$resource)
   },
   methods: {
