@@ -21,7 +21,6 @@
         type='text',
         v-mask='"###.###.###-##"',
         v-model='envelope.Cpf',
-        @keyup='validCpf',
         required)
     md-field
       label Instituição
@@ -68,9 +67,7 @@ export default {
     return {
       envelope: new Person(),
       profile: 'estudante',
-      isValid: {
-        cpf: true
-      }
+      isValid: new Person()
     }
   },
   async created () {
@@ -82,15 +79,6 @@ export default {
     },
     toggleIWannaBe () {
       this.profile = this.envelope.Profile ? 'professor' : 'estudante'
-    },
-    async validCpf () {
-      let cpf = this.envelope.Cpf
-      if (!cpf) return
-
-      cpf = cpf.replace(/[-.]/g, '')
-      if (cpf.length !== 11) return
-
-      this.service.canUseCpf(cpf)
     }
   }
 }

@@ -1,6 +1,6 @@
 export default class {
   constructor (resource, http = null) {
-    this._resource = resource('person{/id}{/cpf}')
+    this._resource = resource('person{/id}{/text}')
     if (http) {
       this._http = http
     }
@@ -14,8 +14,8 @@ export default class {
     return res.json()
   }
 
-  async canUseCpf (cpf) {
-    const res = await this._resource.query({cpf})
+  async canUseEmailOrCpf (text) {
+    const res = await this._resource.query({text})
     return res.json()
   }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -41,15 +41,30 @@ namespace SIE.Controllers
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
         }
 
-        [HttpGet("{cpf}")]
+        [HttpGet("{text}")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        public IActionResult Get(string cpf)
+        public IActionResult Get(string text)
         {
-            if (!cpf.ValidCpf())
+            var res = new List<Person>();
+            var rgx = new Regex(@"[^\d]", RegexOptions.IgnoreCase);
+
+            if (rgx.Match(text).Length > 0)
+            {
+                if (!text.ValidEmail())
+                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail inválido!"));
+                res = _uPerson.GetByEmail(text);
+
+                if (res.Any())
+                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail já está em uso!"));
+
+                return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
+
+            }
+            if (!text.ValidCpf())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF inválido!"));
 
-            var res = _uPerson.GetByCpf(cpf.RCpf());
+            res = _uPerson.GetByCpf(text.RCpf());
             if (res.Count > 0)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF já está em uso!"));
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
