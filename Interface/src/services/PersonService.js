@@ -1,6 +1,6 @@
 export default class {
   constructor (resource, http = null) {
-    this._resource = resource('person{/id}{/text}')
+    this._resource = resource('person{/id}')
     if (http) {
       this._http = http
     }
@@ -10,22 +10,10 @@ export default class {
     return res.json()
   }
   async savePerson (person) {
-    const res = await this._resource.save(person)
-    return res.json()
+    return this._http.post('person/Save', person)
   }
-
-  async canUseEmailOrCpf (text) {
-    const res = await this._resource.query({text})
-    return res.json()
-  }
-
   async login (login) {
-    const res = await this._http.post('person/Login', login, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    const res = await this._http.post('person/Login', login)
     return res.json()
   }
 }

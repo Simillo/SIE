@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -25,50 +26,24 @@ namespace SIE.Controllers
         }
 
         [HttpPost]
+        [Route("Save")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult Post([FromBody] MPerson person)
+        public IActionResult Save([FromBody] MPerson person)
         {
-            if (!person.ModelValid())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Campos inválidos!"));
+            if (person == null) 
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Existem campos obrigatórios vazios!"));
 
             var errors = new List<MModelError>();
             person.ListErrors(_uPerson, ref errors);
+
             if (errors.Any())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, errors));
+                return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campos inválidos!"));
 
             _bPerson.SaveOrUpdate(person);
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
         }
 
-        [HttpGet("{text}")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        public IActionResult Get(string text)
-        {
-            var res = new List<Person>();
-            var rgx = new Regex(@"[^\d]", RegexOptions.IgnoreCase);
-
-            if (rgx.Match(text).Length > 0)
-            {
-                if (!text.ValidEmail())
-                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail inválido!"));
-                res = _uPerson.GetByEmail(text);
-
-                if (res.Any())
-                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail já está em uso!"));
-
-                return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
-
-            }
-            if (!text.ValidCpf())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF inválido!"));
-
-            res = _uPerson.GetByCpf(text.RCpf());
-            if (res.Count > 0)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "CPF já está em uso!"));
-            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
-        }
 
         [HttpPost]
         [Route("Login")]

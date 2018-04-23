@@ -31,6 +31,12 @@ Vue.material.locale = {
   firstDayOfAWeek: 0
 }
 
+Vue.http.headers.common['Content-Type'] = 'application/json'
+Vue.http.headers.common['Access-Control-Allow-Origin'] = '*'
+Vue.http.headers.common['Accept'] = 'application/json, text/plain, */*'
+Vue.http.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, DELETE, PUT, OPTIONS, HEAD'
+Vue.http.headers.common['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, Authorization, Access-Control-Allow-Origin'
+
 Vue.http.interceptors.push((request, next) => {
   request.credentials = 'same-origin'
   bus.$emit('start-spinner')
