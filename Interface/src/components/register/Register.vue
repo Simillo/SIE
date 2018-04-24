@@ -20,6 +20,7 @@
           v-model='form.Email')
         span.md-error(v-if='!$v.form.Email.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Email.email') E-mail inválido!
+        span.md-error(v-else-if='customErrors.Email.HasError') {{customErrors.Email.MessageError}}
       md-field(:class='getValidationClass("Cpf")')
         label(for='cpf') CPF
         md-input#cpf(
@@ -28,6 +29,7 @@
           v-model='form.Cpf')
         span.md-error(v-if='!$v.form.Cpf.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Cpf.validarCpf') CPF inválido!
+        span.md-error(v-else-if='customErrors.Cpf.HasError') {{customErrors.Cpf.MessageError}}
       md-field
         label Instituição
         md-input#institution(
@@ -81,7 +83,10 @@ export default {
     return {
       form: new Person(),
       profile: 'estudante',
-      isValid: new Person()
+      customErrors: {
+        Cpf: {},
+        Email: {}
+      }
     }
   },
   validations: {
@@ -110,8 +115,10 @@ export default {
     this.service = new PersonService(this.$resource, this.$http)
   },
   methods: {
-    async save () {
-      await this.service.savePerson(this.form)
+    save () {
+      this.service.savePerson(this.form)
+        .then()
+        .catch(err => this.handleCustomError(err.body.entity))
     },
     toggleIWannaBe () {
       this.profile = this.form.Profile ? 'professor' : 'estudante'
@@ -126,9 +133,16 @@ export default {
       const field = this.$v.form[fieldName]
       if (field) {
         return {
-          'md-invalid': field.$invalid && field.$dirty
+          'md-invalid': (field.$invalid && field.$dirty) || (this.customErrors[fieldName] && this.customErrors[fieldName].HasError)
         }
       }
+    },
+    handleCustomError (data) {
+      if (!data) return
+
+      data.forEach(d => {
+        this.customErrors[d.Property] = d
+      })
     }
   }
 }

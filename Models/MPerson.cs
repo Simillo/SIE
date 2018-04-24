@@ -29,7 +29,7 @@ namespace SIE.Models
                     Property = "Email"
                 });
             }
-            else if(uPerson.GetByCpf(Email).Count > 0)
+            else if(uPerson.GetByEmail(Email).Count > 0)
             {
                 errors.Add(new MModelError
                 {
