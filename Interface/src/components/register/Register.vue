@@ -5,51 +5,52 @@
       @submit.prevent='validate'
     )
       md-switch.md-primary(
-        v-model='envelope.Profile',
+        v-model='form.Profile',
         @change='toggleIWannaBe') Quero ser {{profile}}
-      md-field
-        label Nome
-        md-input(
-          type='text',
-          v-model='envelope.Name',
-          required)
-      md-field
-        label E-mail
-        md-input(
-          type='email',
-          v-model='envelope.Email',
-          required)
-      md-field
-        label CPF
-        md-input(
-          type='text',
+      md-field(:class='getValidationClass("Name")')
+        label(for='name') Nome
+        md-input#name(
+          name='name',
+          v-model='form.Name')
+        span.md-error(v-if='!$v.form.Name.required') Obrigatório!
+      md-field(:class='getValidationClass("Email")')
+        label(for='email') E-mail
+        md-input#email(
+          name='email',
+          v-model='form.Email')
+        span.md-error(v-if='!$v.form.Email.required') Obrigatório!
+        span.md-error(v-else-if='!$v.form.Email.email') E-mail inválido!
+      md-field(:class='getValidationClass("Cpf")')
+        label(for='cpf') CPF
+        md-input#cpf(
+          name='cpf',
           v-mask='"###.###.###-##"',
-          v-model='envelope.Cpf',
-          required)
+          v-model='form.Cpf')
+        span.md-error(v-if='!$v.form.Cpf.required') Obrigatório!
+        span.md-error(v-else-if='!$v.form.Cpf.validarCpf') CPF inválido!
       md-field
         label Instituição
-        md-input(
-          type='text',
-          v-model='envelope.Institution')
+        md-input#institution(
+          v-model='form.Institution')
       md-datepicker(
-          v-model='envelope.BirthDate',
+          v-model='form.BirthDate',
           required)
         label Data de nascimento
-      md-field
-        label Eu sou...
+      md-field(:class='getValidationClass("Sex")')
+        label(for='sex') Eu sou...
         md-select#sex(
-          v-model='envelope.Sex',
-          name='sex',
-          required)
+          v-model='form.Sex',
+          name='sex')
           md-option(value='1') Homem
           md-option(value='2') Mulher
           md-option(value='3') Outro
-      md-field
-        label Senha
-        md-input(
+      md-field(:class='getValidationClass("Password")')
+        label(for='password') Senha
+        md-input#password(
           type='password',
-          v-model='envelope.Password',
-          required)
+          v-model='form.Password')
+        span.md-error(v-if='!$v.form.Password.required') Obrigatório!
+        span.md-error(v-else-if='!$v.form.Password.minLength') A senha deve ter no mínimo 5 digitos!
       div
         router-link(to='/')
           md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -65,9 +66,9 @@ import { validationMixin } from 'vuelidate'
 import {
   required,
   email,
-  minLength,
-  maxLength
+  minLength
 } from 'vuelidate/lib/validators'
+import { validarCpf } from '../../services/Utils'
 
 import PersonService from '../../services/PersonService'
 
@@ -78,31 +79,30 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
-      envelope: new Person(),
+      form: new Person(),
       profile: 'estudante',
       isValid: new Person()
     }
   },
   validations: {
-    envelope: {
-      firstName: {
-        required,
-        minLength: minLength(3)
-      },
-      lastName: {
-        required,
-        minLength: minLength(3)
-      },
-      age: {
-        required,
-        maxLength: maxLength(3)
-      },
-      gender: {
+    form: {
+      Name: {
         required
       },
-      email: {
+      Email: {
         required,
         email
+      },
+      Cpf: {
+        required,
+        validarCpf
+      },
+      Sex: {
+        required
+      },
+      Password: {
+        required,
+        minLength: minLength(5)
       }
     }
   },
@@ -111,15 +111,23 @@ export default {
   },
   methods: {
     async save () {
-      await this.service.savePerson(this.envelope)
+      await this.service.savePerson(this.form)
     },
     toggleIWannaBe () {
-      this.profile = this.envelope.Profile ? 'professor' : 'estudante'
+      this.profile = this.form.Profile ? 'professor' : 'estudante'
     },
     validate () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.save()
+      }
+    },
+    getValidationClass (fieldName) {
+      const field = this.$v.form[fieldName]
+      if (field) {
+        return {
+          'md-invalid': field.$invalid && field.$dirty
+        }
       }
     }
   }
