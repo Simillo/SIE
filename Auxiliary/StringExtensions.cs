@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SIE.Auxiliary
 {
@@ -44,6 +46,27 @@ namespace SIE.Auxiliary
         {
             var e = new EmailAddressAttribute();
             return e.IsValid(email);
+        }
+
+        public static string Sha256Hash(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return string.Empty;
+
+            var sb = new StringBuilder();
+
+            using (var hash = SHA256.Create())
+            {
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(s));
+
+                foreach (var b in result)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

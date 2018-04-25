@@ -49,7 +49,7 @@ export default {
   async created () {
     this.service = new PersonService(this.$resource, this.$http)
     this.envelope.Email = 'simillonakai@gmail.com'
-    this.envelope.Password = '123'
+    this.envelope.Password = '123123a'
   },
   methods: {
     async login () {

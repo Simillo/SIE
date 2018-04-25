@@ -41,7 +41,7 @@ namespace SIE.Business
                 InstitutionId = institutionId,
                 BirthDate = person.BirthDate,
                 Sex = person.Sex,
-                Password = person.Password,
+                Password = person.Password.Sha256Hash(),
                 Profile = person.Profile
             };
 
@@ -74,7 +74,7 @@ namespace SIE.Business
             if (!login.Email.ValidEmail()) return null;
 
             var listResult = _uPerson.GetByEmail(login.Email);
-            return listResult.FirstOrDefault(p => p.Password == login.Password);
+            return listResult.FirstOrDefault(p => p.Password == login.Password.Sha256Hash());
 
         }
     }

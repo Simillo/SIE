@@ -1,25 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using SIE.Auxiliary;
 using SIE.Models;
 
 namespace SIE.Context
 {
     public class Person
     {
-        public Person(){}
-
-        public Person(MPerson person, Institution institution)
-        {
-            Id = person.Id;
-            Name = person.Name;
-            Cpf = person.Cpf;
-            Email = person.Email;
-            InstitutionId = institution.Id;
-            BirthDate = person.BirthDate;
-            Sex = person.Sex;
-            Password = person.Password;
-            Profile = person.Profile;
-        }
         [Key]
         public int Id { get; set; }
         [Required]

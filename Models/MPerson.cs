@@ -54,7 +54,7 @@ namespace SIE.Models
             {
                 errors.Add(new MModelError
                 {
-                    MessageError = "A senha deve conter pelo menos 6 digitos!",
+                    MessageError = "A senha deve conter pelo menos 6 caracteres!",
                     HasError = true,
                     Property = "Password"
                 });
