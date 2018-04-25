@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.CodeAnalysis.Emit;
 using SIE.Auxiliary;
+using SIE.Context;
 using SIE.Utils;
 
 namespace SIE.Models
@@ -13,7 +14,7 @@ namespace SIE.Models
         public string Name { get; set; }
         public string Cpf { get; set; }
         public string Email { get; set; }
-        public string Institution { get; set; }
+        public MInstitution Institution { get; set; }
         public DateTime BirthDate { get; set; }
         public int Sex { get; set; }
         public string Password { get; set; }
@@ -44,15 +45,6 @@ namespace SIE.Models
                 errors.Add(new MModelError
                 {
                     MessageError = "CPF inválido!",
-                    HasError = true,
-                    Property = "Cpf"
-                });
-            }
-            else if (uPerson.GetByCpf(Cpf.RCpf()).Count > 0)
-            {
-                errors.Add(new MModelError
-                {
-                    MessageError = "CPF já está em uso!",
                     HasError = true,
                     Property = "Cpf"
                 });

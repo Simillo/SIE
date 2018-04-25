@@ -14,7 +14,7 @@ namespace SIE.Context
             Name = person.Name;
             Cpf = person.Cpf;
             Email = person.Email;
-            Institution = person.Institution;
+            InstitutionId = person.Institution.Id;
             BirthDate = person.BirthDate;
             Sex = person.Sex;
             Password = person.Password;
@@ -28,7 +28,7 @@ namespace SIE.Context
         public string Cpf { get; set; }
         [Required]
         public string Email{ get; set; }
-        public string Institution { get; set; }
+        public int? InstitutionId { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]

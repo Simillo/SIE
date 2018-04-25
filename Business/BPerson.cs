@@ -27,7 +27,7 @@ namespace SIE.Business
                 Name = person.Name,
                 Cpf = person.Cpf.RCpf(),
                 Email = person.Email,
-                Institution = person.Institution,
+                InstitutionId = person.Institution.Id,
                 BirthDate = person.BirthDate,
                 Sex = person.Sex,
                 Password = person.Password,

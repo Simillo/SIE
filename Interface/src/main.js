@@ -41,13 +41,14 @@ Vue.http.interceptors.push((request, next) => {
   request.credentials = 'same-origin'
   bus.$emit('start-spinner')
   NProgress.start()
-  next(response => {
+  next(res => {
     bus.$emit('end-spinner')
     NProgress.done()
-    if (response.status !== 200) {
-      bus.$emit('popup', response)
+    const message = res.body.message || res.statusText
+    if (message && message !== 'OK') {
+      bus.$emit('popup', res)
     }
-    if (response.status === 401) {
+    if (res.status === 401) {
       router.push('/')
     }
   })

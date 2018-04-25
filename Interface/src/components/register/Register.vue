@@ -30,10 +30,17 @@
         span.md-error(v-if='!$v.form.Cpf.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Cpf.validarCpf') CPF inválido!
         span.md-error(v-else-if='customErrors.Cpf.HasError') {{customErrors.Cpf.MessageError}}
-      md-field
+      md-autocomplete(
+        v-model='viewInstitution',
+        :md-options='institutions',
+        @md-changed='getInstitutions',
+        @md-opened='getInstitutions'
+      )
         label Instituição
-        md-input#institution(
-          v-model='form.Institution')
+        template(
+          slot='md-autocomplete-item',
+          slot-scope='{ item }'
+        ) {{item.Name}}
       md-datepicker(
           v-model='form.BirthDate',
           required)
@@ -73,6 +80,7 @@ import {
 import { validarCpf } from '../../services/Utils'
 
 import PersonService from '../../services/PersonService'
+import InstitutionService from '../../services/InstitutionService'
 
 export default {
   components: {
@@ -86,7 +94,9 @@ export default {
       customErrors: {
         Cpf: {},
         Email: {}
-      }
+      },
+      institutions: [],
+      viewInstitution: null
     }
   },
   validations: {
@@ -113,11 +123,13 @@ export default {
   },
   async created () {
     this.service = new PersonService(this.$resource, this.$http)
+    this.institutionService = new InstitutionService(this.$resource)
   },
   methods: {
     save () {
+      if (this.viewInstitution) this.form.Institution.Name = this.viewInstitution
       this.service.savePerson(this.form)
-        .then()
+        .then(() => this.$router.push('/'))
         .catch(err => this.handleCustomError(err.body.entity))
     },
     toggleIWannaBe () {
@@ -143,6 +155,19 @@ export default {
       data.forEach(d => {
         this.customErrors[d.Property] = d
       })
+    },
+    async getInstitutions (query) {
+      if (!query) query = ''
+      else if (query.Name) query = query.Name
+      const res = await this.institutionService.get(query)
+      this.institutions = new Promise(resolve => {
+        resolve(res.entity)
+      })
+      if (typeof this.viewInstitution === 'object') {
+        if (this.viewInstitution && this.viewInstitution.Name) {
+          this.viewInstitution = this.viewInstitution.Name
+        }
+      }
     }
   }
 }
