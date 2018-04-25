@@ -25,4 +25,6 @@ function validarCpf (strCPF) {
   return true
 }
 
-export { validarCpf }
+const validPassword = pass => pass && /\d/.test(pass) && /\D/.test(pass)
+
+export { validarCpf, validPassword }

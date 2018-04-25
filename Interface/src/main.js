@@ -46,7 +46,7 @@ Vue.http.interceptors.push((request, next) => {
     NProgress.done()
     const message = res.body.message || res.statusText
     if (message && message !== 'OK') {
-      bus.$emit('popup', res)
+      bus.$emit('popup', message)
     }
     if (res.status === 401) {
       router.push('/')

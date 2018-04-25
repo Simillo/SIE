@@ -8,13 +8,13 @@ namespace SIE.Context
     {
         public Person(){}
 
-        public Person(MPerson person)
+        public Person(MPerson person, Institution institution)
         {
             Id = person.Id;
             Name = person.Name;
             Cpf = person.Cpf;
             Email = person.Email;
-            InstitutionId = person.Institution.Id;
+            InstitutionId = institution.Id;
             BirthDate = person.BirthDate;
             Sex = person.Sex;
             Password = person.Password;

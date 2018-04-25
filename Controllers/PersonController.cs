@@ -32,16 +32,16 @@ namespace SIE.Controllers
         public IActionResult Save([FromBody] MPerson person)
         {
             if (person == null) 
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Existem campos obrigatórios vazios!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Existe(m) campo(s) obrigatório(s) vazio(s)!"));
 
             var errors = new List<MModelError>();
             person.ListErrors(_uPerson, ref errors);
 
             if (errors.Any())
-                return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campos inválidos!"));
+                return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
             _bPerson.SaveOrUpdate(person);
-            return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Pessoa salva com sucesso!"));
+            return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Cadastro realizado com sucesso!"));
         }
 
 
@@ -53,7 +53,7 @@ namespace SIE.Controllers
         {
             var person = _bPerson.SearchForPerson(login);
             if (person == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail ou senha incorreto(s)!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail e/ou senha incorreto(s)!"));
 
             HttpContext.Session.Authenticate(person);
 

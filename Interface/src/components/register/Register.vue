@@ -17,6 +17,7 @@
         label(for='email') E-mail
         md-input#email(
           name='email',
+          @keyup.prevent='resetCustomError("Email")'
           v-model='form.Email')
         span.md-error(v-if='!$v.form.Email.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Email.email') E-mail inválido!
@@ -59,7 +60,8 @@
           type='password',
           v-model='form.Password')
         span.md-error(v-if='!$v.form.Password.required') Obrigatório!
-        span.md-error(v-else-if='!$v.form.Password.minLength') A senha deve ter no mínimo 5 digitos!
+        span.md-error(v-else-if='!$v.form.Password.minLength') A senha deve ter no mínimo 6 caracteres!
+        span.md-error(v-else-if='!$v.form.Password.validPassword') A senha deve contém ao letra(s) e número(s)!
       div
         router-link(to='/')
           md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -77,7 +79,7 @@ import {
   email,
   minLength
 } from 'vuelidate/lib/validators'
-import { validarCpf } from '../../services/Utils'
+import { validarCpf, validPassword } from '../../services/Utils'
 
 import PersonService from '../../services/PersonService'
 import InstitutionService from '../../services/InstitutionService'
@@ -117,7 +119,8 @@ export default {
       },
       Password: {
         required,
-        minLength: minLength(5)
+        validPassword,
+        minLength: minLength(6)
       }
     }
   },
@@ -155,6 +158,9 @@ export default {
       data.forEach(d => {
         this.customErrors[d.Property] = d
       })
+    },
+    resetCustomError (field) {
+      if (this.customErrors[field]) this.customErrors[field].HasError = false
     },
     async getInstitutions (query) {
       if (!query) query = ''

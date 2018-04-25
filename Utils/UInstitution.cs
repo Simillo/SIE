@@ -15,5 +15,6 @@ namespace SIE.Utils
 
         public List<Institution> Get() => _context.Institution.ToList();
         public List<Institution> Get(string name) => _context.Institution.Where(i => i.Name.ToLower().Contains(name.ToLower())).ToList();
+        public Institution GetExact(string name) => _context.Institution.FirstOrDefault(i => i.Name == name);
     }
 }
