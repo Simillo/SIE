@@ -36,11 +36,11 @@ export default {
       width: 450px;
       margin-left: auto;
       margin-right: auto;
-      padding: 50px;
+      padding: 30px 50px 60px;
       .box-logo {
-        background: url('http://via.placeholder.com/100x50');
-        width: 100px;
-        height: 50px;
+        background: url('../../assets/logo.png') no-repeat;
+        width: 145px;
+        height: 123px;
       }
     }
   }
