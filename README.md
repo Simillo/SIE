@@ -5,7 +5,7 @@ O **Sistema Integrado Educacional** (SIE) tem o objetivo juntar pessoas que poss
 
 ## Sobre o projeto
 
-O SIE é desenvolvido usando as ferramentes [ASP.NET CORE 2](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-2.0) e [Vue.js](https://vuejs.org/).
+O SIE é desenvolvido usando as ferramentes [ASP.NET Core 2](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-2.0), [PostgreSQL](https://www.postgresql.org/) e [Vue.js](https://vuejs.org/).
 
 ## Árvore de diretórios
 ```bash
@@ -119,3 +119,21 @@ O SIE é desenvolvido usando as ferramentes [ASP.NET CORE 2](https://docs.micros
 ├───appsettings.json
 └───web.config
 ```
+
+## Executando a aplicação
+Instale os seguintes programas:
+>  [.Net Core 2 sdk](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.4)
+
+> [PostgreSQL](https://www.postgresql.org/)
+  * Será necessário adicionar o `role` do usuário `sie` com a senha `sie`.
+
+> [Node.js](https://nodejs.org/en/)
+
+> [Visual Studio 2017](https://www.visualstudio.com/downloads/?rr=https%3A%2F%2Fwww.google.com.br%2F)
+
+  * Nos sistemas operacionais Linux ou MacOS também funcionará.
+
+Execute os comandos:
+> na pasta `/SIE/` digite `dotnet ef database update`
+
+> na pasta `/SIE/interface/` digite `npm i` e logo em seguida `npm run dev`
