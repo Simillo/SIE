@@ -131,7 +131,8 @@ Instale os seguintes programas:
 
 > [Visual Studio 2017](https://www.visualstudio.com/downloads/?rr=https%3A%2F%2Fwww.google.com.br%2F)
 
-  * Nos sistemas operacionais Linux ou MacOS também funcionará.
+  * Nos sistemas operacionais Linux ou MacOS também funcionará porém use o editor de preferência.
+  * Para executar o build use o comando `dotnet build`.
 
 Execute os comandos:
 > na pasta `/SIE/` digite `dotnet ef database update`
