@@ -6,7 +6,7 @@
     )
       md-switch.md-primary(
         v-model='form.Profile',
-        @change='toggleIWannaBe') Quero ser {{profile}}
+        @change='toggleIWannaBe') Cadastrar como {{profile}}
       md-field(:class='getValidationClass("Name")')
         label(for='name') Nome
         md-input#name(
@@ -182,10 +182,10 @@ export default {
 <style lang='scss'>
 .md-switch.md-theme-default:not(.md-checked) {
   .md-switch-container {
-    background-color: #B39DDB
+    background-color: rgb(162, 219, 157)
   }
   .md-switch-thumb, .md-ripple-wave {
-    background-color: #7E57C2;
+    background-color: rgb(87, 194, 87);
   }
 }
 </style>
