@@ -5,7 +5,8 @@
       @submit.prevent='validate'
     )
       md-switch.md-primary(
-        v-model='form.Profile',
+        v-model='profileNumber',
+        value='1',
         @change='toggleIWannaBe') Cadastrar como {{profile}}
       md-field(:class='getValidationClass("Name")')
         label(for='name') Nome
@@ -91,8 +92,9 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      profileNumber: null,
       form: new Person(),
-      profile: 'estudante',
+      profile: 'professor',
       customErrors: {
         Cpf: {},
         Email: {}
@@ -131,12 +133,13 @@ export default {
   methods: {
     save () {
       if (this.viewInstitution) this.form.Institution.Name = this.viewInstitution
+      this.form.Profile = Number(this.profileNumber)
       this.service.savePerson(this.form)
         .then(() => this.$router.push('/'))
         .catch(err => this.handleCustomError(err.body.entity))
     },
     toggleIWannaBe () {
-      this.profile = this.form.Profile ? 'professor' : 'estudante'
+      this.profile = this.profileNumber ? 'estudante' : 'professor'
     },
     validate () {
       this.$v.$touch()

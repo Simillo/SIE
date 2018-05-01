@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Context;
+using SIE.Enums;
 using SIE.Helpers;
 
 namespace SIE.Controllers
 {
     [Route("api/[controller]")]
-    public class DashboardController : Controller
+    public class TeacherController : Controller
     {
-        public DashboardController(SIEContext context)
+        public TeacherController(SIEContext context)
         {
 
         }
@@ -22,13 +23,13 @@ namespace SIE.Controllers
         [Route("Load")]
         public IActionResult Load()
         {
-            var id = HttpContext.Session.GetString("_id");
-            if (!HttpContext.Session.IsAuth())
+            var profileId = HttpContext.Session.GetInt32("_profile");
+            if (!HttpContext.Session.IsAuth() || profileId != (int)EProfile.Teacher)
             {
                 return Unauthorized();
             }
 
-            return Ok(id);
+            return Ok(profileId);
         }
 
         [HttpGet]

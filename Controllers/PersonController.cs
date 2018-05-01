@@ -4,10 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
 using SIE.Context;
+using SIE.Enums;
 using SIE.Helpers;
 using SIE.Models;
 using SIE.Utils;
@@ -56,8 +58,9 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail e/ou senha incorreto(s)!"));
 
             HttpContext.Session.Authenticate(person);
+            var res = HttpContext.Session.GetInt32("_profile") == (int)EProfile.Teacher ? "/teacher" : "/student";
 
-            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(res, HttpStatusCode.OK, null));
         }
     }
 }

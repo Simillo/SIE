@@ -27,6 +27,7 @@ namespace SIE.Auxiliary
             session.SetString("_name", person.Name);
             session.SetString("_cpf", person.Cpf);
             session.SetString("_email", person.Email);
+            session.SetInt32("_profile", person.Profile);
         }
     }
 }

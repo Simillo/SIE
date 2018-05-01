@@ -56,7 +56,7 @@ export default {
       try {
         const res = await this.service.login(this.envelope)
         this.hasError = false
-        if (res.status === 200) this.$router.push('/dashboard')
+        if (res.status === 200) this.$router.push(res.entity)
       } catch (ex) {
         this.hasError = true
       }

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/login/Login'
 import Register from '@/components/register/Register'
-import Dashboard from '@/components/dashboard/Dashboard'
+import Teacher from '@/components/teacher/Teacher'
 
 Vue.use(Router)
 
@@ -19,9 +19,9 @@ export default new Router({
       component: Register
     },
     {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: Dashboard
+      path: '/Teacher',
+      name: 'Teacher',
+      component: Teacher
     }
   ]
 })
