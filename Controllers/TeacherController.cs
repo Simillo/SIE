@@ -8,6 +8,7 @@ using SIE.Validations;
 namespace SIE.Controllers
 {
     [Route("api/[controller]")]
+    [AuthorizeSIE(EProfile.Teacher)]
     public class TeacherController : Controller
     {
         public TeacherController(SIEContext context)
@@ -16,15 +17,8 @@ namespace SIE.Controllers
         }
         [HttpGet]
         [Route("Load")]
-        [AuthorizeSIE(EProfile.Teacher)]
         public IActionResult Load()
         {
-            //var profileId = HttpContext.Session.GetInt32("_profile");
-            //if (!HttpContext.Session.IsAuth() || profileId != (int)EProfile.Teacher)
-            //{
-            //    return Unauthorized();
-            //}
-
             return Ok(1);
         }
 
