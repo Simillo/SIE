@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using SIE.Context;
+using SIE.Middleware;
 
 namespace SIE
 {
@@ -70,6 +71,7 @@ namespace SIE
             }
             app.UseSession();
             app.UseCors("AllowAll");
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
         }
     }

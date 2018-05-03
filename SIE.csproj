@@ -6,9 +6,17 @@
 
   <ItemGroup>
     <Compile Remove="db\**" />
+    <Compile Remove="Interface\**" />
+    <Compile Remove="SIE prototipos\**" />
     <Content Remove="db\**" />
+    <Content Remove="Interface\**" />
+    <Content Remove="SIE prototipos\**" />
     <EmbeddedResource Remove="db\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <EmbeddedResource Remove="SIE prototipos\**" />
     <None Remove="db\**" />
+    <None Remove="Interface\**" />
+    <None Remove="SIE prototipos\**" />
   </ItemGroup>
 
   <ItemGroup>
