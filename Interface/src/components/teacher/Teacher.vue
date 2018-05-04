@@ -1,7 +1,7 @@
 <template lang='pug'>
   .page-container
     md-app
-      md-app-drawer(md-permanent='full')
+      md-app-drawer.sidebar(md-permanent='full')
         md-toolbar.md-transparent(md-elevation='0')
           .logo
         md-list.sidebar-list
@@ -40,8 +40,12 @@ export default {
   .sidebar-item {
     padding: 10px 0 10px 0;
     margin-top: -1px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    &:first-child {
+      border-top: 1px solid #ccc;
+    }
+    &:not(:last-child) {
+      border-bottom: 1px solid #ccc;
+    }
     &:hover {
       background: #eee;
       cursor: pointer;
