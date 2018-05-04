@@ -2,7 +2,7 @@
   .box
     .box-middle
       .box-inner.md-elevation-1
-        .box-logo
+        .box-logo(v-if='hasLogo')
         .content-box(
           :class='propClass',
           :style='{"min-height": height}')
@@ -11,10 +11,11 @@
 
 <script>
 export default {
-  props: ['hasClass', 'height'],
+  props: ['hasClass', 'height', 'noLogo'],
   data () {
     return {
-      propClass: this.hasClass ? 'margin-top' : ''
+      propClass: this.hasClass ? 'margin-top' : '',
+      hasLogo: !this.noLogo
     }
   }
 }
