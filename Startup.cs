@@ -40,7 +40,7 @@ namespace SIE
             {
                 options.Cookie.Name = ".sie.session";
                 options.Cookie.HttpOnly = true;
-                options.IdleTimeout = TimeSpan.FromMinutes(1);
+                //options.IdleTimeout = TimeSpan.FromMinutes(1);
             });
             services.AddCors(options =>
             {

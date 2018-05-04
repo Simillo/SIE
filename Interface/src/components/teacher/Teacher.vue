@@ -1,22 +1,15 @@
 <template lang='pug'>
   .page-container
     md-app
-      md-app-drawer(
-        md-permanent='full'
-      )
-        md-toolbar.md-transparent(
-          md-elevation='0'
-        )
-          | SIE Logo
+      md-app-drawer(md-permanent='full')
+        md-toolbar.md-transparent(md-elevation='0')
+          .logo
         md-list
-          md-list-item
-            span.md-list-item-text Inbox
+          md-list-item.sidebar-item
+            .sidebar-icon
+              md-icon.md-size-2x book
+            span.md-list-item-text Criar nova sala
       md-app-content
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.
-        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.
   </div>
 </template>
 
@@ -36,5 +29,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+.sidebar-item {
+  margin-top: 20px;
+  span {
+    font-weight: bold;
+  }
+  .sidebar-icon {
+    border-radius: 100%;
+    padding: 5px;
+    background-color: #ddd;
+    margin-right: 10px;
+    > i {
+      color: #333;
+    }
+  }
+}
 </style>

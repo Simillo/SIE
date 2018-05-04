@@ -81,4 +81,11 @@ html, body {
   top: 50%;
   z-index: 999;
 }
+
+.logo {
+  margin-top: 20px;
+  background: url('assets/logo.png') no-repeat;
+  width: 145px;
+  height: 123px;
+}
 </style>
