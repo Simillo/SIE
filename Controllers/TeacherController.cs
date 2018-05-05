@@ -20,9 +20,7 @@ namespace SIE.Controllers
         [Route("Load")]
         public IActionResult Load()
         {
-            var r = _context.Room.Find(3);
-            
-            return Ok(r.Person.Name);
+            return Ok();
         }
     }
 }
