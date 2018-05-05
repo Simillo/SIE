@@ -29,5 +29,7 @@ namespace SIE.Auxiliary
             session.SetString("_email", person.Email);
             session.SetInt32("_profile", person.Profile);
         }
+
+        public static int GetSessionPersonId(this ISession session) => session.GetInt32("_id") ?? 0;
     }
 }

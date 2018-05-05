@@ -50,11 +50,11 @@ export default {
   padding-bottom: 0;
   .sidebar-item {
     margin-top: -1px;
+    & {
+      border-bottom: 1px solid #ccc;
+    }
     &:first-child {
       border-top: 1px solid #ccc;
-    }
-    &:not(:last-child) {
-      border-bottom: 1px solid #ccc;
     }
     &:hover {
       background: #eee;

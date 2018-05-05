@@ -6,4 +6,7 @@ export default class {
     const res = await this._http.get('teacher/Load')
     return res
   }
+  async createRoom (data) {
+    return this._http.post('teacher/CreateRoom', data)
+  }
 }
