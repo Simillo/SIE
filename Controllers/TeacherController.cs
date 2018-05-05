@@ -21,13 +21,5 @@ namespace SIE.Controllers
         {
             return Ok(1);
         }
-
-        [HttpGet]
-        [Route("Logout")]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return Ok();
-        }
     }
 }

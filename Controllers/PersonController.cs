@@ -62,5 +62,13 @@ namespace SIE.Controllers
 
             return Ok(ResponseContent.Create(res, HttpStatusCode.OK, null));
         }
+
+        [HttpGet]
+        [Route("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return Ok();
+        }
     }
 }

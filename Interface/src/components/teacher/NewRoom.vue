@@ -1,18 +1,15 @@
 <template lang='pug'>
-  box(
-    :hasClass='true',
-    :height='"375px"',
-    :noLogo='true')
+  sidebar
 </template>
 
 <script>
 
 import TeacherService from '../../services/TeacherService'
-import Box from '../shared/Box.vue'
+import Teacher from './Teacher.vue'
 
 export default {
   components: {
-    'box': Box
+    'sidebar': Teacher
   },
   data () {
     return {
@@ -20,8 +17,7 @@ export default {
   },
   async created () {
     this.service = new TeacherService(this.$http)
-  },
-  methods: {
+    await this.service.load()
   }
 }
 </script>

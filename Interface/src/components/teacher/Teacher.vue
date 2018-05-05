@@ -2,35 +2,31 @@
   md-app
     md-app-drawer.sidebar(md-permanent='full')
       md-toolbar.md-transparent(md-elevation='0')
-        .logo
+        router-link(to='/teacher')
+          .logo
       md-list.sidebar-list
-        md-list-item.sidebar-item(@click.prevent='changeState("my-rooms")')
+        md-list-item.sidebar-item(
+          v-for='(menu, index) in menus',
+          :key='index'
+          @click.prevent='goTo(menu.path)'
+          )
           .sidebar-icon
-            md-icon.md-size-2x list
-          span.md-list-item-text Minhas salas
-        md-list-item.sidebar-item(@click.prevent='changeState("new-room")')
-          .sidebar-icon
-            md-icon.md-size-2x book
-          span.md-list-item-text Criar nova sala
-    md-app-content(v-if='currentState === "my-rooms"')
-      new-room
-    md-app-content(v-else-if='currentState === "new-room"')
-      .asd teste
-  </div>
+            md-icon.md-size-2x {{menu.icon}}
+          span.md-list-item-text {{menu.name}}
+    md-app-content
+      slot
 </template>
 
 <script>
 
 import TeacherService from '../../services/TeacherService'
-import NewRoom from '../new-room/NewRoom.vue'
+import router from '../../router'
+import EProfile from '../../enums/EProfile'
 
 export default {
-  components: {
-    'new-room': NewRoom
-  },
   data () {
     return {
-      currentState: ''
+      menus: router.options.routes.filter(m => m.sidebar === EProfile.Teacher)
     }
   },
   async created () {
@@ -38,8 +34,8 @@ export default {
     await this.service.load()
   },
   methods: {
-    changeState (newState) {
-      this.currentState = newState
+    goTo (path) {
+      this.$router.push(path)
     }
   }
 }
