@@ -19,12 +19,23 @@ namespace SIE.Migrations
                     Description = table.Column<string>(nullable: true),
                     ExpirateDate = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    OwnerId = table.Column<int>(nullable: false)
+                    PersonId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Room", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Room_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Room_PersonId",
+                table: "Room",
+                column: "PersonId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

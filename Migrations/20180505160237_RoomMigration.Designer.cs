@@ -11,7 +11,7 @@ using System;
 namespace SIE.Migrations
 {
     [DbContext(typeof(SIEContext))]
-    [Migration("20180505132718_RoomMigration")]
+    [Migration("20180505160237_RoomMigration")]
     partial class RoomMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,11 +79,21 @@ namespace SIE.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("OwnerId");
+                    b.Property<int>("PersonId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PersonId");
+
                     b.ToTable("Room");
+                });
+
+            modelBuilder.Entity("SIE.Context.Room", b =>
+                {
+                    b.HasOne("SIE.Context.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

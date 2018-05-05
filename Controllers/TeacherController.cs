@@ -11,15 +11,18 @@ namespace SIE.Controllers
     [AuthorizeSIE(EProfile.Teacher)]
     public class TeacherController : Controller
     {
+        private readonly SIEContext _context;
         public TeacherController(SIEContext context)
         {
-
+            _context = context;
         }
         [HttpGet]
         [Route("Load")]
         public IActionResult Load()
         {
-            return Ok(1);
+            var r = _context.Room.Find(3);
+            
+            return Ok(r.Person.Name);
         }
     }
 }
