@@ -57,6 +57,9 @@ html, body {
 .md-app-content {
   padding: 0!important;
 }
+.md-app-container {
+  overflow-x: hidden;
+}
 .no-margin {
   margin: 0 !important;
 }

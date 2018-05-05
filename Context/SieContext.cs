@@ -9,5 +9,6 @@ namespace SIE.Context
 
         public DbSet<Person> Person { get; set; }
         public DbSet<Institution> Institution { get; set; }
+        public DbSet<Room> Room { get; set; }
     }
 }
