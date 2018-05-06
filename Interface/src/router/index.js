@@ -4,6 +4,7 @@ import Login from '@/components/login/Login'
 import Register from '@/components/register/Register'
 import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
+import MyRooms from '@/components/teacher/MyRooms'
 
 import EProfile from '../enums/EProfile'
 
@@ -34,7 +35,7 @@ export default new Router({
       path: '/teacher/my-rooms',
       name: 'Minhas salas',
       icon: 'list',
-      component: NewRoom
+      component: MyRooms
     },
     {
       sidebar: EProfile.Teacher,

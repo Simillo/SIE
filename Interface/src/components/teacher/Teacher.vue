@@ -18,8 +18,6 @@
 </template>
 
 <script>
-
-import TeacherService from '../../services/TeacherService'
 import router from '../../router'
 import EProfile from '../../enums/EProfile'
 
@@ -28,10 +26,6 @@ export default {
     return {
       menus: router.options.routes.filter(m => m.sidebar === EProfile.Teacher)
     }
-  },
-  async created () {
-    this.service = new TeacherService(this.$http)
-    await this.service.load()
   },
   methods: {
     goTo (path) {

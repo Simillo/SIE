@@ -9,4 +9,7 @@ export default class {
   async createRoom (data) {
     return this._http.post('teacher/CreateRoom', data)
   }
+  async myRooms () {
+    return this._http.get('teacher/MyRooms')
+  }
 }

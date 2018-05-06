@@ -46,5 +46,21 @@ namespace SIE.Controllers
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Sala criada com sucesso!"));
         }
+
+        [HttpGet]
+        [Route("MyRooms")]
+        public IActionResult MyRooms()
+        {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var rooms = _uRoom.GetByOwner(authenticatedUserId)
+                .Select(r => new
+                {
+                    r.Name,
+                    r.Code,
+                    CurrentState = ((ERoomState)r.CurrentState).Description(),
+                    NumberOfStudents = r.NumberOfStudents == 0 ? "-" : r.NumberOfStudents.ToString()
+                });
+            return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
+        }
     }
 }
