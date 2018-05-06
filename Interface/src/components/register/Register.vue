@@ -31,7 +31,6 @@
           v-model='form.Cpf')
         span.md-error(v-if='!$v.form.Cpf.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Cpf.validarCpf') CPF inválido!
-        span.md-error(v-else-if='customErrors.Cpf.HasError') {{customErrors.Cpf.MessageError}}
       md-autocomplete(
         v-model='viewInstitution',
         :md-options='institutions',

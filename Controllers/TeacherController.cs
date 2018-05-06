@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -7,6 +9,8 @@ using SIE.Enums;
 using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
+using System.Net;
+using SIE.Helpers;
 
 namespace SIE.Controllers
 {
@@ -32,15 +36,15 @@ namespace SIE.Controllers
         [Route("CreateRoom")]
         public IActionResult CreateRoom([FromBody] MNewRoom newRoom)
         {
-            var isValidRoom = newRoom.ValidRoom(_uRoom);
-            if (!isValidRoom)
-                return BadRequest();
+            var errors = new List<MModelError>();
+            newRoom.ValidRoom(_uRoom, ref errors);
+            if (errors.Any())
+                return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             _bRoom.Save(newRoom, authenticatedUserId);
 
-
-            return Ok(true);
+            return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Sala criada com sucesso!"));
         }
     }
 }

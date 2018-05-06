@@ -3,7 +3,7 @@
     box(
       :hasClass='true',
       :height='"375px"',
-      :noLogo='true')
+      :titleProp='"Nova sala"')
       form(
       novalidate,
       @submit.prevent='validate'
@@ -13,14 +13,18 @@
         label(for='name') Nome da sala
         md-input#name(
           name='name',
+          @keyup.prevent='resetCustomError("Name")',
           v-model='form.Name')
         span.md-error(v-if='!$v.form.Name.required') Obrigatório!
+        span.md-error(v-else-if='customErrors.Name.HasError') {{customErrors.Name.MessageError}}
       md-field(:class='getValidationClass("Code")')
         label(for='code') Código da sala
         md-input#code(
           name='code',
+          @keyup.prevent='resetCustomError("Code")',
           v-model='form.Code')
         span.md-error(v-if='!$v.form.Code.required') Obrigatório!
+        span.md-error(v-else-if='customErrors.Code.HasError') {{customErrors.Code.MessageError}}
       md-datepicker(v-model='form.ExpirationDate')
         label Data do fim da sala
       md-field
@@ -49,7 +53,11 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
-      form: new NewRoom()
+      form: new NewRoom(),
+      customErrors: {
+        Name: {},
+        Code: {}
+      }
     }
   },
   validations: {
@@ -68,8 +76,9 @@ export default {
   },
   methods: {
     async save () {
-      const res = await this.service.createRoom(this.form)
-      console.log(res)
+      this.service.createRoom(this.form)
+        .then()
+        .catch(err => this.handleCustomError(err.body.entity))
     },
     validate () {
       this.$v.$touch()
@@ -81,9 +90,19 @@ export default {
       const field = this.$v.form[fieldName]
       if (field) {
         return {
-          'md-invalid': field.$invalid && field.$dirty
+          'md-invalid': (field.$invalid && field.$dirty) || (this.customErrors[fieldName] && this.customErrors[fieldName].HasError)
         }
       }
+    },
+    handleCustomError (data) {
+      if (!data) return
+
+      data.forEach(d => {
+        this.customErrors[d.Property] = d
+      })
+    },
+    resetCustomError (field) {
+      if (this.customErrors[field]) this.customErrors[field].HasError = false
     }
   }
 }

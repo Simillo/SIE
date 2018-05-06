@@ -2,7 +2,9 @@
   .box
     .box-middle
       .box-inner.md-elevation-1
-        .box-logo(v-if='hasLogo')
+        .box-logo(v-if='!title')
+        .box-title(v-if='title')
+          span {{title}}
         .content-box(
           :class='propClass',
           :style='{"min-height": height}')
@@ -11,12 +13,15 @@
 
 <script>
 export default {
-  props: ['hasClass', 'height', 'noLogo'],
+  props: ['hasClass', 'height', 'titleProp'],
   data () {
     return {
       propClass: this.hasClass ? 'margin-top' : '',
-      hasLogo: !this.noLogo
+      title: this.titleProp
     }
+  },
+  created () {
+    console.log(this.title)
   }
 }
 </script>
@@ -42,6 +47,12 @@ export default {
         background: url('../../assets/logo.png') no-repeat;
         width: 145px;
         height: 123px;
+      }
+      .box-title {
+        text-align: center;
+        span {
+          font-size: 23px;
+        }
       }
     }
   }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SIE.Utils;
 
 namespace SIE.Models
@@ -10,10 +11,28 @@ namespace SIE.Models
         public DateTime? ExpirationDate { get; set; }
         public string Description { get; set; }
 
-        public bool ValidRoom(URoom uRoom)
+        public void ValidRoom(URoom uRoom, ref List<MModelError> errors)
         {
-            var code = uRoom.SearchByCode(Code);
-            return !string.IsNullOrEmpty(Name) && code == null;
+            var roomExisting = uRoom.SearchByCode(Code);
+            if (string.IsNullOrEmpty(Name))
+            {
+                errors.Add(new MModelError
+                {
+                    HasError = true,
+                    MessageError = "Obrigatório",
+                    Property = "Name"
+                });
+            }
+
+            if (roomExisting != null)
+            {
+                errors.Add(new MModelError
+                {
+                    HasError = true,
+                    MessageError = "Já existe uma sala com esse código!",
+                    Property = "Code"
+                });
+            }
         }
     }
 }
