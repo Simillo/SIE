@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace SIE.Controllers
     [AuthorizeSIE(EProfile.Teacher)]
     public class TeacherController : Controller
     {
+        private readonly BHistory _bHistory;
         private readonly BRoom _bRoom;
         private readonly URoom _uRoom;
         public TeacherController(SIEContext context)
         {
+            _bHistory = new BHistory(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
         }
@@ -43,6 +46,15 @@ namespace SIE.Controllers
 
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             _bRoom.Save(newRoom, authenticatedUserId);
+
+            var history = new History
+            {
+                PersonId = authenticatedUserId,
+                Action = "Usuário criou uma nova sala",
+                DateAction = DateTime.Now
+            };
+
+            _bHistory.SaveHistory(history);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Sala criada com sucesso!"));
         }

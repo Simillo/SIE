@@ -19,10 +19,13 @@ namespace SIE.Controllers
     [Route("api/[controller]")]
     public class PersonController : Controller
     {
+        private readonly BHistory _bHistory;
         private readonly BPerson _bPerson;
         private readonly UPerson _uPerson;
+
         public PersonController(SIEContext context)
         {
+            _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
             _uPerson = new UPerson(context);
         }
@@ -58,7 +61,15 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail e/ou senha incorreto(s)!"));
 
             HttpContext.Session.Authenticate(person);
-            var res = HttpContext.Session.GetInt32("_profile") == (int)EProfile.Teacher ? "/teacher" : "/student";
+            var res = person.Profile == (int)EProfile.Teacher ? "/teacher" : "/student";
+            var history = new History
+            {
+                PersonId = person.Id,
+                Action = "Usuário autenticou no sistema",
+                DateAction = DateTime.Now
+            };
+
+            _bHistory.SaveHistory(history);
 
             return Ok(ResponseContent.Create(res, HttpStatusCode.OK, null));
         }
