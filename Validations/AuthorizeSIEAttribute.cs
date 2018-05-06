@@ -10,10 +10,8 @@ namespace SIE.Validations
     {
         private readonly EProfile _profile;
 
-        public AuthorizeSIEAttribute(EProfile profile)
-        {
-            _profile = profile;
-        }
+        public AuthorizeSIEAttribute(EProfile profile) => _profile = profile;
+
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.HttpContext.Session != null)

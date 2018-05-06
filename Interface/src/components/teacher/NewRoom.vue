@@ -72,7 +72,6 @@ export default {
   },
   async created () {
     this.service = new TeacherService(this.$http)
-    await this.service.load()
   },
   methods: {
     async save () {

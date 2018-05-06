@@ -1,6 +1,15 @@
 <template lang='pug'>
   sidebar
-    pre {{room}}
+    .room-container
+      .room-head
+        .room-head-name
+          span.room-name {{room.Name}}
+          span.room-code  {{room.Code}}
+        .room-head-description(v-if='room.Description')
+          span {{room.Description}}
+      .room-content
+        md-button.md-raised.md-primary.no-margin Criar Atividade
+
 </template>
 
 <script>
@@ -30,4 +39,27 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.room-container {
+  padding: 40px 0 0 40px;
+  .room-head {
+    width: 400px;
+    min-height: 20px;
+    font-weight: bold;
+    .room-head-name {
+      .room-name {
+        font-size: 25px;
+      }
+      .room-code {
+        font-size: 17px;
+      }
+    }
+    .room-head-description {
+      margin-top: 10px;
+      font-size: 17px;
+    }
+  }
+  .room-content {
+    margin-top: 40px;
+  }
+}
 </style>

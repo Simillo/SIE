@@ -28,12 +28,6 @@ namespace SIE.Controllers
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
         }
-        [HttpGet]
-        [Route("Load")]
-        public IActionResult Load()
-        {
-            return Ok();
-        }
 
         [HttpPost]
         [Route("CreateRoom")]
@@ -64,14 +58,9 @@ namespace SIE.Controllers
         public IActionResult MyRooms()
         {
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            var rooms = _uRoom.GetByOwner(authenticatedUserId)
-                .Select(r => new
-                {
-                    r.Name,
-                    r.Code,
-                    CurrentState = ((ERoomState)r.CurrentState).Description(),
-                    NumberOfStudents = r.NumberOfStudents == 0 ? "-" : r.NumberOfStudents.ToString()
-                });
+            var rooms = _uRoom
+                .GetByOwner(authenticatedUserId)
+                .Select(r => new MMyRoomsView(r));
             return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
         }
 
@@ -86,7 +75,7 @@ namespace SIE.Controllers
             if (room.PersonId != HttpContext.Session.GetSessionPersonId())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, $"Você não tem acesso a essa sala!"));
 
-            return Ok(ResponseContent.Create(room, HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(new MRoomView(room), HttpStatusCode.OK, null));
         }
     }
 }
