@@ -3,19 +3,11 @@
     .room-container
       .room-head
         .room-head-name
-          span.room-name {{room.Name}}
-          span.room-code  {{room.Code}}
-        .room-head-description(v-if='room.Description')
-          span {{room.Description}}
+          span.room-name {{activity.Name}}
+          span.room-code  {{activity.Code}}
+        .room-head-description(v-if='activity.Description')
+          span {{activity.Description}}
       .room-content
-        .btn-new
-          router-link(:to='"/teacher/room/"+room.Code+"/activity"')
-            md-button.md-raised.md-primary.no-margin Criar Atividade
-        md-field.margin-top-20.input-search
-          label Filtrar atividade por nome ou descrição
-          md-input(
-            v-model='search'
-          )
 </template>
 
 <script>
@@ -29,8 +21,7 @@ export default {
   },
   data () {
     return {
-      room: {},
-      search: ''
+      activity: {}
     }
   },
   async created () {
@@ -41,7 +32,7 @@ export default {
     async loadData () {
       try {
         const res = await this.service.loadRoom(this.$route.params.roomCode)
-        this.room = res.body.entity
+        this.activity = res.body.entity
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }

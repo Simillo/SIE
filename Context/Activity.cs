@@ -17,7 +17,7 @@ namespace SIE.Context
 
         [Required]
         public int CurrentState { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         [Required]
         [ForeignKey("Person")]

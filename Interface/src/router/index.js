@@ -6,6 +6,7 @@ import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRooms from '@/components/teacher/MyRooms'
 import Room from '@/components/teacher/Room'
+import NewActivity from '@/components/teacher/NewActivity'
 
 import EProfile from '../enums/EProfile'
 
@@ -53,9 +54,15 @@ export default new Router({
     },
     {
       sidebar: EProfile.NotShown,
-      path: '/teacher/room/:roomCode/new',
-      name: 'Sala',
-      component: Room
+      path: '/teacher/room/:roomCode/activity',
+      name: 'Nova atividade',
+      component: NewActivity
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/teacher/room/:roomCode/activity/:activityId',
+      name: 'Nova atividade',
+      component: NewActivity
     }
   ]
 })
