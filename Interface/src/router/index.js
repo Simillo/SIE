@@ -5,6 +5,7 @@ import Register from '@/components/register/Register'
 import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRooms from '@/components/teacher/MyRooms'
+import Room from '@/components/teacher/Room'
 
 import EProfile from '../enums/EProfile'
 
@@ -13,19 +14,19 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      sidebar: EProfile.Annon,
+      sidebar: EProfile.NotShown,
       path: '/',
       name: 'Login',
       component: Login
     },
     {
-      sidebar: EProfile.Annon,
+      sidebar: EProfile.NotShown,
       path: '/register',
       name: 'Register',
       component: Register
     },
     {
-      sidebar: EProfile.Annon,
+      sidebar: EProfile.NotShown,
       path: '/teacher',
       name: 'Teacher',
       component: Teacher
@@ -43,6 +44,12 @@ export default new Router({
       name: 'Criar nova sala',
       icon: 'book',
       component: NewRoom
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/teacher/room/:roomCode',
+      name: 'Sala',
+      component: Room
     }
   ]
 })
