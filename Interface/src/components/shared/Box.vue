@@ -19,9 +19,6 @@ export default {
       propClass: this.hasClass ? 'margin-top' : '',
       title: this.titleProp
     }
-  },
-  created () {
-    console.log(this.title)
   }
 }
 </script>
@@ -45,6 +42,7 @@ export default {
       padding: 30px 50px 60px;
       .box-logo {
         background: url('../../assets/logo.png') no-repeat;
+        background-size: 145px 123px;
         width: 145px;
         height: 123px;
       }

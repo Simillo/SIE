@@ -90,6 +90,7 @@ html, body {
 .logo {
   margin-top: 20px;
   background: url('assets/logo.png') no-repeat;
+  background-size: 145px 123px;
   width: 145px;
   height: 123px;
 }
