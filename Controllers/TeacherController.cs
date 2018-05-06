@@ -74,5 +74,19 @@ namespace SIE.Controllers
                 });
             return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
         }
+
+        [HttpGet]
+        [Route("LoadRoom/{roomCode}")]
+        public IActionResult LoadRoom(string roomCode)
+        {
+            var room = _uRoom.SearchByCode(roomCode);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Sala com código \"{roomCode}\" não existe!"));
+            
+            if (room.PersonId != HttpContext.Session.GetSessionPersonId())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, $"Você não tem acesso a essa sala!"));
+
+            return Ok(ResponseContent.Create(room, HttpStatusCode.OK, null));
+        }
     }
 }

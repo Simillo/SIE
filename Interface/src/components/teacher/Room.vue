@@ -1,6 +1,6 @@
 <template lang='pug'>
   sidebar
-    | room
+    pre {{room}}
 </template>
 
 <script>
@@ -14,11 +14,17 @@ export default {
   },
   data () {
     return {
-      rooms: []
+      room: {}
     }
   },
   async created () {
     this.service = new TeacherService(this.$http)
+    try {
+      const res = await this.service.loadRoom(this.$route.params.roomCode)
+      this.room = res.body.entity
+    } catch (ex) {
+      this.$router.push('/teacher/my-rooms')
+    }
   }
 }
 </script>

@@ -17,7 +17,8 @@
         md-table-cell(
           md-label='Nome da sala',
           md-sort-by='Name'
-        ) {{item.Name}}
+        )
+          router-link(:to='"/teacher/room/"+item.Code') {{item.Name}}
         md-table-cell(
           md-label='Código da sala',
           md-sort-by='Code'

@@ -12,4 +12,7 @@ export default class {
   async myRooms () {
     return this._http.get('teacher/MyRooms')
   }
+  async loadRoom (roomCode) {
+    return this._http.get(`teacher/LoadRoom/${roomCode}`)
+  }
 }
