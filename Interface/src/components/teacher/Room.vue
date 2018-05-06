@@ -11,7 +11,7 @@
         .btn-new
           router-link(:to='"/teacher/room/"+room.Code+"/new"')
             md-button.md-raised.md-primary.no-margin Criar Atividade
-        md-field.margin-top-20  
+        md-field.margin-top-20.input-search
           label Filtrar atividade por nome ou descrição
           md-input(
             v-model='search'
@@ -35,16 +35,23 @@ export default {
   },
   async created () {
     this.service = new TeacherService(this.$http)
-    try {
-      const res = await this.service.loadRoom(this.$route.params.roomCode)
-      this.room = res.body.entity
-    } catch (ex) {
-      this.$router.push('/teacher/my-rooms')
+    this.loadData()
+  },
+  methods: {
+    async loadData () {
+      try {
+        const res = await this.service.loadRoom(this.$route.params.roomCode)
+        this.room = res.body.entity
+      } catch (ex) {
+        this.$router.push('/teacher/my-rooms')
+      }
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-
+.input-search {
+  width: 50%;
+}
 </style>
