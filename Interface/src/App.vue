@@ -60,6 +60,9 @@ html, body {
 .md-app-container {
   overflow-x: hidden;
 }
+.margin-top-20 {
+  margin-top: 20px!important;
+}
 .no-margin {
   margin: 0 !important;
 }
@@ -93,5 +96,29 @@ html, body {
   background-size: 145px 123px;
   width: 145px;
   height: 123px;
+}
+.room-container {
+  padding: 40px 0 0 40px;
+  width: 80%;
+  .room-head {
+    width: 400px;
+    min-height: 20px;
+    font-weight: bold;
+    .room-head-name {
+      .room-name {
+        font-size: 25px;
+      }
+      .room-code {
+        font-size: 17px;
+      }
+    }
+    .room-head-description {
+      margin-top: 10px;
+      font-size: 17px;
+    }
+  }
+  .room-content {
+    margin-top: 40px;
+  }
 }
 </style>

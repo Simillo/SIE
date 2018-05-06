@@ -8,8 +8,14 @@
         .room-head-description(v-if='room.Description')
           span {{room.Description}}
       .room-content
-        md-button.md-raised.md-primary.no-margin Criar Atividade
-
+        .btn-new
+          router-link(:to='"/teacher/room/"+room.Code+"/new"')
+            md-button.md-raised.md-primary.no-margin Criar Atividade
+        md-field.margin-top-20  
+          label Filtrar atividade por nome ou descrição
+          md-input(
+            v-model='search'
+          )
 </template>
 
 <script>
@@ -23,7 +29,8 @@ export default {
   },
   data () {
     return {
-      room: {}
+      room: {},
+      search: ''
     }
   },
   async created () {
@@ -39,27 +46,5 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.room-container {
-  padding: 40px 0 0 40px;
-  .room-head {
-    width: 400px;
-    min-height: 20px;
-    font-weight: bold;
-    .room-head-name {
-      .room-name {
-        font-size: 25px;
-      }
-      .room-code {
-        font-size: 17px;
-      }
-    }
-    .room-head-description {
-      margin-top: 10px;
-      font-size: 17px;
-    }
-  }
-  .room-content {
-    margin-top: 40px;
-  }
-}
+
 </style>

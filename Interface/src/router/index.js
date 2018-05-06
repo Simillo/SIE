@@ -50,6 +50,12 @@ export default new Router({
       path: '/teacher/room/:roomCode',
       name: 'Sala',
       component: Room
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/teacher/room/:roomCode/new',
+      name: 'Sala',
+      component: Room
     }
   ]
 })

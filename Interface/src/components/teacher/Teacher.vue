@@ -39,6 +39,9 @@ export default {
 .md-app {
   height: 100%;
 }
+.md-drawer {
+  width: 300px;
+}
 .sidebar-list {
   margin-top: 21px;
   padding-bottom: 0;
