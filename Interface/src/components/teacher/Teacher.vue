@@ -1,7 +1,19 @@
 <template lang='pug'>
   md-app
-    md-app-drawer.sidebar(md-permanent='full')
+    md-app-toolbar.md-primary
+      md-button.md-icon-button(
+        @click='toggleSidebar',
+        v-if='!menuVisible')
+        md-icon menu
+      span.md-title Seja bem-vindo(a), {{person.Name}}
+    md-app-drawer.sidebar(
+      :md-active.sync='menuVisible',
+      md-persistent='full'
+    )
       md-toolbar.md-transparent(md-elevation='0')
+        .md-toolbar-section-end
+          md-button.md-icon-button.md-dense(@click='toggleSidebar')
+            md-icon keyboard_arrow_left
         router-link(to='/teacher')
           .logo
       md-list.sidebar-list
@@ -18,18 +30,32 @@
 </template>
 
 <script>
+import TeacherService from '../../services/TeacherService'
+
 import router from '../../router'
 import EProfile from '../../enums/EProfile'
 
 export default {
   data () {
     return {
-      menus: router.options.routes.filter(m => m.sidebar === EProfile.Teacher)
+      menuVisible: false,
+      menus: router.options.routes.filter(m => m.sidebar === EProfile.Teacher),
+      person: {}
     }
+  },
+  async created () {
+    this.menuVisible = !!localStorage.sidebarState
+    this.service = new TeacherService(this.$http)
+    const res = await this.service.load()
+    this.person = res.data.entity
   },
   methods: {
     goTo (path) {
       this.$router.push(path)
+    },
+    toggleSidebar () {
+      this.menuVisible = !this.menuVisible
+      localStorage.sidebarState = this.menuVisible
     }
   }
 }

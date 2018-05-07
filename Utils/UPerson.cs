@@ -13,5 +13,7 @@ namespace SIE.Utils
 
         public List<Person> GetByCpf(string cpf) => _context.Person.Where(p => p.Cpf == cpf.RCpf()).ToList();
         public List<Person> GetByEmail(string email) => _context.Person.Where(p => p.Email == email).ToList();
+
+        public Person GetById(int idPerson) => _context.Person.Find(idPerson);
     }
 }

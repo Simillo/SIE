@@ -90,8 +90,13 @@ html, body {
   z-index: 999;
 }
 
+.md-toolbar {
+  a {
+    width: 100%;
+  }
+}
 .logo {
-  margin-top: 20px;
+  margin: 20px auto 0px;
   background: url('assets/logo.png') no-repeat;
   background-size: 145px 123px;
   width: 145px;

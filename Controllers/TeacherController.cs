@@ -25,6 +25,7 @@ namespace SIE.Controllers
         private readonly UActivity _uActivity;
         private readonly BRoom _bRoom;
         private readonly URoom _uRoom;
+        private readonly UPerson _uPerson;
 
         public TeacherController(SIEContext context)
         {
@@ -33,6 +34,22 @@ namespace SIE.Controllers
             _uActivity = new UActivity(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
+            _uPerson = new UPerson(context);
+        }
+
+        [HttpGet]
+        [Route("Load")]
+        public IActionResult Load()
+        {
+            var idPersonAutenticated = HttpContext.Session.GetSessionPersonId();
+            var person = _uPerson.GetById(idPersonAutenticated);
+            var result = new
+            {
+                person.Name,
+                person.Cpf,
+                person.Email
+            };
+            return Ok(ResponseContent.Create(result, HttpStatusCode.OK, null));
         }
 
         [HttpPost]
