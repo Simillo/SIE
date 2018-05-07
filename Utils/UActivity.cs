@@ -13,5 +13,7 @@ namespace SIE.Utils
         public UActivity(SIEContext context) => _context = context;
 
         public Activity GetById(int id) => _context.Activity.Find(id);
+
+        public List<Activity> GetByUser(int personId) => _context.Activity.Where(a => a.PersonId == personId).ToList();
     }
 }

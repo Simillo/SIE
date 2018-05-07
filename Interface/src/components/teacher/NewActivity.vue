@@ -121,7 +121,7 @@ export default {
       const params = this.$route.params
       this.form.Id = params.activityId || 0
       await this.service.saveOrUpdateActivity(this.form, params.roomCode)
-        .then()
+        .then(() => this.$router.push(`/teacher/room/${this.$route.params.roomCode}`))
         .catch(err => {
           if (err.body.status === 401) this.$router.push('/teacher/my-rooms')
         })

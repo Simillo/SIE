@@ -74,28 +74,32 @@ namespace SIE.Controllers
         [Route("LoadRoom/{roomCode}")]
         public IActionResult LoadRoom(string roomCode)
         {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+
             var room = _uRoom.GetByCode(roomCode);
             if (room == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != HttpContext.Session.GetSessionPersonId())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
-                    "Você não tem acesso a essa sala!"));
+            if (room.PersonId != authenticatedUserId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
-            return Ok(ResponseContent.Create(new MRoomView(room), HttpStatusCode.OK, null));
+
+            var activities = _uActivity.GetByUser(authenticatedUserId);
+
+            return Ok(ResponseContent.Create(new MRoomView(room, activities), HttpStatusCode.OK, null));
         }
 
         [HttpPost]
         [Route("SaveActivity/{roomCode}")]
         public IActionResult SaveActivity([FromBody] MNewActivity activity, string roomCode)
         {
-            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             var room = _uRoom.GetByCode(roomCode);
             if (room == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
                     $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != sessionPersonId)
+            if (room.PersonId != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
                     "Você não tem acesso a essa sala!"));
 
@@ -119,6 +123,15 @@ namespace SIE.Controllers
 
             _bActivity.SaveOrUpdate(activity, room);
             var msgType = activity.Id > 0 ? "editada" : "criada";
+
+            var history = new History
+            {
+                PersonId = authenticatedUserId,
+                Action = "Usuário criou uma nova atividade",
+                DateAction = DateTime.Now
+            };
+
+            _bHistory.SaveHistory(history);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }

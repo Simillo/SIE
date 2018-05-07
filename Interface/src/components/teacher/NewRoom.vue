@@ -76,7 +76,7 @@ export default {
   methods: {
     async save () {
       this.service.createRoom(this.form)
-        .then()
+        .then(() => this.$router.push('/teacher/my-rooms'))
         .catch(err => this.handleCustomError(err.body.entity))
     },
     validate () {

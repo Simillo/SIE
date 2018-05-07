@@ -16,6 +16,12 @@
           md-input(
             v-model='search'
           )
+        .room-content-activities
+          .room-content-activities-item(
+            v-for='(activity, index) in room.Activities',
+            :key='index'
+          )
+            pre {{activity}}
 </template>
 
 <script>
