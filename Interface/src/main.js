@@ -9,6 +9,7 @@ import NProgress from 'nprogress'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import 'nprogress/nprogress.css'
+import VueCharts from 'vue-chartjs'
 import router from './router'
 import bus from './bus'
 
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 Vue.use(VueMaterial)
 Vue.use(VueResource)
 Vue.use(VueTheMask)
+Vue.use(VueCharts)
 
 Vue.material.locale = {
   startYear: 1910,

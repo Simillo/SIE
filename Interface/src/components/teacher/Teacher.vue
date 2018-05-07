@@ -13,7 +13,7 @@
       md-toolbar.md-transparent(md-elevation='0')
         .md-toolbar-section-end
           md-button.md-icon-button.md-dense(@click='toggleSidebar')
-            md-icon keyboard_arrow_left
+            md-icon.md-size-2x keyboard_arrow_left
         router-link(to='/teacher')
           .logo
       md-list.sidebar-list
@@ -64,6 +64,14 @@ export default {
 <style lang='scss' scoped>
 .md-app {
   height: 100%;
+}
+.md-toolbar-section-end {
+  position: absolute;
+  top: 20px;
+  left: 250px;
+  .md-icon {
+    color:#0E479E!important;
+  }
 }
 .md-drawer {
   width: 300px;
