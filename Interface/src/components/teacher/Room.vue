@@ -14,11 +14,12 @@
         md-field.margin-top-20.input-search
           label Filtrar atividade por nome ou descrição
           md-input(
-            v-model='search'
+            v-model='search',
+            @keyup.prevent='searchFor'
           )
         .room-content-activities
           .room-content-activities-item(
-            v-for='(activity, index) in room.Activities',
+            v-for='(activity, index) in searched',
             :key='index'
           )
             .activities-head
@@ -53,7 +54,8 @@ export default {
   data () {
     return {
       room: {},
-      search: ''
+      search: '',
+      searched: []
     }
   },
   async created () {
@@ -65,6 +67,7 @@ export default {
       try {
         const res = await this.service.loadRoom(this.$route.params.roomCode)
         this.room = res.body.entity
+        this.searched = this.room.Activities
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }
@@ -90,6 +93,15 @@ export default {
         case 3:
           return `Atividade finalizada em ${this.getFormatedDate(expirationDate)}`
       }
+    },
+    searchFor () {
+      const query = this.search
+      if (!query) {
+        this.searched = this.room.Activities
+        return
+      }
+
+      this.searched = this.room.Activities.filter(a => a.Name.includes(query) || (a.Description && a.Description.includes(query)))
     },
     getActions (state) {
       const visualize = {
