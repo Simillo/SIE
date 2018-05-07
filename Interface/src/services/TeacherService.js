@@ -15,4 +15,7 @@ export default class {
   async loadRoom (roomCode) {
     return this._http.get(`teacher/LoadRoom/${roomCode}`)
   }
+  async saveOrUpdateActivity (data, roomCode) {
+    return this._http.post(`teacher/SaveActivity/${roomCode}`, data)
+  }
 }

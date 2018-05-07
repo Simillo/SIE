@@ -61,7 +61,7 @@ export default new Router({
     {
       sidebar: EProfile.NotShown,
       path: '/teacher/room/:roomCode/activity/:activityId',
-      name: 'Nova atividade',
+      name: 'Editar atividade',
       component: NewActivity
     }
   ]

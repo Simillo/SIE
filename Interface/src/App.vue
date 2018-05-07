@@ -119,6 +119,10 @@ html, body {
   }
   .room-content {
     margin-top: 40px;
+    width: 80%;
+    @media (max-width: 780px) {
+      width: 100%;
+    }
   }
 }
 </style>

@@ -27,4 +27,10 @@ function validarCpf (strCPF) {
 
 const validPassword = pass => pass && /\d/.test(pass) && /\D/.test(pass)
 
-export { validarCpf, validPassword }
+const number = num => num !== undefined && !isNaN(Number(num))
+
+const positive = num => number(num) && num > 0
+
+const int = num => number(num) && Number.isInteger(+num)
+
+export { validarCpf, validPassword, number, int, positive }
