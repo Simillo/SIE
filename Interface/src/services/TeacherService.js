@@ -18,4 +18,7 @@ export default class {
   async saveOrUpdateActivity (data, roomCode) {
     return this._http.post(`teacher/SaveActivity/${roomCode}`, data)
   }
+  async loadActivity (roomCode, activityId) {
+    return this._http.get(`teacher/LoadActivity/${roomCode}/${activityId}`)
+  }
 }

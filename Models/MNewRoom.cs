@@ -13,7 +13,7 @@ namespace SIE.Models
 
         public void ValidRoom(URoom uRoom, ref List<MModelError> errors)
         {
-            var roomExisting = uRoom.SearchByCode(Code);
+            var roomExisting = uRoom.GetByCode(Code);
             if (string.IsNullOrEmpty(Name))
             {
                 errors.Add(new MModelError

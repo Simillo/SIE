@@ -8,10 +8,7 @@ namespace SIE.Business
     {
         private readonly SIEContext _context;
 
-        public BActivity(SIEContext context)
-        {
-            _context = context;
-        }
+        public BActivity(SIEContext context) => _context = context;
 
         public void SaveOrUpdate(MNewActivity newActivity, Room room)
         {

@@ -38,10 +38,10 @@
             md-datepicker(v-model='form.ExpirationDate')
               label Data final para entrega
           div
-            router-link(:to='"/teacher/room/"+activity.Code')
+            router-link(:to='"/teacher/room/"+$route.params.roomCode')
               md-button.md-raised.md-primary.no-margin.float-left Voltar
             md-button.md-raised.md-primary.no-margin.float-right(
-              @click.prevent='validate') Criar Atividade
+              @click.prevent='validate') {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
 </template>
 
 <script>
@@ -63,7 +63,8 @@ export default {
   data () {
     return {
       activity: {},
-      form: new NewActivity()
+      form: new NewActivity(),
+      isEditing: !!this.$route.params.activityId
     }
   },
   validations: {
@@ -89,8 +90,15 @@ export default {
   methods: {
     async loadActivity () {
       try {
-        const res = await this.service.loadActivity(this.$route.params.activityId)
+        const params = this.$route.params
+        const res = await this.service.loadActivity(params.roomCode, params.activityId)
         this.activity = res.body.entity
+        this.form = {
+          Title: this.activity.Name,
+          Description: this.activity.Description,
+          Weight: this.activity.Weight,
+          ExpirationDate: this.activity.ExpirationDate
+        }
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }
@@ -113,8 +121,10 @@ export default {
       const params = this.$route.params
       this.form.Id = params.activityId || 0
       await this.service.saveOrUpdateActivity(this.form, params.roomCode)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then()
+        .catch(err => {
+          if (err.body.status === 401) this.$router.push('/teacher/my-rooms')
+        })
     },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
