@@ -84,7 +84,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
 
-            var activities = _uActivity.GetByUser(authenticatedUserId);
+            var activities = _uActivity.GetByRoom(room.Id);
 
             return Ok(ResponseContent.Create(new MRoomView(room, activities), HttpStatusCode.OK, null));
         }

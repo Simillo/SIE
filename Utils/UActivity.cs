@@ -15,5 +15,6 @@ namespace SIE.Utils
         public Activity GetById(int id) => _context.Activity.Find(id);
 
         public List<Activity> GetByUser(int personId) => _context.Activity.Where(a => a.PersonId == personId).ToList();
+        public List<Activity> GetByRoom(int roomId) => _context.Activity.Where(a => a.RoomId == roomId).ToList();
     }
 }

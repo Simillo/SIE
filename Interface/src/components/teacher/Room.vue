@@ -21,7 +21,24 @@
             v-for='(activity, index) in room.Activities',
             :key='index'
           )
-            pre {{activity}}
+            .activities-head
+              span.activities-name {{activity.Name}}
+              span.activities-state {{getCurrentStateTitle(activity.CurrentState)}}
+            br
+            .activities-sub-head
+              span.activities-sub-title {{getCurrentStateSubtitle(activity.CurrentState, activity.ExpirationDate)}}
+            br
+            .activities-description-container
+              span.activities-description {{activity.Description}}
+            br
+            .activities-actions
+              .activities-actions-item(
+                v-for='(action, index) in getActions(activity.CurrentState)',
+                :key='index'
+              )
+                router-link(:to='action.To')
+                  md-tooltip(md-direction='top') {{action.Tooltip}}
+                  md-icon.md-size {{action.Icon}}
 </template>
 
 <script>
@@ -51,13 +68,97 @@ export default {
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }
+    },
+    getCurrentStateTitle (state) {
+      switch (state) {
+        case 1:
+          return 'Atividade em construção'
+        case 2:
+          return 'Atividade em andamento'
+        case 3:
+          return 'Atividade finalizada'
+      }
+    },
+    getCurrentStateSubtitle (state, expirationDate) {
+      switch (state) {
+        case 1:
+          return ''
+        case 2:
+          if (expirationDate === null) return ''
+
+          return `Entregar até ${this.getFormatedDate(expirationDate)}`
+        case 3:
+          return `Atividade finalizada em ${this.getFormatedDate(expirationDate)}`
+      }
+    },
+    getActions (state) {
+      const visualize = {
+        Tooltip: 'Visualizar',
+        To: '/teacher/1',
+        Icon: 'remove_red_eye'
+      }
+      const finalize = {
+        Tooltip: 'Finalizar atividade',
+        To: '/teacher/2',
+        Icon: 'close'
+      }
+      const edit = {
+        Tooltip: 'Editar atividade',
+        To: '/teacher/3',
+        Icon: 'build'
+      }
+      const initate = {
+        Tooltip: 'Liberar atividade',
+        To: '/teacher/4',
+        Icon: 'play_arrow'
+      }
+
+      switch (state) {
+        case 1:
+          return [edit, initate]
+        case 2:
+          return [visualize, finalize]
+        case 3:
+          return [visualize]
+      }
+    },
+    getFormatedDate (date) {
+      return new Date(date).toLocaleDateString('pt-BR')
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.input-search {
-  width: 50%;
+.room-content-activities-item {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  min-height: 20px;
+  div {
+    margin: 5px;
+    display: block;
+  }
+  .activities-head {
+    .activities-name {
+      float: left;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .activities-state {
+      float: right;
+    }
+  }
+  .activities-actions-item {
+    display: inline-block;
+    a {
+      text-decoration: none;
+    }
+    i {
+      background: #ccc;
+      border-radius: 100%;
+      padding: 15px;
+      color: black;
+    }
+  }
 }
 </style>
