@@ -1,6 +1,9 @@
 # SIE
 ## Sistema Integrado Educacional
 
+![SIE](https://raw.githubusercontent.com/simillo/SIE/Interface/src/assets/logo.png)
+
+
 O **Sistema Integrado Educacional** (SIE) permitirá facilitar o gerenciamento de notas de turmas da disciplina Engenharia de Software de diversas instituições, abordar turmas e distribuir pontos em forma de troféus e categorias. Essa aplicação afeta diretamente a professores e alunos envolvidos na disciplina em questão.
 O sistema terá, como grande oportunidade, alavancar os estudos em Engenharia de Software, impulsionar o desejo dos alunos a praticar a disciplina e motivá-los a ganhar o prêmio, como um troféu. Um sistema que gere uma turma, seus alunos e salas e professores, têm muito a agregar e facilitar os processos das partes interessadas.
 
