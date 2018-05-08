@@ -11,9 +11,10 @@ using System;
 namespace SIE.Migrations
 {
     [DbContext(typeof(SIEContext))]
-    partial class SIEContextModelSnapshot : ModelSnapshot
+    [Migration("20180508162918_EndDateForRoomAndActivityMigration")]
+    partial class EndDateForRoomAndActivityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +31,7 @@ namespace SIE.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<DateTime?>("ExpirationDate");
 
@@ -126,7 +127,7 @@ namespace SIE.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<DateTime?>("ExpirationDate");
 

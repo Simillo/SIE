@@ -17,7 +17,7 @@
             v-model='search',
             @keyup.prevent='searchFor'
           )
-        .room-content-activities
+        .room-content-activities(v-if='searched.length')
           .room-content-activities-item(
             v-for='(activity, index) in searched',
             :key='index'
@@ -27,7 +27,7 @@
               span.activities-state {{getCurrentStateTitle(activity.CurrentState)}}
             br
             .activities-sub-head
-              span.activities-sub-title {{getCurrentStateSubtitle(activity.CurrentState, activity.ExpirationDate)}}
+              span.activities-sub-title {{getCurrentStateSubtitle(activity.CurrentState, activity.ExpirationDate, activity.EndDate)}}
             br
             .activities-description-container
               span.activities-description {{activity.Description}}
@@ -40,6 +40,10 @@
                 router-link(:to='action.To')
                   md-tooltip(md-direction='top') {{action.Tooltip}}
                   md-icon.md-size {{action.Icon}}
+        .room-content-activities(v-if='!searched.length && room.Activities && room.Activities.length')
+          p Nenhuma atividade foi encontrada com o filtro informado!
+        .room-content-activities(v-else-if='!room.Activities || !room.Activities.length')
+          p Nenhuma atividade foi adicionada ainda. Clique em "CRIAR ATIVIDADE" para criar uma!
 </template>
 
 <script>
@@ -64,13 +68,12 @@ export default {
   },
   methods: {
     async loadData () {
-      try {
-        const res = await this.service.loadRoom(this.$route.params.roomCode)
-        this.room = res.body.entity
-        this.searched = this.room.Activities
-      } catch (ex) {
-        this.$router.push('/teacher/my-rooms')
-      }
+      this.service.loadRoom(this.$route.params.roomCode)
+        .then(res => {
+          this.room = res.body.entity
+          this.searched = this.room.Activities
+        })
+        .catch(() => this.$router.push('/teacher/my-rooms'))
     },
     getCurrentStateTitle (state) {
       switch (state) {
@@ -82,7 +85,7 @@ export default {
           return 'Atividade finalizada'
       }
     },
-    getCurrentStateSubtitle (state, expirationDate) {
+    getCurrentStateSubtitle (state, expirationDate, endDate) {
       switch (state) {
         case 1:
           return ''
@@ -91,7 +94,7 @@ export default {
 
           return `Entregar até ${this.getFormatedDate(expirationDate)}`
         case 3:
-          return `Atividade finalizada em ${this.getFormatedDate(expirationDate)}`
+          return `Atividade finalizada em ${this.getFormatedDate(endDate)}`
       }
     },
     searchFor () {

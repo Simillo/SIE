@@ -14,10 +14,12 @@ namespace SIE.Models
             Description = activity.Description;
             CurrentState = activity.CurrentState;
             Weight = activity.Weight;
+            EndDate = activity.EndDate;
         }
 
         public string Name { get; set; }
         public DateTime? ExpirationDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public string Description { get; set; }
         public int CurrentState { get; set; }
         public double Weight { get; set; }
