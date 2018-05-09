@@ -1,6 +1,9 @@
 # SIE
 ## Sistema Integrado Educacional
 
+![SIE](/Interface/src/assets/logo.png)
+
+
 O **Sistema Integrado Educacional** (SIE) permitirá facilitar o gerenciamento de notas de turmas da disciplina Engenharia de Software de diversas instituições, abordar turmas e distribuir pontos em forma de troféus e categorias. Essa aplicação afeta diretamente a professores e alunos envolvidos na disciplina em questão.
 O sistema terá, como grande oportunidade, alavancar os estudos em Engenharia de Software, impulsionar o desejo dos alunos a praticar a disciplina e motivá-los a ganhar o prêmio, como um troféu. Um sistema que gere uma turma, seus alunos e salas e professores, têm muito a agregar e facilitar os processos das partes interessadas.
 
@@ -11,64 +14,23 @@ O SIE é desenvolvido usando as ferramentes [ASP.NET Core 2](https://docs.micros
 ## Árvore de diretórios
 ```bash
 ├───Auxiliary/ #métodos auxiliares
-│   ├───SessionExtensions.cs
-│   └───StringExtensions.cs
 ├───Business/ #métodos para salvar, alterar, deletar
-│   ├───BInstitution.cs
-│   └───BPerson.cs
 ├───Context/ #métodos de contexto do banco usando migrations
-│   ├───Institution.cs
-│   ├───Person.cs
-│   └───SieContext.cs
 ├───Controllers/ #métodos controlares que interagem com a interface
-│   ├───DashboardController.cs
-│   ├───InstitutionController.cs
-│   └───PersonController.cs
 ├───Helpers/ #métodos para facilicar o desenvolvimento
-│   └───ResponseContent.cs
 ├───Interface/ #diretório de interface 
 │   ├───build/ #arquivos para gerar release
-│   │   ├───build.js
-│   │   ├───check-versions.js
-│   │   ├───logo.png
-│   │   ├───utils.js
-│   │   ├───vue-loader.conf.js
-│   │   ├───webpack.base.conf.js
-│   │   ├───webpack.dev.conf.js
-│   │   └───webpack.prod.conf.js
 │   ├───config/ #arquivos de ambiente
-│   │   ├───dev.env.js
-│   │   ├───index.js
-│   │   └───prod.env.js
 │   ├───src/ #pasta com os arquivos source da interface
 │   │   ├───assets/ #arquivos staticos
-│   │   │   ├───logo.png
-│   │   │   └───logo.xcf
 │   │   ├───components/ #componentes do Vue.js
-│   │   │   ├───dashboard/
-│   │   │   │   └───Dashboard.vue
-│   │   │   ├───login/
-│   │   │   │   └───Login.vue
-│   │   │   ├───register/
-│   │   │   │   └───Register.vue
-│   │   │   └───shared/
-│   │   │       └───Box.vue
 │   │   ├───domain/ #classes para objetos
-│   │   │   ├───Institution.js
-│   │   │   ├───Login.js
-│   │   │   └───Person.js
 │   │   ├───router/ #classe de rotas
-│   │   │   └───index.js
 │   │   ├───services/ #serviços de comunicação com a lógica
-│   │   │   ├───DashboardService.js
-│   │   │   ├───InstitutionService.js
-│   │   │   ├───PersonService.js
-│   │   │   └───Utils.js
 │   │   ├───App.vue #componente principal para o vue
 │   │   ├───bus.js #arquivo de emissão e sinais
 │   │   └───main.js #arquivo principal para carregar o vue
 │   ├───static/
-│   │   └───.gitkeep
 │   ├───.babelrc
 │   ├───.editorconfig
 │   ├───.eslintignore
@@ -80,35 +42,10 @@ O SIE é desenvolvido usando as ferramentes [ASP.NET Core 2](https://docs.micros
 │   ├───package-lock.json
 │   └───package.json
 ├───Migrations/ #histório de mudanças do banco
-│   ├───20180415233427_InitialMigration.Designer.cs
-│   ├───20180415233427_InitialMigration.cs
-│   ├───20180415234528_MigrationNullable.Designer.cs
-│   ├───20180415234528_MigrationNullable.cs
-│   ├───20180415235014_MigrationLength.Designer.cs
-│   ├───20180415235014_MigrationLength.cs
-│   ├───20180415235522_MigrationLengthEmail.Designer.cs
-│   ├───20180415235522_MigrationLengthEmail.cs
-│   ├───20180417002210_MigrationProfile.Designer.cs
-│   ├───20180417002210_MigrationProfile.cs
-│   ├───20180424225210_InstitutionMigration.Designer.cs
-│   ├───20180424225210_InstitutionMigration.cs
-│   └───SIEContextModelSnapshot.cs
 ├───Models/ #classes modelos para facilicar o desenvolvimento
-│   ├───MInstitution.cs
-│   ├───MLogin.cs
-│   ├───MModelError.cs
-│   ├───MPerson.cs
-│   └───MResponseContent.cs
 ├───Properties/ #configurações de desenvolvimento
-│   └───launchSettings.json
 ├───SIE prototipos/ #protótipos
-│   ├───SIE - Cadastro.bmpr
-│   ├───SIE - Cadastro.pdf
-│   ├───SIE - Dashboard Professor.bmpr
-│   └───SIE - Dashboard Professor.pdf
 ├───Utils/ #classes de buscas do banco
-│   ├───UInstitution.cs
-│   └───UPerson.cs
 ├───.gitignore
 ├───Program.cs #classe de carregamento da aplicação
 ├───README.md #leia-me
