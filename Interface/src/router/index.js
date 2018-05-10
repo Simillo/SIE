@@ -6,7 +6,7 @@ import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRooms from '@/components/teacher/MyRooms'
 import Room from '@/components/teacher/Room'
-import NewActivity from '@/components/teacher/NewActivity'
+import Activity from '@/components/teacher/Activity'
 
 import EProfile from '../enums/EProfile'
 
@@ -56,13 +56,13 @@ export default new Router({
       sidebar: EProfile.NotShown,
       path: '/teacher/room/:roomCode/activity',
       name: 'Nova atividade',
-      component: NewActivity
+      component: Activity
     },
     {
       sidebar: EProfile.NotShown,
       path: '/teacher/room/:roomCode/activity/:activityId',
       name: 'Editar atividade',
-      component: NewActivity
+      component: Activity
     }
   ]
 })

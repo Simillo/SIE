@@ -9,6 +9,7 @@ namespace SIE.Models
 
         public MViewActivity(Activity activity)
         {
+            Id = activity.Id;
             Name = activity.Title;
             ExpirationDate = activity.ExpirationDate;
             Description = activity.Description;
@@ -17,6 +18,7 @@ namespace SIE.Models
             EndDate = activity.EndDate;
         }
 
+        public int Id { get; set; }
         public string Name { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public DateTime? EndDate { get; set; }

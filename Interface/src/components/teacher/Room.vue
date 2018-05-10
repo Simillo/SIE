@@ -34,10 +34,28 @@
             br
             .activities-actions
               .activities-actions-item(
-                v-for='(action, index) in getActions(activity.CurrentState)',
+                v-for='(action, index) in getActions(activity)',
                 :key='index'
               )
-                router-link(:to='action.To')
+                md-dialog-confirm(
+                  :md-active.sync='active',
+                  md-title='Use Google\'s location service?',
+                  md-content='Let Google help apps determine location. <br> This means sending <strong>anonymous</strong> location data to Google, even when no apps are running.',
+                  md-confirm-text='Agree',
+                  md-cancel-text='Disagree',
+                  @md-confirm='toggle(action.Dialog.OnConfirm)'
+                )
+
+                a(
+                  v-if='!!action.Dialog',
+                  @click.prevent='active = true',
+                )
+                  md-tooltip(md-direction='top') {{action.Tooltip}}
+                  md-icon.md-size {{action.Icon}}
+                router-link(
+                  v-if='!!action.To',
+                  :to='action.To'
+                )
                   md-tooltip(md-direction='top') {{action.Tooltip}}
                   md-icon.md-size {{action.Icon}}
         .room-content-activities(v-if='!searched.length && room.Activities && room.Activities.length')
@@ -59,7 +77,8 @@ export default {
     return {
       room: {},
       search: '',
-      searched: []
+      searched: [],
+      active: false
     }
   },
   async created () {
@@ -106,29 +125,33 @@ export default {
 
       this.searched = this.room.Activities.filter(a => a.Name.includes(query) || (a.Description && a.Description.includes(query)))
     },
-    getActions (state) {
+    getActions (activity) {
       const visualize = {
         Tooltip: 'Visualizar',
-        To: '/teacher/1',
+        To: `/teacher/room/abc/activity/${activity.Id}`,
         Icon: 'remove_red_eye'
       }
       const finalize = {
         Tooltip: 'Finalizar atividade',
-        To: '/teacher/2',
-        Icon: 'close'
+        Icon: 'close',
+        Dialog: {
+          OnConfirm: this.finalize
+        }
       }
       const edit = {
         Tooltip: 'Editar atividade',
-        To: '/teacher/3',
+        To: `/teacher/room/abc/activity/${activity.Id}`,
         Icon: 'build'
       }
       const initate = {
         Tooltip: 'Liberar atividade',
-        To: '/teacher/4',
-        Icon: 'play_arrow'
+        Icon: 'play_arrow',
+        Dialog: {
+          OnConfirm: this.initiate
+        }
       }
 
-      switch (state) {
+      switch (activity.CurrentState) {
         case 1:
           return [edit, initate]
         case 2:
@@ -139,6 +162,18 @@ export default {
     },
     getFormatedDate (date) {
       return new Date(date).toLocaleDateString('pt-BR')
+    },
+    activeModal () {
+      this.active = true
+    },
+    initiate () {
+      alert('iniciou')
+    },
+    finalize () {
+      alert('finalizou')
+    },
+    toggle (fn) {
+      fn()
     }
   }
 }

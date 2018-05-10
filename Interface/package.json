@@ -13,6 +13,7 @@
   "dependencies": {
     "chart.js": "^2.7.2",
     "enumify": "^1.0.4",
+    "moment": "^2.22.1",
     "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-chartjs": "^3.3.1",

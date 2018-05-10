@@ -11,6 +11,7 @@ import 'vue-material/dist/theme/default.css'
 import 'nprogress/nprogress.css'
 import VueCharts from 'vue-chartjs'
 import router from './router'
+import moment from 'moment'
 import bus from './bus'
 
 Vue.config.productionTip = false
@@ -57,6 +58,8 @@ Vue.http.interceptors.push((request, next) => {
 })
 
 Vue.http.options.root = 'http://localhost/SIE/api'
+
+Vue.filter('date', (value) => value ? moment(String(value)).format('DD/MM/YYYY') : null)
 
 /* eslint-disable no-new */
 new Vue({

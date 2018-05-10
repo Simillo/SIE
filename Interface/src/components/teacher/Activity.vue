@@ -16,12 +16,14 @@
             label(for='title') Título da atividade
             md-input#title(
               name='title',
+              :disabled='!canIEdit',
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
             md-textarea#description(
               name='description',
+              :disabled='!canIEdit',
               v-model='form.Description'
             )
             span.md-error(v-if='!$v.form.Description.required') Obrigatório!
@@ -30,18 +32,29 @@
               label(for='weight') Peso
               md-input#weight(
                 name='weight',
+                :disabled='!canIEdit',
                 type='number',
                 v-model='form.Weight')
               span.md-error(v-if='!$v.form.Weight.required') Obrigatório!
               span.md-error(v-else-if='!$v.form.Weight.number') O peso deve ser um número!
               span.md-error(v-else-if='!$v.form.Weight.positive') O peso deve ser maior que 0!
-            md-datepicker(v-model='form.ExpirationDate')
+            md-datepicker(
+              v-if='canIEdit',
+              v-model='form.ExpirationDate'
+            )
               label Data final para entrega
+            .date-shown(
+              v-if='!canIEdit && !!form.ExpirationDate'
+            )
+              span Data final para entrega:
+              span {{form.ExpirationDate | date}}
           div
             router-link(:to='"/teacher/room/"+$route.params.roomCode')
               md-button.md-raised.md-primary.no-margin.float-left Voltar
             md-button.md-raised.md-primary.no-margin.float-right(
-              @click.prevent='validate') {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
+              v-if='canIEdit',
+              @click.prevent='validate'
+            ) {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
 </template>
 
 <script>
@@ -50,6 +63,8 @@ import TeacherService from '../../services/TeacherService'
 import Teacher from './Teacher.vue'
 
 import NewActivity from '../../domain/NewActivity'
+
+import ERoomState from '../../enums/ERoomState'
 
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
@@ -64,7 +79,8 @@ export default {
     return {
       activity: {},
       form: new NewActivity(),
-      isEditing: !!this.$route.params.activityId
+      isEditing: !!this.$route.params.activityId,
+      canIEdit: true
     }
   },
   validations: {
@@ -93,6 +109,7 @@ export default {
         const params = this.$route.params
         const res = await this.service.loadActivity(params.roomCode, params.activityId)
         this.activity = res.body.entity
+        this.canIEdit = this.activity.CurrentState === ERoomState.Building
         this.form = {
           Title: this.activity.Name,
           Description: this.activity.Description,
@@ -144,6 +161,14 @@ export default {
 }
 .md-inline {
   display: flex;
+}
+
+.date-shown {
+  width: 100%;
+  margin-left: 20px;
+  span {
+    display: block
+  }
 }
 
 </style>

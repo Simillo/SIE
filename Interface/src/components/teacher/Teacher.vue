@@ -7,8 +7,7 @@
         md-icon menu
       span.md-title Seja bem-vindo(a), {{person.Name}}
     md-app-drawer.sidebar(
-      :md-active.sync='menuVisible',
-      md-persistent='full'
+      :md-active.sync='menuVisible'
     )
       md-toolbar.md-transparent(md-elevation='0')
         .md-toolbar-section-end
@@ -44,7 +43,6 @@ export default {
     }
   },
   async created () {
-    this.menuVisible = !!localStorage.sidebarState
     this.service = new TeacherService(this.$http)
     const res = await this.service.load()
     this.person = res.data.entity
