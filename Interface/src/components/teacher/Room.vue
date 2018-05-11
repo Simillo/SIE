@@ -1,5 +1,13 @@
 <template lang='pug'>
   sidebar
+    md-dialog-confirm(
+      :md-active.sync='active',
+      :md-title='current.title',
+      :md-content='current.message',
+      md-confirm-text='Continuar',
+      md-cancel-text='Cancelar',
+      @md-confirm='current.fn()'
+    )
     .room-container
       .room-head
         .room-head-name
@@ -37,18 +45,9 @@
                 v-for='(action, index) in getActions(activity)',
                 :key='index'
               )
-                md-dialog-confirm(
-                  :md-active.sync='active',
-                  md-title='Use Google\'s location service?',
-                  md-content='Let Google help apps determine location. <br> This means sending <strong>anonymous</strong> location data to Google, even when no apps are running.',
-                  md-confirm-text='Agree',
-                  md-cancel-text='Disagree',
-                  @md-confirm='toggle(action.Dialog.OnConfirm)'
-                )
-
                 a(
                   v-if='!!action.Dialog',
-                  @click.prevent='active = true',
+                  @click.prevent='toggle(action.Dialog)',
                 )
                   md-tooltip(md-direction='top') {{action.Tooltip}}
                   md-icon.md-size {{action.Icon}}
@@ -78,7 +77,12 @@ export default {
       room: {},
       search: '',
       searched: [],
-      active: false
+      active: false,
+      current: {
+        fn: Function,
+        message: '',
+        title: ''
+      }
     }
   },
   async created () {
@@ -135,7 +139,9 @@ export default {
         Tooltip: 'Finalizar atividade',
         Icon: 'close',
         Dialog: {
-          OnConfirm: this.finalize
+          fn: this.finalize,
+          message: 'Deseja realmente finalizar a atividade?',
+          title: 'Atenção'
         }
       }
       const edit = {
@@ -147,7 +153,9 @@ export default {
         Tooltip: 'Liberar atividade',
         Icon: 'play_arrow',
         Dialog: {
-          OnConfirm: this.initiate
+          fn: this.initiate,
+          message: 'Deseja realmente liberar a atividade?',
+          title: 'Atenção'
         }
       }
 
@@ -172,8 +180,9 @@ export default {
     finalize () {
       alert('finalizou')
     },
-    toggle (fn) {
-      fn()
+    toggle (context) {
+      this.current = context
+      this.active = true
     }
   }
 }
@@ -202,6 +211,7 @@ export default {
     display: inline-block;
     a {
       text-decoration: none;
+      cursor: pointer;
     }
     i {
       background: #ccc;
