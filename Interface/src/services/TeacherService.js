@@ -21,4 +21,10 @@ export default class {
   async loadActivity (roomCode, activityId) {
     return this._http.get(`teacher/LoadActivity/${roomCode}/${activityId}`)
   }
+  async initiateActivity (activityId) {
+    return this._http.get(`teacher/InitiateActivity/${activityId}`)
+  }
+  async finalizeActivity (activityId) {
+    return this._http.get(`teacher/FinalizeActivity/${activityId}`)
+  }
 }

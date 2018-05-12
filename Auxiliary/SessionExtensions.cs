@@ -12,11 +12,14 @@ namespace SIE.Auxiliary
             session.SetString(key, JsonConvert.SerializeObject(value));
         }
 
-        public static T Get<T>(this ISession session, string key)
+        public static dynamic GetCurrentPerson(this ISession session)
         {
-            var value = session.GetString(key);
-            return value == null ? default(T) :
-                JsonConvert.DeserializeObject<T>(value);
+            return new
+            {
+                Name = session.GetString("_name"),
+                Email = session.GetString("_email"),
+                Cpf = session.GetString("_cpf")
+            };
         }
 
         public static bool IsAuth(this ISession session) => !string.IsNullOrEmpty(session.GetString("_id"));

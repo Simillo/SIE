@@ -41,15 +41,7 @@ namespace SIE.Controllers
         [Route("Load")]
         public IActionResult Load()
         {
-            var idPersonAutenticated = HttpContext.Session.GetSessionPersonId();
-            var person = _uPerson.GetById(idPersonAutenticated);
-            var result = new
-            {
-                person.Name,
-                person.Cpf,
-                person.Email
-            };
-            return Ok(ResponseContent.Create(result, HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(HttpContext.Session.GetCurrentPerson(), HttpStatusCode.OK, null));
         }
 
         [HttpPost]
@@ -164,12 +156,56 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (activity == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade com código não existe!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
             if (activity.PersonId != sessionPersonId || room.PersonId != sessionPersonId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             return Ok(ResponseContent.Create(new MViewActivity(activity), HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
+        [Route("InitiateActivity/{activityId}")]
+        public IActionResult InitiateActivity(int activityId)
+        {
+            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (activity.PersonId != sessionPersonId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (activity.CurrentState != (int)EActivityState.Building)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser iniciada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
+
+            activity.CurrentState = (int) EActivityState.InProgress;
+            _bActivity.SaveOrUpdate(activity);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi iniciada!"));
+        }
+
+        [HttpGet]
+        [Route("FinalizeActivity/{activityId}")]
+        public IActionResult FinalizeActivity(int activityId)
+        {
+            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (activity.PersonId != sessionPersonId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (activity.CurrentState != (int)EActivityState.InProgress)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser encerrada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
+
+            activity.CurrentState = (int)EActivityState.Done;
+            _bActivity.SaveOrUpdate(activity);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi encerrada!"));
         }
     }
 }

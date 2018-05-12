@@ -47,7 +47,7 @@
               )
                 a(
                   v-if='!!action.Dialog',
-                  @click.prevent='toggle(action.Dialog)',
+                  @click.prevent='toggle(action.Dialog, activity.Id)',
                 )
                   md-tooltip(md-direction='top') {{action.Tooltip}}
                   md-icon.md-size {{action.Icon}}
@@ -81,7 +81,8 @@ export default {
       current: {
         fn: Function,
         message: '',
-        title: ''
+        title: '',
+        id: 0
       }
     }
   },
@@ -91,6 +92,8 @@ export default {
   },
   methods: {
     async loadData () {
+      this.search = ''
+      this.searched = []
       this.service.loadRoom(this.$route.params.roomCode)
         .then(res => {
           this.room = res.body.entity
@@ -132,7 +135,7 @@ export default {
     getActions (activity) {
       const visualize = {
         Tooltip: 'Visualizar',
-        To: `/teacher/room/abc/activity/${activity.Id}`,
+        To: `/teacher/room/${this.room.Code}/activity/${activity.Id}`,
         Icon: 'remove_red_eye'
       }
       const finalize = {
@@ -140,13 +143,13 @@ export default {
         Icon: 'close',
         Dialog: {
           fn: this.finalize,
-          message: 'Deseja realmente finalizar a atividade?',
+          message: 'Deseja realmente encerrar a atividade?<br/>Após o encerramento de uma atividade, não será possível <b>receber</b> ou <b>avaliar</b> mais respostas.',
           title: 'Atenção'
         }
       }
       const edit = {
         Tooltip: 'Editar atividade',
-        To: `/teacher/room/abc/activity/${activity.Id}`,
+        To: `/teacher/room/${this.room.Code}/activity/${activity.Id}`,
         Icon: 'build'
       }
       const initate = {
@@ -154,7 +157,7 @@ export default {
         Icon: 'play_arrow',
         Dialog: {
           fn: this.initiate,
-          message: 'Deseja realmente liberar a atividade?',
+          message: 'Deseja realmente liberar a atividade?<br/>Durante o período de entregas da atividade não será possível <b>editar</b> a atividade.',
           title: 'Atenção'
         }
       }
@@ -175,13 +178,16 @@ export default {
       this.active = true
     },
     initiate () {
-      alert('iniciou')
+      this.service.initiateActivity(this.current.id)
+        .then(() => this.loadData())
     },
     finalize () {
-      alert('finalizou')
+      this.service.finalizeActivity(this.current.id)
+        .then(() => this.loadData())
     },
-    toggle (context) {
+    toggle (context, activityId) {
       this.current = context
+      this.current.id = activityId
       this.active = true
     }
   }

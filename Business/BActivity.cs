@@ -10,6 +10,14 @@ namespace SIE.Business
 
         public BActivity(SIEContext context) => _context = context;
 
+        public void SaveOrUpdate(Activity activity)
+        {
+            if (activity.Id > 0)
+                Update(activity);
+            else
+                Save(activity);
+        }
+
         public void SaveOrUpdate(MNewActivity newActivity, Room room)
         {
             var activity = new Activity
