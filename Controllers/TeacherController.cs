@@ -203,6 +203,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser encerrada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
 
             activity.CurrentState = (int)EActivityState.Done;
+            activity.EndDate = DateTime.Now;
             _bActivity.SaveOrUpdate(activity);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi encerrada!"));
