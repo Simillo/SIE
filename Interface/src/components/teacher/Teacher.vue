@@ -1,6 +1,6 @@
 <template lang='pug'>
   md-app
-    md-app-toolbar.md-primary
+    md-app-toolbar
       md-button.md-icon-button(
         @click='toggleSidebar',
         v-if='!menuVisible')

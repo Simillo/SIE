@@ -2,7 +2,7 @@
   sidebar
     md-dialog-confirm(
       :md-active.sync='active',
-      :md-title='current.title',
+      md-title='Atenção',
       :md-content='current.message',
       md-confirm-text='Continuar',
       md-cancel-text='Cancelar',
@@ -16,9 +16,26 @@
         .room-head-description(v-if='room.Description')
           span {{room.Description}}
       .room-content
-        .btn-new
+        .btn-new(v-if='room.CurrentState !== ERoomState.Closed.ordinal')
           router-link(:to='"/teacher/room/"+room.Code+"/activity"')
             md-button.md-raised.md-primary.no-margin Criar Atividade
+          md-speed-dial(
+            md-event='click',
+            md-direction='bottom'
+          )
+            md-speed-dial-target.md-primary
+              md-icon build
+              md-tooltip.margin-tooltip(md-direction='left') Ações da sala
+            md-speed-dial-content
+              md-button.md-icon-button.md-plain.md-sie(
+                @click.prevent='openRoom',
+                v-if='room.CurrentState !== ERoomState.Open.ordinal'
+              )
+                md-tooltip.margin-tooltip(md-direction='left') Abrir a sala
+                md-icon lock_open
+              md-button.md-icon-button.md-plain.md-accent(@click.prevent='closeRoom')
+                md-tooltip.margin-tooltip(md-direction='left') Encerrar a sala
+                md-icon close
         md-field.margin-top-20.input-search
           label Filtrar atividade por nome ou descrição
           md-input(
@@ -35,7 +52,7 @@
               span.activities-state {{getCurrentStateTitle(activity.CurrentState)}}
             br
             .activities-sub-head
-              span.activities-sub-title {{getCurrentStateSubtitle(activity.CurrentState, activity.ExpirationDate, activity.EndDate)}}
+              span.activities-sub-title {{getCurrentStateSubtitle(activity)}}
             br
             .activities-description-container
               span.activities-description {{activity.Description}}
@@ -67,6 +84,7 @@
 
 import TeacherService from '../../services/TeacherService'
 import Teacher from './Teacher.vue'
+import ERoomState from '../../enums/ERoomState'
 
 export default {
   components: {
@@ -78,6 +96,7 @@ export default {
       search: '',
       searched: [],
       active: false,
+      ERoomState,
       current: {
         fn: Function,
         message: '',
@@ -111,7 +130,11 @@ export default {
           return 'Atividade finalizada'
       }
     },
-    getCurrentStateSubtitle (state, expirationDate, endDate) {
+    getCurrentStateSubtitle (activity) {
+      const state = activity.CurretnState
+      const expirationDate = activity.ExpirationDate
+      const endDate = activity.EndDate
+
       switch (state) {
         case 1:
           return ''
@@ -143,8 +166,7 @@ export default {
         Icon: 'close',
         Dialog: {
           fn: this.finalize,
-          message: 'Deseja realmente encerrar a atividade?<br/>Após o encerramento de uma atividade, não será possível <b>receber</b> ou <b>avaliar</b> mais respostas.',
-          title: 'Atenção'
+          message: 'Deseja realmente encerrar a atividade?<br/>Após o encerramento de uma atividade, não será possível <b>receber</b> ou <b>avaliar</b> mais respostas.'
         }
       }
       const edit = {
@@ -157,8 +179,7 @@ export default {
         Icon: 'play_arrow',
         Dialog: {
           fn: this.initiate,
-          message: 'Deseja realmente liberar a atividade?<br/>Durante o período de entregas da atividade não será possível <b>editar</b> a atividade.',
-          title: 'Atenção'
+          message: 'Deseja realmente liberar a atividade?<br/>Durante o período de entregas da atividade não será possível <b>editar</b> a atividade.'
         }
       }
 
@@ -189,12 +210,50 @@ export default {
       this.current = context
       this.current.id = activityId
       this.active = true
+    },
+    openRoom () {
+      this.current = {
+        fn: this.$_openRoom,
+        message: 'Deseja realmente abrir essa sala?<br/>Após aberto uma sala, a mesma estará presente na lista de salas disponíveis e qualquer pessoa pode solicitar acesso.'
+      }
+      this.active = true
+    },
+    closeRoom () {
+      this.current = {
+        fn: this.$_closeRoom,
+        message: 'Deseja realmente fechar essa sala?<br/>Após o fechamento de uma sala, ela não poderá ser aberta novamente, nenhum aluno terá acesso e não será possível <b>criar</b> ou <b>avaliar</b> atividades.'
+      }
+      this.active = true
+    },
+    $_openRoom () {
+      this.service.openRoom(this.room.Code)
+        .then(() => this.loadData())
+    },
+    $_closeRoom () {
+      this.service.closeRoom(this.room.Code)
+        .then(() => this.loadData())
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.md-sie {
+  background: #41c300!important;
+  i {
+    color: #fff!important;
+  }
+}
+.md-speed-dial {
+  float: right;
+  .md-tooltip {
+    margin-left: 20px;
+  }
+  .md-speed-dial-content {
+    position: absolute;
+    margin: 55px 0px auto 9px;
+  }
+}
 .room-content-activities-item {
   border: 1px solid #ccc;
   margin-bottom: 20px;

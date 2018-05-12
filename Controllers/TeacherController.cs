@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -12,7 +11,6 @@ using SIE.Utils;
 using SIE.Validations;
 using System.Net;
 using SIE.Helpers;
-using Activity = System.Diagnostics.Activity;
 
 namespace SIE.Controllers
 {
@@ -25,7 +23,6 @@ namespace SIE.Controllers
         private readonly UActivity _uActivity;
         private readonly BRoom _bRoom;
         private readonly URoom _uRoom;
-        private readonly UPerson _uPerson;
 
         public TeacherController(SIEContext context)
         {
@@ -34,7 +31,6 @@ namespace SIE.Controllers
             _uActivity = new UActivity(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
-            _uPerson = new UPerson(context);
         }
 
         [HttpGet]
@@ -54,7 +50,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            _bRoom.Save(newRoom, authenticatedUserId);
+            _bRoom.SaveOrUpdate(newRoom, authenticatedUserId);
 
             var history = new History
             {
@@ -78,6 +74,61 @@ namespace SIE.Controllers
                 .Select(r => new MMyRoomsView(r));
             return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
         }
+
+        [HttpGet]
+        [Route("OpenRoom/{roomCode}")]
+        public IActionResult OpenRoom(string roomCode)
+        {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var room = _uRoom.GetByCode(roomCode);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
+                    $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (room.PersonId != authenticatedUserId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
+                    "Você não tem acesso a essa sala!"));
+
+            if (room.CurrentState == (int) ERoomState.Open)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A sala já está aberta!"));
+
+            if (room.CurrentState == (int) ERoomState.Closed)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
+                    "A não pode ser aberta depois de fechada!"));
+
+            room.CurrentState = (int) ERoomState.Open;
+            room.StartDate = DateTime.Now;
+            _bRoom.SaveOrUpdate(room);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "A sala foi aberta com sucesso!"));
+        }
+
+
+        [HttpGet]
+        [Route("CloseRoom/{roomCode}")]
+        public IActionResult CloseRoom(string roomCode)
+        {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var room = _uRoom.GetByCode(roomCode);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (room.PersonId != authenticatedUserId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
+
+            if (room.CurrentState == (int)ERoomState.Closed)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A sala já está fechada!"));
+
+            room.CurrentState = (int)ERoomState.Closed;
+            room.EndDate = DateTime.Now;
+            _bRoom.SaveOrUpdate(room);
+
+            var activities = _uActivity.GetByRoom(room.Id);
+            _bActivity.CloseAll(activities);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "A sala foi fechada com sucesso!"));
+        }
+
 
         [HttpGet]
         [Route("LoadRoom/{roomCode}")]
@@ -181,6 +232,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser iniciada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
 
             activity.CurrentState = (int) EActivityState.InProgress;
+            activity.StartDate = DateTime.Now;
             _bActivity.SaveOrUpdate(activity);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi iniciada!"));

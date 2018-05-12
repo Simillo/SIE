@@ -29,6 +29,7 @@ namespace SIE.Context
         [Required]
         public string Code { get; set ;}
 
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? ExpirationDate { get; set; }
 

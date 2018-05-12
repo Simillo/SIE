@@ -1,4 +1,6 @@
-﻿using SIE.Context;
+﻿using System;
+using System.Collections.Generic;
+using SIE.Context;
 using SIE.Enums;
 using SIE.Models;
 
@@ -36,6 +38,16 @@ namespace SIE.Business
                 Update(activity);
             else
                 Save(activity);
+        }
+
+        public void CloseAll(List<Activity> activities)
+        {
+            foreach (var activity in activities)
+            {
+                activity.CurrentState = (int) EActivityState.Done;
+                activity.EndDate = DateTime.Now;
+                Update(activity);
+            }
         }
 
         private void Update(Activity activity)
