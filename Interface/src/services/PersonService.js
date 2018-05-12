@@ -1,9 +1,6 @@
 export default class {
-  constructor (resource, http = null) {
-    this._resource = resource('person{/id}')
-    if (http) {
-      this._http = http
-    }
+  constructor (http) {
+    this._http = http
   }
   async loadPersons () {
     const res = await this._resource.query()
@@ -15,5 +12,8 @@ export default class {
   async login (login) {
     const res = await this._http.post('person/Login', login)
     return res.json()
+  }
+  async logout () {
+    return this._http.get('person/Logout')
   }
 }

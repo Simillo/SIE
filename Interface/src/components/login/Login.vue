@@ -63,7 +63,7 @@ export default {
     }
   },
   async created () {
-    this.service = new PersonService(this.$resource, this.$http)
+    this.service = new PersonService(this.$http)
     this.form.Email = 'simillonakai@gmail.com'
     this.form.Password = '123123a'
   },

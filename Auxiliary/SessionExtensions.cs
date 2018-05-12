@@ -7,11 +7,6 @@ namespace SIE.Auxiliary
 {
     public static class SessionExtensions
     {
-        public static void Set<T>(this ISession session, string key, T value)
-        {
-            session.SetString(key, JsonConvert.SerializeObject(value));
-        }
-
         public static dynamic GetCurrentPerson(this ISession session)
         {
             return new
@@ -22,7 +17,7 @@ namespace SIE.Auxiliary
             };
         }
 
-        public static bool IsAuth(this ISession session) => !string.IsNullOrEmpty(session.GetString("_id"));
+        public static bool IsAuth(this ISession session) => session.GetInt32("_id") > 0;
 
         public static void Authenticate(this ISession session, Person person)
         {

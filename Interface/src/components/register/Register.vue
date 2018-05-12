@@ -126,7 +126,7 @@ export default {
     }
   },
   async created () {
-    this.service = new PersonService(this.$resource, this.$http)
+    this.service = new PersonService(this.$http)
     this.institutionService = new InstitutionService(this.$resource)
   },
   methods: {

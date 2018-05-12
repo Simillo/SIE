@@ -79,7 +79,7 @@ namespace SIE.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return Ok();
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Saindo..."));
         }
     }
 }
