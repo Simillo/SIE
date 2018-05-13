@@ -38,7 +38,7 @@
             v-if='item.CanIJoin',
             @click.prevent='join(item)'
           )
-            md-tooltip(md-direction='top') Entrar
+            md-tooltip(md-direction='left') Entrar
             md-icon exit_to_app
 </template>
 
@@ -69,7 +69,8 @@ export default {
         })
     },
     join (room) {
-      console.log(room)
+      this.service.join(room.Code)
+        .then(() => this.loadRooms())
     }
   }
 }

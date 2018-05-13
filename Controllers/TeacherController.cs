@@ -52,14 +52,7 @@ namespace SIE.Controllers
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             _bRoom.SaveOrUpdate(newRoom, authenticatedUserId);
 
-            var history = new History
-            {
-                PersonId = authenticatedUserId,
-                Action = "Usuário criou uma nova sala",
-                DateAction = DateTime.Now
-            };
-
-            _bHistory.SaveHistory(history);
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova sala");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Sala criada com sucesso!"));
         }
@@ -100,6 +93,8 @@ namespace SIE.Controllers
             room.StartDate = DateTime.Now;
             _bRoom.SaveOrUpdate(room);
 
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário abriu uma sala");
+
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "A sala foi aberta com sucesso!"));
         }
 
@@ -125,6 +120,8 @@ namespace SIE.Controllers
 
             var activities = _uActivity.GetByRoom(room.Id);
             _bActivity.CloseAll(activities);
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário fechou uma sala");
+
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "A sala foi fechada com sucesso!"));
         }
@@ -184,14 +181,7 @@ namespace SIE.Controllers
             _bActivity.SaveOrUpdate(activity, room);
             var msgType = activity.Id > 0 ? "editada" : "criada";
 
-            var history = new History
-            {
-                PersonId = authenticatedUserId,
-                Action = "Usuário criou uma nova atividade",
-                DateAction = DateTime.Now
-            };
-
-            _bHistory.SaveHistory(history);
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }
@@ -219,13 +209,13 @@ namespace SIE.Controllers
         [Route("InitiateActivity/{activityId}")]
         public IActionResult InitiateActivity(int activityId)
         {
-            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             var activity = _uActivity.GetById(activityId);
 
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != sessionPersonId)
+            if (activity.PersonId != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.Building)
@@ -235,6 +225,8 @@ namespace SIE.Controllers
             activity.StartDate = DateTime.Now;
             _bActivity.SaveOrUpdate(activity);
 
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário inciou uma atividade");
+
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi iniciada!"));
         }
 
@@ -242,13 +234,13 @@ namespace SIE.Controllers
         [Route("FinalizeActivity/{activityId}")]
         public IActionResult FinalizeActivity(int activityId)
         {
-            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             var activity = _uActivity.GetById(activityId);
 
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != sessionPersonId)
+            if (activity.PersonId != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.InProgress)
@@ -257,6 +249,7 @@ namespace SIE.Controllers
             activity.CurrentState = (int)EActivityState.Done;
             activity.EndDate = DateTime.Now;
             _bActivity.SaveOrUpdate(activity);
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário finalizou uma atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi encerrada!"));
         }

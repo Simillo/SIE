@@ -25,6 +25,7 @@ namespace SIE.Context
 
         [Required]
         public DateTime JoinDate { get; set; }
+        public DateTime? ExitDate { get; set; }
 
         public bool Active { get; set; }
     }

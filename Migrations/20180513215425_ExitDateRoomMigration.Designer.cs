@@ -11,9 +11,10 @@ using System;
 namespace SIE.Migrations
 {
     [DbContext(typeof(SIEContext))]
-    partial class SIEContextModelSnapshot : ModelSnapshot
+    [Migration("20180513215425_ExitDateRoomMigration")]
+    partial class ExitDateRoomMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +124,7 @@ namespace SIE.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<DateTime?>("ExitDate");
+                    b.Property<DateTime>("ExitDate");
 
                     b.Property<DateTime>("JoinDate");
 

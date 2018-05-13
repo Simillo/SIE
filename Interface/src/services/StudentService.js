@@ -9,4 +9,7 @@ export default class {
   async loadRooms () {
     return this._http.get('student/LoadRooms')
   }
+  async join (roomCode) {
+    return this._http.get(`student/Join/${roomCode}`)
+  }
 }

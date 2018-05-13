@@ -46,6 +46,8 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
             _bPerson.SaveOrUpdate(person);
+            _bHistory.SaveHistory(person.Id, "Usuário registrou no sistema");
+
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Cadastro realizado com sucesso!"));
         }
 
@@ -62,14 +64,8 @@ namespace SIE.Controllers
 
             HttpContext.Session.Authenticate(person);
             var res = person.Profile == (int)EProfile.Teacher ? "/teacher" : "/student";
-            var history = new History
-            {
-                PersonId = person.Id,
-                Action = "Usuário autenticou no sistema",
-                DateAction = DateTime.Now
-            };
 
-            _bHistory.SaveHistory(history);
+            _bHistory.SaveHistory(person.Id, "Usuário autenticou no sistema");
 
             return Ok(ResponseContent.Create(res, HttpStatusCode.OK, null));
         }

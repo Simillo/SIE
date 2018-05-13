@@ -21,18 +21,20 @@ namespace SIE.Controllers
         private readonly BHistory _bHistory;
         private readonly BActivity _bActivity;
         private readonly UActivity _uActivity;
+        private readonly URelStudentRoom _uRelStudentRoom;
         private readonly BRoom _bRoom;
         private readonly URoom _uRoom;
-        private readonly URelStudentRoom _uRelStudentRoom;
+        private readonly BRelStudentRoom _bRelStudentRoom;
 
         public StudentController(SIEContext context)
         {
             _bActivity = new BActivity(context);
             _bHistory = new BHistory(context);
             _uActivity = new UActivity(context);
+            _uRelStudentRoom = new URelStudentRoom(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
-            _uRelStudentRoom = new URelStudentRoom(context);
+            _bRelStudentRoom = new BRelStudentRoom(context);
         }
 
         [HttpGet]
@@ -47,14 +49,37 @@ namespace SIE.Controllers
         public IActionResult LoadRooms()
         {
             var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
-            var roomId = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
 
             var rooms = _uRoom
                 .GetAll()
                 .Where(r => r.CurrentState == (int) ERoomState.Open)
-                .Select(r => new MAllRoomsView(r, !roomId.Contains(r.Id)));
+                .Select(r => new MAllRoomsView(r, !roomsIds.Contains(r.Id)));
 
             return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
+        [Route("Join/{roomCode}")]
+        public IActionResult Join(string roomCode)
+        {
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+            var room = _uRoom.GetByCode(roomCode);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (room.CurrentState != (int)ERoomState.Open)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você não pode entrar nessa sala pois ela não está aberta!"));
+
+            if (roomsIds.Contains(room.Id))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já está nessa sala!"));
+
+            _bRelStudentRoom.Save(authenticatedPersonId, room.Id);
+            _bHistory.SaveHistory(authenticatedPersonId, "Usuário entrou em uma sala");
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você entrou na sala!"));
+
         }
     }
 }
