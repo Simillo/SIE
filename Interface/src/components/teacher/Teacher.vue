@@ -63,7 +63,6 @@ export default {
     this.personService = new PersonService(this.$http)
     const res = await this.service.load()
     this.person = res.data.entity
-    this.menuVisible = true
   },
   methods: {
     goTo (path) {

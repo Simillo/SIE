@@ -6,4 +6,7 @@ export default class {
     const res = await this._http.get('student/Load')
     return res
   }
+  async loadRooms () {
+    return this._http.get('student/LoadRooms')
+  }
 }

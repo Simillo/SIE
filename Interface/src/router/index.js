@@ -1,15 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+// MISC
+import EProfile from '../enums/EProfile'
+
+// EXTERN
 import Login from '@/components/login/Login'
 import Register from '@/components/register/Register'
+
+// TEACHER
 import Teacher from '@/components/teacher/Teacher'
-import Student from '@/components/student/Student'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRooms from '@/components/teacher/MyRooms'
 import Room from '@/components/teacher/Room'
 import Activity from '@/components/teacher/Activity'
 
-import EProfile from '../enums/EProfile'
+// STUDENT
+import Student from '@/components/student/Student'
+import Rooms from '@/components/student/Rooms'
 
 Vue.use(Router)
 
@@ -70,6 +78,13 @@ export default new Router({
       path: '/student',
       name: 'Estudante',
       component: Student
+    },
+    {
+      sidebar: EProfile.Student,
+      path: '/student/rooms',
+      name: 'Salas disponíveis',
+      icon: 'book',
+      component: Rooms
     }
   ]
 })

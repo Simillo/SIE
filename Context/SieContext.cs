@@ -12,5 +12,6 @@ namespace SIE.Context
         public DbSet<Room> Room { get; set; }
         public DbSet<History> History { get; set; }
         public DbSet<Activity> Activity { get; set; }
+        public DbSet<RelStudentRoom> RelStudentRoom { get; set; }
     }
 }
