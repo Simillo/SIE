@@ -76,6 +76,8 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já está nessa sala!"));
 
             _bRelStudentRoom.Save(authenticatedPersonId, room.Id);
+            room.NumberOfStudents++;
+            _bRoom.SaveOrUpdate(room);
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário entrou em uma sala");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você entrou na sala!"));

@@ -50,7 +50,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            _bRoom.SaveOrUpdate(newRoom, authenticatedUserId);
+            _bRoom.Save(newRoom, authenticatedUserId);
 
             _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova sala");
 

@@ -21,7 +21,7 @@ namespace SIE.Business
                 Save(room);
         }
 
-        public void SaveOrUpdate(MNewRoom newRoom, int personId)
+        public void Save(MNewRoom newRoom, int personId)
         {
             var room = new Room(newRoom, personId);
             Save(room);
