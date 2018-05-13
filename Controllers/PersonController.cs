@@ -45,8 +45,8 @@ namespace SIE.Controllers
             if (errors.Any())
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
-            _bPerson.SaveOrUpdate(person);
-            _bHistory.SaveHistory(person.Id, "Usuário registrou no sistema");
+            var newPerson = _bPerson.SaveOrUpdate(person);
+            _bHistory.SaveHistory(newPerson.Id, "Usuário registrou no sistema");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Cadastro realizado com sucesso!"));
         }

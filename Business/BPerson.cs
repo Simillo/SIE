@@ -23,7 +23,7 @@ namespace SIE.Business
             _uInstitution = new UInstitution(_context);
             _bInstitution = new BInstitution(_context);
         }
-        public void SaveOrUpdate(MPerson person)
+        public Person SaveOrUpdate(MPerson person)
         {
             var institutionId = 0;
             if (!string.IsNullOrEmpty(person.Institution?.Name))
@@ -56,6 +56,7 @@ namespace SIE.Business
             }
 
             _context.SaveChanges();
+            return cPerson;
 
         }
 
