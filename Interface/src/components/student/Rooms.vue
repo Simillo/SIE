@@ -1,0 +1,55 @@
+<template lang='pug'>
+  sidebar
+    //- md-table(
+    //-   v-model='rooms',
+    //-   md-sort='Name',
+    //-   md-sort-order='asc',
+    //-   md-card,
+    //-   md-fixed-header
+    //- )
+    //-   md-table-toolbar
+    //-     .md-toolbar-section-start
+    //-       h1.md-title Minhas salas
+    //-   md-table-row(
+    //-     slot='md-table-row',
+    //-     slot-scope='{ item }'
+    //-   )
+    //-     md-table-cell(
+    //-       md-label='Nome da sala',
+    //-       md-sort-by='Name'
+    //-     )
+    //-       router-link(:to='"/teacher/room/"+item.Code') {{item.Name}}
+    //-     md-table-cell(
+    //-       md-label='Código da sala',
+    //-       md-sort-by='Code'
+    //-     ) {{item.Code}}
+    //-     md-table-cell(
+    //-       md-label='Quantidade de alunos',
+    //-       md-sort-by='NumberOfStudents',
+    //-       md-numeric
+    //-     ) {{item.NumberOfStudents}}
+    //-     md-table-cell(
+    //-       md-label='Estado',
+    //-       md-sort-by='CurrentState'
+    //-     ) {{item.CurrentState}}
+</template>
+
+<script>
+
+import Teacher from './Teacher.vue'
+
+export default {
+  components: {
+    'sidebar': Teacher
+  },
+  data () {
+    return {
+    }
+  },
+  async created () {
+  }
+}
+</script>
+
+<style lang='scss' scoped>
+</style>

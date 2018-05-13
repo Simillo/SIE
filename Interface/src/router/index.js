@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/login/Login'
 import Register from '@/components/register/Register'
 import Teacher from '@/components/teacher/Teacher'
+import Student from '@/components/student/Student'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRooms from '@/components/teacher/MyRooms'
 import Room from '@/components/teacher/Room'
@@ -29,7 +30,7 @@ export default new Router({
     {
       sidebar: EProfile.NotShown,
       path: '/teacher',
-      name: 'Teacher',
+      name: 'Professor',
       component: Teacher
     },
     {
@@ -63,6 +64,12 @@ export default new Router({
       path: '/teacher/room/:roomCode/activity/:activityId',
       name: 'Editar atividade',
       component: Activity
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/student',
+      name: 'Estudante',
+      component: Student
     }
   ]
 })
