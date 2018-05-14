@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -53,8 +51,23 @@ namespace SIE.Controllers
 
             var rooms = _uRoom
                 .GetAll()
-                .Where(r => r.CurrentState == (int) ERoomState.Open)
+                .Where(r => r.CurrentState == (int)ERoomState.Open)
                 .Select(r => new MAllRoomsView(r, !roomsIds.Contains(r.Id)));
+
+            return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
+        [Route("LoadMyRooms")]
+        public IActionResult LoadMyRooms()
+        {
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+
+            var rooms = _uRoom
+                .GetAll()
+                .Where(r => roomsIds.Contains(r.Id))
+                .Select(r => new MMyRoomsView(r));
 
             return Ok(ResponseContent.Create(rooms, HttpStatusCode.OK, null));
         }
@@ -81,7 +94,6 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário entrou em uma sala");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você entrou na sala!"));
-
         }
     }
 }

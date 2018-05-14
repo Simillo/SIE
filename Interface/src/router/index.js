@@ -11,13 +11,14 @@ import Register from '@/components/register/Register'
 // TEACHER
 import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
-import MyRooms from '@/components/teacher/MyRooms'
+import MyRoomsTeacher from '@/components/teacher/MyRooms'
 import Room from '@/components/teacher/Room'
 import Activity from '@/components/teacher/Activity'
 
 // STUDENT
 import Student from '@/components/student/Student'
 import Rooms from '@/components/student/Rooms'
+import MyRoomsStudent from '@/components/student/MyRooms'
 
 Vue.use(Router)
 
@@ -46,7 +47,7 @@ export default new Router({
       path: '/teacher/my-rooms',
       name: 'Minhas salas',
       icon: 'list',
-      component: MyRooms
+      component: MyRoomsTeacher
     },
     {
       sidebar: EProfile.Teacher,
@@ -85,6 +86,13 @@ export default new Router({
       name: 'Salas disponíveis',
       icon: 'book',
       component: Rooms
+    },
+    {
+      sidebar: EProfile.Student,
+      path: '/student/my-rooms',
+      name: 'Minhas salas',
+      icon: 'list',
+      component: MyRoomsStudent
     }
   ]
 })

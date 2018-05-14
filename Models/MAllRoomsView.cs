@@ -18,7 +18,7 @@ namespace SIE.Models
         {
             Name = room.Name;
             Code = room.Code;
-            CurrentState = "Aberta";
+            CurrentState = ((ERoomState) room.CurrentState).Description();
             NumberOfStudents = room.NumberOfStudents == 0 ? "-" : room.NumberOfStudents.ToString();
             CanIJoin = canIJoin;
         }
