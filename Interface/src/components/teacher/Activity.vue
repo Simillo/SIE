@@ -109,7 +109,7 @@ export default {
         const params = this.$route.params
         const res = await this.service.loadActivity(params.roomCode, params.activityId)
         this.activity = res.body.entity
-        this.canIEdit = this.activity.CurrentState === ERoomState.Building
+        this.canIEdit = this.activity.CurrentState === ERoomState.Building.ordinal
         this.form = {
           Title: this.activity.Name,
           Description: this.activity.Description,

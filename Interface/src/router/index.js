@@ -13,13 +13,14 @@ import Teacher from '@/components/teacher/Teacher'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRoomsTeacher from '@/components/teacher/MyRooms'
 import RoomTeacher from '@/components/teacher/Room'
-import Activity from '@/components/teacher/Activity'
+import ActivityTeacher from '@/components/teacher/Activity'
 
 // STUDENT
 import Student from '@/components/student/Student'
 import Rooms from '@/components/student/Rooms'
 import MyRoomsStudent from '@/components/student/MyRooms'
 import RoomStudent from '@/components/student/Room'
+import ActivityStudent from '@/components/student/Activity'
 
 Vue.use(Router)
 
@@ -69,13 +70,13 @@ export default new Router({
       sidebar: EProfile.NotShown,
       path: '/teacher/room/:roomCode/activity',
       name: 'Nova atividade',
-      component: Activity
+      component: ActivityTeacher
     },
     {
       sidebar: EProfile.NotShown,
       path: '/teacher/room/:roomCode/activity/:activityId',
       name: 'Editar atividade',
-      component: Activity
+      component: ActivityTeacher
     },
     {
       sidebar: EProfile.NotShown,
@@ -104,6 +105,12 @@ export default new Router({
       path: '/student/room/:roomCode',
       name: 'Sala estudante',
       component: RoomStudent
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/student/room/:roomCode/activity/:activityId',
+      name: 'Atividade estudante',
+      component: ActivityStudent
     }
   ]
 })

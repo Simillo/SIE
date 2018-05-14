@@ -34,12 +34,18 @@
         md-table-cell(
           md-label='Ações'
         )
-          .join(
+          .action(
             v-if='item.CanIJoin',
             @click.prevent='join(item)'
           )
             md-tooltip(md-direction='left') Entrar
             md-icon exit_to_app
+          .action(
+            v-else,
+            @click.prevent='exit(item)'
+          )
+            md-tooltip(md-direction='left') Sair
+            md-icon close
 </template>
 
 <script>
@@ -71,13 +77,17 @@ export default {
     join (room) {
       this.service.join(room.Code)
         .then(() => this.loadRooms())
+    },
+    exit (room) {
+      this.service.exitRoom(room.Code)
+        .then(res => this.loadRooms())
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.join {
+.action {
   cursor: pointer;
   width: 25px;
 }

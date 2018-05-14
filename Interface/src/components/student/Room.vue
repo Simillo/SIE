@@ -146,15 +146,14 @@ export default {
     },
     getActions (activity) {
       const answer = {
-        Tooltip: activity.CurretnState === EActivityState.InProgress.ordinal ? 'Responser' : 'Visualizar',
+        Tooltip: activity.CurrentState === EActivityState.InProgress.ordinal ? 'Responder' : 'Visualizar',
         To: `/student/room/${this.room.Code}/activity/${activity.Id}`,
         Icon: 'play_arrow'
       }
 
       switch (activity.CurrentState) {
-        case 2:
-          return [answer]
-        case 3:
+        case EActivityState.InProgress.ordinal:
+        case EActivityState.Done.ordinal:
           return [answer]
       }
     },

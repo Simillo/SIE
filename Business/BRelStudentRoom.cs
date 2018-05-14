@@ -24,17 +24,17 @@ namespace SIE.Business
             _context.SaveChanges();
         }
 
-        public void Update(int personId, int roomId, bool active)
+        public void Exit(int personId, int roomId)
         {
             var rel = _context
                 .RelStudentRoom
-                .FirstOrDefault(r => r.RoomId == roomId && r.PersonId == personId);
+                .FirstOrDefault(r => r.RoomId == roomId && r.PersonId == personId && r.Active);
 
             if (rel == null)
                 return;
 
             rel.ExitDate = DateTime.Now;
-            rel.Active = active;
+            rel.Active = false;
             _context.RelStudentRoom.Update(rel);
             _context.SaveChanges();
         }

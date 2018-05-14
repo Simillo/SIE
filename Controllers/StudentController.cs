@@ -136,10 +136,38 @@ namespace SIE.Controllers
             if (!roomsIds.Contains(room.Id))
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não pode sair dessa sala pois não está cadastrado nelas!"));
 
-            _bRelStudentRoom.Update(authenticatedPersonId, room.Id, false);
+            _bRelStudentRoom.Exit(authenticatedPersonId, room.Id);
+            room.NumberOfStudents--;
+            _bRoom.SaveOrUpdate(room);
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário saiu de uma sala");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você saiu da sala!"));
+        }
+
+        [HttpGet]
+        [Route("LoadActivity/{roomCode}/{activityId}")]
+        public IActionResult LoadActivity(string roomCode, int activityId)
+        {
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+            var room = _uRoom.GetByCode(roomCode);
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (room.CurrentState != (int)ERoomState.Open)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala pois ela esta fechada!"));
+
+            if (activity.CurrentState == (int)EActivityState.Building)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (!roomsIds.Contains(room.Id))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
+
+            return Ok(ResponseContent.Create(new MViewActivity(activity), HttpStatusCode.OK, null));
         }
     }
 }

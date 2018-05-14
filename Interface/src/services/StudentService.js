@@ -21,4 +21,7 @@ export default class {
   async exitRoom (roomCode) {
     return this._http.get(`student/ExitRoom/${roomCode}`)
   }
+  async loadActivity (roomCode, activityId) {
+    return this._http.get(`student/LoadActivity/${roomCode}/${activityId}`)
+  }
 }
