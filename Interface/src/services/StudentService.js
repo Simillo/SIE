@@ -15,4 +15,10 @@ export default class {
   async loadMyRooms () {
     return this._http.get('student/LoadMyRooms')
   }
+  async loadRoom (roomCode) {
+    return this._http.get(`student/LoadRoom/${roomCode}`)
+  }
+  async exitRoom (roomCode) {
+    return this._http.get(`student/ExitRoom/${roomCode}`)
+  }
 }

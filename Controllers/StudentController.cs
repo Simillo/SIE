@@ -86,7 +86,9 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você não pode entrar nessa sala pois ela não está aberta!"));
 
             if (roomsIds.Contains(room.Id))
+            {
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já está nessa sala!"));
+            }
 
             _bRelStudentRoom.Save(authenticatedPersonId, room.Id);
             room.NumberOfStudents++;
@@ -94,6 +96,50 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário entrou em uma sala");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você entrou na sala!"));
+        }
+
+        [HttpGet]
+        [Route("LoadRoom/{roomCode}")]
+        public IActionResult LoadRoom(string roomCode)
+        {
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var room = _uRoom.GetByCode(roomCode);
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+            
+            if (room.CurrentState != (int)ERoomState.Open)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala pois ela não está aberta!"));
+
+            if (!roomsIds.Contains(room.Id))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala pois não está cadastrado nela!"));
+
+            var activities = _uActivity
+                .GetByRoom(room.Id)
+                .Where(r => r.CurrentState != (int)EActivityState.Building);
+
+            return Ok(ResponseContent.Create(new MRoomView(room, activities), HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
+        [Route("ExitRoom/{roomCode}")]
+        public IActionResult ExitRoom(string roomCode)
+        {
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var room = _uRoom.GetByCode(roomCode);
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (!roomsIds.Contains(room.Id))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não pode sair dessa sala pois não está cadastrado nelas!"));
+
+            _bRelStudentRoom.Update(authenticatedPersonId, room.Id, false);
+            _bHistory.SaveHistory(authenticatedPersonId, "Usuário saiu de uma sala");
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você saiu da sala!"));
         }
     }
 }

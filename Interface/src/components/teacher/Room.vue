@@ -84,7 +84,9 @@
 
 import TeacherService from '../../services/TeacherService'
 import Teacher from './Teacher.vue'
+
 import ERoomState from '../../enums/ERoomState'
+import EActivityState from '../../enums/EActivityState'
 
 export default {
   components: {
@@ -122,11 +124,11 @@ export default {
     },
     getCurrentStateTitle (state) {
       switch (state) {
-        case 1:
+        case EActivityState.Building.ordinal:
           return 'Atividade em construção'
-        case 2:
+        case EActivityState.InProgress.ordinal:
           return 'Atividade em andamento'
-        case 3:
+        case EActivityState.Done.ordinal:
           return 'Atividade finalizada'
       }
     },
@@ -136,13 +138,15 @@ export default {
       const endDate = activity.EndDate
 
       switch (state) {
-        case 1:
+        case EActivityState.Building.ordinal:
           return ''
-        case 2:
+
+        case EActivityState.InProgress.ordinal:
           if (expirationDate === null) return ''
 
           return `Entregar até ${this.getFormatedDate(expirationDate)}`
-        case 3:
+
+        case EActivityState.Done.ordinal:
           return `Atividade finalizada em ${this.getFormatedDate(endDate)}`
       }
     },
@@ -184,11 +188,11 @@ export default {
       }
 
       switch (activity.CurrentState) {
-        case 1:
+        case EActivityState.Building.ordinal:
           return [edit, initate]
-        case 2:
+        case EActivityState.InProgress.ordinal:
           return [visualize, finalize]
-        case 3:
+        case EActivityState.Done.ordinal:
           return [visualize]
       }
     },

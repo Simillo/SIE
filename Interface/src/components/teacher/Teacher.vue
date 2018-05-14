@@ -38,7 +38,7 @@
         )
           .sidebar-icon
             md-icon.md-size-2x {{menu.icon}}
-          span.md-list-item-text {{menu.name}}
+          span.md-list-item-text {{menu.title}}
     md-app-content
       slot
 </template>

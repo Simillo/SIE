@@ -1,14 +1,14 @@
 <template lang='pug'>
   sidebar
-    //- md-dialog-confirm(
+    md-dialog-confirm(
       :md-active.sync='active',
       md-title='Atenção',
       :md-content='current.message',
       md-confirm-text='Continuar',
       md-cancel-text='Cancelar',
       @md-confirm='current.fn()'
-    )
-    //- .room-container
+      )
+    .room-container
       .room-head
         .room-head-name
           span.room-name {{room.Name}}
@@ -16,9 +16,7 @@
         .room-head-description(v-if='room.Description')
           span {{room.Description}}
       .room-content
-        .btn-new(v-if='room.CurrentState !== ERoomState.Closed.ordinal')
-          router-link(:to='"/teacher/room/"+room.Code+"/activity"')
-            md-button.md-raised.md-primary.no-margin Criar Atividade
+        .btn-new
           md-speed-dial(
             md-event='click',
             md-direction='bottom'
@@ -27,14 +25,8 @@
               md-icon build
               md-tooltip.margin-tooltip(md-direction='left') Ações da sala
             md-speed-dial-content
-              md-button.md-icon-button.md-plain.md-sie(
-                @click.prevent='openRoom',
-                v-if='room.CurrentState !== ERoomState.Open.ordinal'
-              )
-                md-tooltip.margin-tooltip(md-direction='left') Abrir a sala
-                md-icon lock_open
-              md-button.md-icon-button.md-plain.md-accent(@click.prevent='closeRoom')
-                md-tooltip.margin-tooltip(md-direction='left') Encerrar a sala
+              md-button.md-icon-button.md-plain.md-accent(@click.prevent='exitRoom')
+                md-tooltip.margin-tooltip(md-direction='left') Sair da sala
                 md-icon close
         md-field.margin-top-20.input-search
           label Filtrar atividade por nome ou descrição
@@ -77,86 +69,152 @@
         .room-content-activities(v-if='!searched.length && room.Activities && room.Activities.length')
           p Nenhuma atividade foi encontrada com o filtro informado!
         .room-content-activities(v-else-if='!room.Activities || !room.Activities.length')
-          p Nenhuma atividade foi adicionada ainda. Clique em "CRIAR ATIVIDADE" para criar uma!
+          p Nenhuma atividade foi adicionada ainda. Aguarde o professor da sala adicionar!
 </template>
 
 <script>
+import Student from './Student.vue'
+import ERoomState from '../../enums/ERoomState'
+import EActivityState from '../../enums/EActivityState'
 
-import Teacher from './Teacher.vue'
+import StudentSevice from '../../services/StudentService'
 
 export default {
   components: {
-    'sidebar': Teacher
+    'sidebar': Student
   },
   data () {
     return {
-      // room: {},
-      // search: '',
-      // searched: [],
-      // active: false,
-      // ERoomState,
-      // current: {
-      //   fn: Function,
-      //   message: '',
-      //   title: '',
-      //   id: 0
-      // }
+      room: {},
+      search: '',
+      searched: [],
+      active: false,
+      ERoomState,
+      current: {
+        fn: Function,
+        message: '',
+        title: '',
+        id: 0
+      }
     }
   },
   async created () {
+    this.service = new StudentSevice(this.$http)
+    this.loadRoom()
   },
   methods: {
+    loadRoom () {
+      this.search = ''
+      this.searched = []
+      this.service.loadRoom(this.$route.params.roomCode)
+        .then(res => {
+          this.room = res.body.entity
+          this.searched = this.room.Activities
+        })
+        .catch(() => this.$router.push('/student/my-rooms'))
+    },
+    getCurrentStateTitle (state) {
+      switch (state) {
+        case EActivityState.InProgress.ordinal:
+          return 'Atividade em andamento'
+        case EActivityState.Done.ordinal:
+          return 'Atividade finalizada'
+      }
+    },
+    getCurrentStateSubtitle (activity) {
+      const state = activity.CurretnState
+      const expirationDate = activity.ExpirationDate
+      const endDate = activity.EndDate
+
+      switch (state) {
+        case EActivityState.InProgress.ordinal:
+          if (expirationDate === null) return ''
+
+          return `Entregar até ${this.getFormatedDate(expirationDate)}`
+        case EActivityState.Done.ordinal:
+          return `Atividade finalizada em ${this.getFormatedDate(endDate)}`
+      }
+    },
+    searchFor () {
+      const query = this.search
+      if (!query) {
+        this.searched = this.room.Activities
+        return
+      }
+
+      this.searched = this.room.Activities.filter(a => a.Name.includes(query) || (a.Description && a.Description.includes(query)))
+    },
+    getActions (activity) {
+      const answer = {
+        Tooltip: activity.CurretnState === EActivityState.InProgress.ordinal ? 'Responser' : 'Visualizar',
+        To: `/student/room/${this.room.Code}/activity/${activity.Id}`,
+        Icon: 'play_arrow'
+      }
+
+      switch (activity.CurrentState) {
+        case 2:
+          return [answer]
+        case 3:
+          return [answer]
+      }
+    },
+    exitRoom () {
+      this.service.exitRoom(this.room.Code)
+        .then(() => {
+          this.$router.push('/student/my-rooms')
+        })
+    }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-// .md-sie {
-//   background: #41c300!important;
-//   i {
-//     color: #fff!important;
-//   }
-// }
-// .md-speed-dial {
-//   float: right;
-//   .md-tooltip {
-//     margin-left: 20px;
-//   }
-//   .md-speed-dial-content {
-//     position: absolute;
-//     margin: 55px 0px auto 9px;
-//   }
-// }
-// .room-content-activities-item {
-//   border: 1px solid #ccc;
-//   margin-bottom: 20px;
-//   min-height: 20px;
-//   div {
-//     margin: 5px;
-//     display: block;
-//   }
-//   .activities-head {
-//     .activities-name {
-//       float: left;
-//       font-size: 20px;
-//       font-weight: bold;
-//     }
-//     .activities-state {
-//       float: right;
-//     }
-//   }
-//   .activities-actions-item {
-//     display: inline-block;
-//     a {
-//       text-decoration: none;
-//       cursor: pointer;
-//     }
-//     i {
-//       background: #ccc;
-//       border-radius: 100%;
-//       padding: 15px;
-//       color: black;
-//     }
-//   }
-// }
+.md-sie {
+  background: #41c300!important;
+  i {
+    color: #fff!important;
+  }
+}
+.md-speed-dial {
+  float: right;
+  .md-tooltip {
+    margin-left: 20px;
+  }
+  .md-speed-dial-content {
+    position: absolute;
+    margin: 55px 0px auto 9px;
+  }
+}
+.room-content-activities-item {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  min-height: 20px;
+  div {
+    margin: 5px;
+    display: block;
+  }
+  .activities-head {
+    .activities-name {
+      float: left;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .activities-state {
+      float: right;
+    }
+  }
+  .activities-actions-item {
+    display: inline-block;
+    a {
+      text-decoration: none;
+      cursor: pointer;
+    }
+    i {
+      background: #ccc;
+      border-radius: 100%;
+      padding: 15px;
+      color: black;
+    }
+  }
+}
 </style>

@@ -13,7 +13,7 @@ namespace SIE.Utils
 
         public List<int> GetRoomIdByPersonId(int personId) =>
             _context.RelStudentRoom
-            .Where(r => r.PersonId == personId)
+            .Where(r => r.PersonId == personId && r.Active)
             .Select(p => p.RoomId)
             .ToList();
     }
