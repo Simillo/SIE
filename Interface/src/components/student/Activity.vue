@@ -7,6 +7,7 @@
           span.room-code  {{activity.Code}}
         .room-head-description(v-if='activity.Description')
           span {{activity.Description}}
+          span peso: {{activity.Weight}}
       .room-content
         form(
           novalidate,
@@ -70,19 +71,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-// .input-search {
-//   width: 50%;
-// }
-// .md-inline {
-//   display: flex;
-// }
-
-// .date-shown {
-//   width: 100%;
-//   margin-left: 20px;
-//   span {
-//     display: block
-//   }
-// }
-
+span {
+  display: block;
+}
 </style>
