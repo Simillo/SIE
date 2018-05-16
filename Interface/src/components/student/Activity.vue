@@ -23,7 +23,7 @@
           div
             router-link(:to='"/student/room/"+$route.params.roomCode')
               md-button.md-raised.md-primary.no-margin.float-left Voltar
-            md-button.md-raised.md-primary.no-margin.float-right(@click.prevent='validate') Salvar Resposta
+            md-button.md-raised.md-primary.no-margin.float-right(@click.prevent='save') Salvar Resposta
 </template>
 
 <script>
@@ -56,16 +56,15 @@ export default {
         .catch(() => {
           this.$router.push('/student/my-rooms')
         })
+    },
+    async save () {
+      const params = this.$route.params
+      await this.service.answer(params.roomCode, params.activityId, this.form.Answer)
+        .then(() => this.$router.push(`/student/room/${this.$route.params.roomCode}`))
+        .catch(err => {
+          if (err.body.status === 401) this.$router.push('/student/my-rooms')
+        })
     }
-    // },
-    // async save () {
-    //   const params = this.$route.params
-    //   this.form.Id = params.activityId || 0
-    //   await this.service.saveOrUpdateActivity(this.form, params.roomCode)
-    //     .then(() => this.$router.push(`/student/room/${this.$route.params.roomCode}`))
-    //     .catch(err => {
-    //       if (err.body.status === 401) this.$router.push('/student/my-rooms')
-    //     })
   }
 }
 </script>

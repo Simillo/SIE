@@ -8,7 +8,6 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -18,12 +17,16 @@ namespace SIE.Controllers
     public class StudentController : Controller
     {
         private readonly BHistory _bHistory;
+
         private readonly BActivity _bActivity;
+        private readonly BRelStudentRoom _bRelStudentRoom;
+        private readonly BAnswer _bAnswer;
+        private readonly BRoom _bRoom;
+
         private readonly UActivity _uActivity;
         private readonly URelStudentRoom _uRelStudentRoom;
-        private readonly BRoom _bRoom;
+        private readonly UAnswer _uAnswer;
         private readonly URoom _uRoom;
-        private readonly BRelStudentRoom _bRelStudentRoom;
 
         public StudentController(SIEContext context)
         {
@@ -31,9 +34,11 @@ namespace SIE.Controllers
             _bHistory = new BHistory(context);
             _uActivity = new UActivity(context);
             _uRelStudentRoom = new URelStudentRoom(context);
+            _uAnswer = new UAnswer(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
             _bRelStudentRoom = new BRelStudentRoom(context);
+            _bAnswer = new BAnswer(context);
         }
 
         [HttpGet]
@@ -173,9 +178,37 @@ namespace SIE.Controllers
 
         [HttpPost]
         [Route("Answer/{roomCode}/{activityId}")]
-        public IActionResult Answer([FromBody] dynamic answer, string roomCode, int activityId)
+        public IActionResult Answer([FromBody] MAnswer answer, string roomCode, int activityId)
         {
-            return Ok();
+            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+            var room = _uRoom.GetByCode(roomCode);
+            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (room.CurrentState != (int)ERoomState.Open)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala pois ela esta fechada!"));
+
+            if (activity.CurrentState == (int)EActivityState.Building)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (!roomsIds.Contains(room.Id))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
+
+            if (string.IsNullOrEmpty(answer.Answer))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "É obrigatório responder a atividade!"));
+
+            if (_uAnswer.GetByActivity(activity.Id) != null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já respondeu essa atividade!"));
+
+            _bAnswer.Save(authenticatedPersonId, activity.Id, room.Id, answer.Answer);
+            _bHistory.SaveHistory(authenticatedPersonId, "Usuário respondeu a uma atividade");
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade respondida!"));
         }
     }
 }

@@ -89,7 +89,7 @@ export default new Router({
       path: '/student/rooms',
       name: 'Salas disponíveis',
       icon: 'book',
-      title: 'Salas diponíveis',
+      title: 'Salas disponíveis',
       component: Rooms
     },
     {
