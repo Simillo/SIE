@@ -8,6 +8,7 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -168,6 +169,13 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             return Ok(ResponseContent.Create(new MViewActivity(activity), HttpStatusCode.OK, null));
+        }
+
+        [HttpPost]
+        [Route("Answer/{roomCode}/{activityId}")]
+        public IActionResult Answer([FromBody] dynamic answer, string roomCode, int activityId)
+        {
+            return Ok();
         }
     }
 }
