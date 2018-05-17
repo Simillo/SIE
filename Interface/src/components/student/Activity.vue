@@ -15,6 +15,7 @@
           span.room-code  {{activity.Code}}
         .room-head-description(v-if='activity.Description')
           span peso: {{activity.Weight}}
+          br
           span {{activity.Description}}
       .room-content
         form(

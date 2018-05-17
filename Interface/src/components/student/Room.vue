@@ -147,15 +147,23 @@ export default {
     getActions (activity) {
       const alreadyAnswered = !!activity.Answer.Answer
       const answer = {
-        Tooltip: activity.CurrentState === EActivityState.InProgress.ordinal && !alreadyAnswered ? 'Responder' : 'Visualizar',
+        Tooltip: 'Responder',
         To: `/student/room/${this.room.Code}/activity/${activity.Id}`,
         Icon: 'play_arrow'
       }
 
+      const visualize = {
+        Tooltip: 'Visualizar',
+        To: `/student/room/${this.room.Code}/activity/${activity.Id}`,
+        Icon: 'remove_red_eye'
+      }
+
       switch (activity.CurrentState) {
         case EActivityState.InProgress.ordinal:
-        case EActivityState.Done.ordinal:
+          if (alreadyAnswered) return [visualize]
           return [answer]
+        case EActivityState.Done.ordinal:
+          return [visualize]
       }
     },
     exitRoom () {
