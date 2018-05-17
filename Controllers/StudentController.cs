@@ -18,7 +18,6 @@ namespace SIE.Controllers
     {
         private readonly BHistory _bHistory;
 
-        private readonly BActivity _bActivity;
         private readonly BRelStudentRoom _bRelStudentRoom;
         private readonly BAnswer _bAnswer;
         private readonly BRoom _bRoom;
@@ -30,7 +29,6 @@ namespace SIE.Controllers
 
         public StudentController(SIEContext context)
         {
-            _bActivity = new BActivity(context);
             _bHistory = new BHistory(context);
             _uActivity = new UActivity(context);
             _uRelStudentRoom = new URelStudentRoom(context);
@@ -173,7 +171,8 @@ namespace SIE.Controllers
             if (!roomsIds.Contains(room.Id))
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
-            return Ok(ResponseContent.Create(new MViewActivity(activity), HttpStatusCode.OK, null));
+            var answer = _uAnswer.GetByUser(activityId, authenticatedPersonId);
+            return Ok(ResponseContent.Create(new MViewActivity(activity, answer), HttpStatusCode.OK, null));
         }
 
         [HttpPost]
@@ -202,7 +201,7 @@ namespace SIE.Controllers
             if (string.IsNullOrEmpty(answer.Answer))
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "É obrigatório responder a atividade!"));
 
-            if (_uAnswer.GetByActivity(activity.Id) != null)
+            if (_uAnswer.GetByUser(activity.Id, authenticatedPersonId) != null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já respondeu essa atividade!"));
 
             _bAnswer.Save(authenticatedPersonId, activity.Id, room.Id, answer.Answer);

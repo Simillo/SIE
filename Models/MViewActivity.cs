@@ -7,7 +7,7 @@ namespace SIE.Models
     {
         public MViewActivity() { }
 
-        public MViewActivity(Activity activity)
+        public MViewActivity(Activity activity, Answer answer = null)
         {
             Id = activity.Id;
             Name = activity.Title;
@@ -16,6 +16,10 @@ namespace SIE.Models
             CurrentState = activity.CurrentState;
             Weight = activity.Weight;
             EndDate = activity.EndDate;
+            Answer = new MAnswer
+            {
+                Answer = answer?.UserAnswer
+            };
         }
 
         public int Id { get; set; }
@@ -25,5 +29,6 @@ namespace SIE.Models
         public string Description { get; set; }
         public int CurrentState { get; set; }
         public double Weight { get; set; }
+        public MAnswer Answer { get; set; }
     }
 }

@@ -11,6 +11,8 @@ namespace SIE.Utils
         private readonly SIEContext _context;
         public UAnswer(SIEContext context) => _context = context;
 
-        public Answer GetByActivity(int activityId) => _context.Answer.FirstOrDefault(a => a.ActivityId == activityId);
+        public List<Answer> GetByActivity(int activityId) => _context.Answer.Where(a => a.ActivityId == activityId).ToList();
+
+        public Answer GetByUser(int activityId, int personId) => _context.Answer.FirstOrDefault(a => a.ActivityId == activityId && a.PersonId == personId);
     }
 }
