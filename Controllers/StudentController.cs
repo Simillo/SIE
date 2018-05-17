@@ -127,28 +127,6 @@ namespace SIE.Controllers
         }
 
         [HttpGet]
-        [Route("ExitRoom/{roomCode}")]
-        public IActionResult ExitRoom(string roomCode)
-        {
-            var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
-            var room = _uRoom.GetByCode(roomCode);
-            var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
-
-            if (room == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
-
-            if (!roomsIds.Contains(room.Id))
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não pode sair dessa sala pois não está cadastrado nelas!"));
-
-            _bRelStudentRoom.Exit(authenticatedPersonId, room.Id);
-            room.NumberOfStudents--;
-            _bRoom.SaveOrUpdate(room);
-            _bHistory.SaveHistory(authenticatedPersonId, "Usuário saiu de uma sala");
-
-            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Você saiu da sala!"));
-        }
-
-        [HttpGet]
         [Route("LoadActivity/{roomCode}/{activityId}")]
         public IActionResult LoadActivity(string roomCode, int activityId)
         {

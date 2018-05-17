@@ -11,9 +11,10 @@ using System;
 namespace SIE.Migrations
 {
     [DbContext(typeof(SIEContext))]
-    partial class SIEContextModelSnapshot : ModelSnapshot
+    [Migration("20180517012717_AnswerNamesMigration")]
+    partial class AnswerNamesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

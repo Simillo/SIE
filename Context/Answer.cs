@@ -19,7 +19,7 @@ namespace SIE.Context
 
         [Required]
         public string UserAnswer { get; set; }
-        public string Justification { get; set; }
+        public string Feedback { get; set; }
 
         public double Grade { get; set; }
 
