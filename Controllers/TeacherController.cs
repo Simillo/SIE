@@ -23,6 +23,7 @@ namespace SIE.Controllers
         private readonly UActivity _uActivity;
         private readonly BRoom _bRoom;
         private readonly URoom _uRoom;
+        private readonly UAnswer _uAnswer;
 
         public TeacherController(SIEContext context)
         {
@@ -31,6 +32,7 @@ namespace SIE.Controllers
             _uActivity = new UActivity(context);
             _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
+            _uAnswer = new UAnswer(context);
         }
 
         [HttpGet]
@@ -146,6 +148,26 @@ namespace SIE.Controllers
             return Ok(ResponseContent.Create(new MRoomView(room, activities), HttpStatusCode.OK, null));
         }
 
+        [HttpGet]
+        [Route("LoadActivity/{roomCode}/{activityId}")]
+        public IActionResult LoadActivity(string roomCode, int activityId)
+        {
+            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+            var room = _uRoom.GetByCode(roomCode);
+            if (room == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (activity.PersonId != sessionPersonId || room.PersonId != sessionPersonId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
+
+            var answers = _uAnswer.GetByActivity(activity.Id);
+            return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers), HttpStatusCode.OK, null));
+        }
+
         [HttpPost]
         [Route("SaveActivity/{roomCode}")]
         public IActionResult SaveActivity([FromBody] MNewActivity activity, string roomCode)
@@ -186,24 +208,6 @@ namespace SIE.Controllers
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }
 
-        [HttpGet]
-        [Route("LoadActivity/{roomCode}/{activityId}")]
-        public IActionResult LoadActivity(string roomCode, int activityId)
-        {
-            var sessionPersonId = HttpContext.Session.GetSessionPersonId();
-            var activity = _uActivity.GetById(activityId);
-            var room = _uRoom.GetByCode(roomCode);
-            if (room == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
-
-            if (activity == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
-
-            if (activity.PersonId != sessionPersonId || room.PersonId != sessionPersonId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
-
-            return Ok(ResponseContent.Create(new MViewActivity(activity), HttpStatusCode.OK, null));
-        }
 
         [HttpGet]
         [Route("InitiateActivity/{activityId}")]
@@ -252,6 +256,13 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedUserId, "Usuário finalizou uma atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade foi encerrada!"));
+        }
+
+        [HttpPost]
+        [Route("Evaluate/{roomCode}/{activityId}")]
+        public IActionResult Evaluate([FromBody] MViewAnswer answer, string roomCode, int activityId)
+        {
+            return Ok();
         }
     }
 }

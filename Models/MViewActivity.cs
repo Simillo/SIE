@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SIE.Context;
 
 namespace SIE.Models
 {
     public class MViewActivity
     {
-        public MViewActivity() { }
-
-        public MViewActivity(Activity activity, Answer answer = null)
+        public MViewActivity(Activity activity, Answer answer = null, List<Answer> answers = null)
         {
             Id = activity.Id;
             Name = activity.Title;
@@ -20,6 +20,7 @@ namespace SIE.Models
             {
                 Answer = answer?.UserAnswer
             };
+            Answers = answers?.Select(a => new MViewAnswer(a)).ToList() ?? new List<MViewAnswer>();
         }
 
         public int Id { get; set; }
@@ -30,5 +31,6 @@ namespace SIE.Models
         public int CurrentState { get; set; }
         public double Weight { get; set; }
         public MAnswer Answer { get; set; }
+        public List<MViewAnswer> Answers { get; set; }
     }
 }

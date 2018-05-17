@@ -55,6 +55,23 @@
               v-if='canIEdit',
               @click.prevent='validate'
             ) {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
+
+        .room-content-activities-item(
+            v-for='(activity, index) in searched',
+            :key='index'
+          )
+            .activities-sub-head
+              span.activities-sub-title Entregue {{activity.SentDate | date}}
+            br
+            .activities-description-container
+              span.activities-description {{activity.Answer}}
+            br
+            .activities-actions
+              .activities-actions-item(
+                @click.prevent='grade(activity)'
+              )
+                md-tooltip(md-direction='top') Avaliar
+                md-icon.md-size note_add
 </template>
 
 <script>
@@ -77,6 +94,8 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      search: '',
+      searched: [],
       activity: {},
       form: new NewActivity(),
       isEditing: !!this.$route.params.activityId,
@@ -106,6 +125,8 @@ export default {
   methods: {
     async loadActivity () {
       try {
+        this.search = ''
+        this.searched = []
         const params = this.$route.params
         const res = await this.service.loadActivity(params.roomCode, params.activityId)
         this.activity = res.body.entity
@@ -116,6 +137,10 @@ export default {
           Weight: this.activity.Weight,
           ExpirationDate: this.activity.ExpirationDate
         }
+        this.searched = this.activity.Answers.map(a => {
+          a.Open = false
+          return a
+        })
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }
@@ -150,6 +175,9 @@ export default {
           'md-invalid': field.$invalid && field.$dirty
         }
       }
+    },
+    grade (activity) {
+      console.log(activity)
     }
   }
 }
@@ -170,5 +198,43 @@ export default {
     display: block
   }
 }
-
+.md-speed-dial {
+  float: right;
+  .md-tooltip {
+    margin-left: 20px;
+  }
+  .md-speed-dial-content {
+    position: absolute;
+    margin: 55px 0px auto 9px;
+  }
+}
+.room-content-activities-item {
+  border: 1px solid #ccc;
+  margin: 100px 0 20px;
+  min-height: 20px;
+  div {
+    margin: 5px;
+    display: block;
+  }
+  .activities-head {
+    .activities-name {
+      float: left;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .activities-state {
+      float: right;
+    }
+  }
+  .activities-actions-item {
+    display: inline-block;
+    cursor: pointer;
+    i {
+      background: #ccc;
+      border-radius: 100%;
+      padding: 15px;
+      color: black;
+    }
+  }
+}
 </style>
