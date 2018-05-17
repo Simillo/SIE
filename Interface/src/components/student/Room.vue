@@ -145,8 +145,9 @@ export default {
       this.searched = this.room.Activities.filter(a => a.Name.includes(query) || (a.Description && a.Description.includes(query)))
     },
     getActions (activity) {
+      const alreadyAnswered = !!activity.Answer.Answer
       const answer = {
-        Tooltip: activity.CurrentState === EActivityState.InProgress.ordinal ? 'Responder' : 'Visualizar',
+        Tooltip: activity.CurrentState === EActivityState.InProgress.ordinal && !alreadyAnswered ? 'Responder' : 'Visualizar',
         To: `/student/room/${this.room.Code}/activity/${activity.Id}`,
         Icon: 'play_arrow'
       }

@@ -85,6 +85,7 @@ export default {
   height: 100%;
 }
 .my-profile {
+  cursor: pointer;
   margin-top: 20px;
   height: 60px;
   .my-photo {

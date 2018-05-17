@@ -20,7 +20,6 @@
         form(
           novalidate,
           @submit.prevent='active = true'
-          @keypress.enter='active = true'
         )
           md-field(:class='getValidationClass("Answer")')
             label(for='answer') Resposta

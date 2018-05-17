@@ -9,7 +9,7 @@ namespace SIE.Models
     {
         public MRoomView() { }
 
-        public MRoomView(Room room, IEnumerable<Activity> activities)
+        public MRoomView(Room room, IEnumerable<Activity> activities, IEnumerable<Answer> answers = null)
         {
             Name = room.Name;
             Code = room.Code;
@@ -18,7 +18,7 @@ namespace SIE.Models
             CurrentState = room.CurrentState;
             NumberOfStudents = room.NumberOfStudents;
             EndDate = room.EndDate;
-            Activities = activities.Select(a => new MViewActivity(a));
+            Activities = activities.Select(a => new MViewActivity(a, answers?.FirstOrDefault(x => x.ActivityId == a.Id)));
         }
 
         public string Name { get; set; }
@@ -28,8 +28,6 @@ namespace SIE.Models
         public string Description { get; set; }
         public int CurrentState { get; set; }
         public int NumberOfStudents { get; set; }
-
         public IEnumerable<MViewActivity> Activities { get; set; }
-
     }
 }
