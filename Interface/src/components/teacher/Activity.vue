@@ -236,14 +236,16 @@ export default {
       float: right;
     }
   }
-  .activities-actions-item {
+  .activities-actions {
     display: inline-block;
-    cursor: pointer;
-    i {
-      background: #ccc;
-      border-radius: 100%;
-      padding: 15px;
-      color: black;
+    .activities-actions-item {
+      cursor: pointer;
+      i {
+        background: #ccc;
+        border-radius: 100%;
+        padding: 15px;
+        color: black;
+      }
     }
   }
 }
