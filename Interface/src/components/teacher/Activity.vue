@@ -58,7 +58,7 @@
 
         .room-content-activities-item(
             v-for='(activity, index) in searched',
-            :key='index'
+            :key='activity.Id'
           )
             .activities-sub-head
               span.activities-sub-title Entregue {{activity.SentDate | date}}
@@ -67,11 +67,18 @@
               span.activities-description {{activity.Answer}}
             br
             .activities-actions
-              .activities-actions-item(
-                @click.prevent='grade(activity)'
-              )
+              .activities-actions-item(@click='open(index)')
                 md-tooltip(md-direction='top') Avaliar
                 md-icon.md-size note_add
+              .activities-actions-grade(v-if='activity.Open')
+                md-field
+                  label(for='grade') Nota
+                  md-input#grade(
+                    name='grade',
+                    type='number',
+                    v-model='activity.Grade'
+                  )
+
 </template>
 
 <script>
@@ -96,6 +103,7 @@ export default {
     return {
       search: '',
       searched: [],
+      original: [],
       activity: {},
       form: new NewActivity(),
       isEditing: !!this.$route.params.activityId,
@@ -141,6 +149,7 @@ export default {
           a.Open = false
           return a
         })
+        this.original = [...this.searched]
       } catch (ex) {
         this.$router.push('/teacher/my-rooms')
       }
@@ -176,8 +185,9 @@ export default {
         }
       }
     },
-    grade (activity) {
-      console.log(activity)
+    open (index) {
+      this.original[index].Open = !this.original[index].Open
+      this.searched = [...this.original]
     }
   }
 }
