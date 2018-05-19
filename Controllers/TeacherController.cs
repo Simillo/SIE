@@ -10,6 +10,7 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
+using Newtonsoft.Json;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -20,17 +21,21 @@ namespace SIE.Controllers
     {
         private readonly BHistory _bHistory;
         private readonly BActivity _bActivity;
-        private readonly UActivity _uActivity;
         private readonly BRoom _bRoom;
+        private readonly BAnswer _bAnswer;
+
+        private readonly UActivity _uActivity;
         private readonly URoom _uRoom;
         private readonly UAnswer _uAnswer;
 
         public TeacherController(SIEContext context)
         {
-            _bActivity = new BActivity(context);
             _bHistory = new BHistory(context);
-            _uActivity = new UActivity(context);
+            _bActivity = new BActivity(context);
             _bRoom = new BRoom(context);
+            _bAnswer = new BAnswer(context);
+
+            _uActivity = new UActivity(context);
             _uRoom = new URoom(context);
             _uAnswer = new UAnswer(context);
         }
@@ -259,10 +264,37 @@ namespace SIE.Controllers
         }
 
         [HttpPost]
-        [Route("Evaluate/{roomCode}/{activityId}")]
-        public IActionResult Evaluate([FromBody] MViewAnswer answer, string roomCode, int activityId)
+        [Route("Evaluate/{roomCode}")]
+        public IActionResult Evaluate([FromBody] object obj, string roomCode)
         {
-            return Ok();
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var mAnswer = (MViewAnswer) obj;
+
+            var answer = _uAnswer.GetById(mAnswer.Id);
+            var activity = _uActivity.GetById(answer.ActivityId);
+
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (activity.PersonId != authenticatedUserId)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (activity.CurrentState != (int)EActivityState.InProgress)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser avaliada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
+
+            if (mAnswer.Grade <= 0.0)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A nota da atividade deve ser maior que 0!"));
+
+            if (mAnswer.Grade > activity.Weight)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A nota da atividade deve ser menor que o peso da atividade, {activity.Weight}!"));
+
+            answer.EvaluatedDate = DateTime.Now;
+            answer.Grade = mAnswer.Grade;
+
+            _bAnswer.Update(answer);
+            _bHistory.SaveHistory(authenticatedUserId, "Usuário avaliou uma resposta");
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Resposta foi avaliada!"));
         }
     }
 }

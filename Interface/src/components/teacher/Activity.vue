@@ -67,9 +67,9 @@
               span.activities-description {{activity.Answer}}
             br
             .activities-actions
-              .activities-actions-item(@click='open(index)')
-                md-tooltip(md-direction='top') Avaliar
+              .activities-actions-item(@click.prevent='toggleGrade(index)')
                 md-icon.md-size note_add
+                  md-tooltip(md-direction='top') Avaliar
               .activities-actions-grade(v-if='activity.Open')
                 md-field
                   label(for='grade') Nota
@@ -78,7 +78,13 @@
                     type='number',
                     v-model='activity.Grade'
                   )
-
+                .evaluate-actions
+                  .activities-actions-item(@click.prevent='evaluate(activity, index)')
+                    md-icon.md-size check
+                      md-tooltip(md-direction='top') Salvar
+                  .activities-actions-item(@click.prevent='toggleGrade(index)')
+                    md-icon.md-size close
+                      md-tooltip(md-direction='top') Cancelar
 </template>
 
 <script>
@@ -185,9 +191,13 @@ export default {
         }
       }
     },
-    open (index) {
+    toggleGrade (index) {
       this.original[index].Open = !this.original[index].Open
       this.searched = [...this.original]
+    },
+    evaluate (activity, index) {
+      this.toggleGrade(index)
+      this.service.evaluate(activity, this.$route.params.roomCode)
     }
   }
 }
@@ -237,14 +247,30 @@ export default {
     }
   }
   .activities-actions {
-    display: inline-block;
+    width: 50%;
     .activities-actions-item {
+      width: 30px;
+      height: 30px;
       cursor: pointer;
       i {
         background: #ccc;
         border-radius: 100%;
         padding: 15px;
         color: black;
+      }
+    }
+    .activities-actions-grade {
+      display: inline;
+      .md-field{
+        width: calc(100% - 100px);
+        input {
+          width: 100%;
+        }
+      }
+      .evaluate-actions {
+        display: inline-flex;
+        float: right;
+        margin-top: -35px;
       }
     }
   }

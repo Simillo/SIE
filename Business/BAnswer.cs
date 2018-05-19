@@ -27,5 +27,11 @@ namespace SIE.Business
             _context.Answer.Add(newAnswer);
             _context.SaveChanges();
         }
+
+        public void Update(Answer answer)
+        {
+            _context.Answer.Update(answer);
+            _context.SaveChanges();
+        }
     }
 }

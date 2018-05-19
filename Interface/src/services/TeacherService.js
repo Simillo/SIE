@@ -33,4 +33,7 @@ export default class {
   async closeRoom (roomCode) {
     return this._http.get(`teacher/CloseRoom/${roomCode}`)
   }
+  async evaluate (activity, roomCode) {
+    return this._http.post(`teacher/Evaluate/${roomCode}`, activity)
+  }
 }
