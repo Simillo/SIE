@@ -25,11 +25,11 @@ namespace SIE.Context
         [Required]
         [ForeignKey("Person")]
         public int PersonId { get; set; }
-        public Person Person { get; set; }
+        public virtual Person Person { get; set; }
 
         [Required]
         [ForeignKey("Room")]
         public int RoomId { get; set; }
-        public Room Room { get; set; }
+        public virtual Room Room { get; set; }
     }
 }

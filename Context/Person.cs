@@ -16,7 +16,7 @@ namespace SIE.Context
         public string Email{ get; set; }
         [ForeignKey("Institution")]
         public int? InstitutionId { get; set; }
-        public Institution Institution { get; set; }
+        public virtual Institution Institution { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]

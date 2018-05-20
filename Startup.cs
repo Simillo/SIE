@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using SIE.Context;
 using SIE.Middleware;
@@ -30,7 +28,7 @@ namespace SIE
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<SIEContext>(options => options.UseNpgsql(Configuration.GetConnectionString("sie")));
+                .AddDbContext<SIEContext>(options => options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("sie")));
             services.AddLogging();
             services.AddMvc()
                 .AddSessionStateTempDataProvider()
@@ -74,5 +72,7 @@ namespace SIE
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
         }
+
+        
     }
 }

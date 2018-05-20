@@ -170,7 +170,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             var answers = _uAnswer.GetByActivity(activity.Id);
-            return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers), HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(answers, HttpStatusCode.OK, null));
         }
 
         [HttpPost]

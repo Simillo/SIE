@@ -16,6 +16,6 @@ namespace SIE.Context
         [Required]
         [ForeignKey("Person")]
         public int PersonId { get; set; }
-        public Person Person { get; set; }
+        public virtual Person Person { get; set; }
     }
 }
