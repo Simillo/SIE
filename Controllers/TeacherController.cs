@@ -265,12 +265,15 @@ namespace SIE.Controllers
 
         [HttpPost]
         [Route("Evaluate/{roomCode}")]
-        public IActionResult Evaluate([FromBody] object obj, string roomCode)
+        public IActionResult Evaluate([FromBody] MTeacherAnswer mAnswer, string roomCode)
         {
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            var mAnswer = (MViewAnswer) obj;
 
             var answer = _uAnswer.GetById(mAnswer.Id);
+
+            if (answer == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A resposta não existe!"));
+
             var activity = _uActivity.GetById(answer.ActivityId);
 
             if (activity == null)
@@ -289,6 +292,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A nota da atividade deve ser menor que o peso da atividade, {activity.Weight}!"));
 
             answer.EvaluatedDate = DateTime.Now;
+            answer.Feedback = mAnswer.Feedback;
             answer.Grade = mAnswer.Grade;
 
             _bAnswer.Update(answer);

@@ -78,6 +78,12 @@
                     type='number',
                     v-model='activity.Grade'
                   )
+                md-field
+                  label(for='feedback') Feedback
+                  md-input#feedback(
+                    name='feedback',
+                    v-model='activity.Feedback'
+                  )
                 .evaluate-actions
                   .activities-actions-item(@click.prevent='evaluate(activity, index)')
                     md-icon.md-size check
@@ -196,8 +202,10 @@ export default {
       this.searched = [...this.original]
     },
     evaluate (activity, index) {
-      this.toggleGrade(index)
       this.service.evaluate(activity, this.$route.params.roomCode)
+        .then(() => {
+          this.toggleGrade(index)
+        })
     }
   }
 }
