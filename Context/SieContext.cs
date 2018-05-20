@@ -5,7 +5,9 @@ namespace SIE.Context
 {
     public class SIEContext : DbContext
     {
-        public SIEContext(DbContextOptions<SIEContext> options) : base(options) { }
+        public SIEContext(DbContextOptions<SIEContext> options) : base(options)
+        {
+        }
 
         public DbSet<Person> Person { get; set; }
         public DbSet<Institution> Institution { get; set; }

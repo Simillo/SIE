@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using SIE.Auxiliary;
-using SIE.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIE.Context
 {
@@ -15,7 +14,9 @@ namespace SIE.Context
         public string Cpf { get; set; }
         [Required]
         public string Email{ get; set; }
+        [ForeignKey("Institution")]
         public int? InstitutionId { get; set; }
+        public Institution Institution { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]

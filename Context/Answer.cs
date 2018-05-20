@@ -12,7 +12,6 @@ namespace SIE.Context
         [Key]
         public int Id { get; set; }
 
-
         [Required]
         public DateTime SentDate { get; set; }
         public DateTime? EvaluatedDate { get; set; }
