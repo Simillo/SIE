@@ -15,6 +15,7 @@
           span.room-code  {{activity.Code}}
         .room-head-description(v-if='activity.Description')
           span peso: {{activity.Weight}}
+          span {{getGrade(activity.Answer.Grade, activity.Weight)}}
           br
           span {{activity.Description}}
       .room-content
@@ -42,6 +43,8 @@
 <script>
 import StudentService from '../../services/StudentService'
 import Student from './Student.vue'
+
+import EActivityState from '../../enums/EActivityState'
 
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
@@ -79,7 +82,7 @@ export default {
         .then(res => {
           this.activity = res.body.entity
           this.form = res.body.entity.Answer
-          this.canIAnswer = !res.body.entity.Answer.Answer
+          this.canIAnswer = !res.body.entity.Answer.Answer && res.body.entity.CurrentState === EActivityState.InProgress.ordinal
         })
         .catch(() => {
           this.$router.push('/student/my-rooms')
@@ -106,6 +109,16 @@ export default {
       if (!this.$v.$invalid) {
         this.save()
       }
+    },
+    getGrade (grade, weight) {
+      if (!grade) {
+        if (this.activity.CurrentState === EActivityState.Done.ordinal) {
+          if (!this.activity.Answer.Answer) return 'Atividade finalizada sem você ter respondido'
+          else return 'Atividade foi finalizada sem ser avaliada'
+        } else if (this.activity.Answer.Answer) return 'Atividade ainda não foi avaliada'
+      }
+
+      return grade ? `nota: ${(grade / weight * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%` : 'Você ainda não respondeu'
     }
   }
 }

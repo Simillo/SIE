@@ -15,12 +15,12 @@ namespace SIE.Models
         public MAnswer(Answer answer)
         {
             Answer = answer?.UserAnswer;
-            Grade = answer?.Grade ?? 0;
-            Answer = answer?.Feedback;
+            Grade = answer?.Grade;
+            Feedback = answer?.Feedback;
         }
 
         public string Answer { get; set; }
-        public double Grade { get; set; }
+        public double? Grade { get; set; }
         public string Feedback { get; set; }
     }
 }

@@ -37,6 +37,7 @@ export default {
 </script>
 
 <style lang='scss'>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 html, body {
   padding: 0;
   margin: 0;
@@ -48,7 +49,7 @@ html, body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -88,6 +89,10 @@ html, body {
   left: 50%;
   top: 50%;
   z-index: 999;
+}
+
+.margin-left-20 {
+  margin-left: 20px;
 }
 
 .md-toolbar {

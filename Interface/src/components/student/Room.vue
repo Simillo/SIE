@@ -45,7 +45,7 @@
             br
             .activities-sub-head
               span.activities-sub-title {{getCurrentStateSubtitle(activity)}}
-              span.activity-float-right {{getGrade(activity.Answer.Grade, activity.Weight)}}
+              span.activity-float-right {{getGrade(activity)}}
             br
             .activities-description-container
               span.activities-description {{activity.Description}}
@@ -67,6 +67,8 @@
                 )
                   md-tooltip(md-direction='top') {{action.Tooltip}}
                   md-icon.md-size {{action.Icon}}
+                span.margin-left-20(v-if='activity.Answer.Feedback') Feedback do professor:
+                  b &nbsp;{{activity.Answer.Feedback}}
         .room-content-activities(v-if='!searched.length && room.Activities && room.Activities.length')
           p Nenhuma atividade foi encontrada com o filtro informado!
         .room-content-activities(v-else-if='!room.Activities || !room.Activities.length')
@@ -170,8 +172,17 @@ export default {
           return [visualize]
       }
     },
-    getGrade (grade, weight) {
-      return grade ? `${(grade / weight * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%` : 'Atividade ainda não foi avaliada!'
+    getGrade (activity) {
+      const grade = activity.Answer.Grade
+      const weight = activity.Weight
+      if (!grade) {
+        if (activity.CurrentState === EActivityState.Done.ordinal) {
+          if (!activity.Answer.Answer) return 'Atividade finalizada sem você ter respondido'
+          else return 'Atividade foi finalizada sem ser avaliada'
+        } else if (activity.Answer.Answer) return 'Atividade ainda não foi avaliada'
+      }
+
+      return grade ? `${(grade / weight * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%` : 'Você ainda não respondeu'
     },
     exitRoom () {
       this.service.exitRoom(this.room.Code)
