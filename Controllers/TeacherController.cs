@@ -170,7 +170,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             var answers = _uAnswer.GetByActivity(activity.Id);
-            return Ok(ResponseContent.Create(answers, HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers), HttpStatusCode.OK, null));
         }
 
         [HttpPost]
@@ -180,12 +180,10 @@ namespace SIE.Controllers
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             var room = _uRoom.GetByCode(roomCode);
             if (room == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                    $"A sala com código \"{roomCode}\" não existe!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.PersonId != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
-                    "Você não tem acesso a essa sala!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int) ERoomState.Closed)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Essa sala está fechada!"));
@@ -193,17 +191,25 @@ namespace SIE.Controllers
             if (activity.ExpirationDate != null)
             {
                 if (activity.ExpirationDate < DateTime.Now)
-                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                        "A data de fim da atividade não pode ser menor que a data atual!"));
+                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A data de fim da atividade não pode ser menor que a data atual!"));
 
                 if (room.ExpirationDate != null && activity.ExpirationDate > room.ExpirationDate)
-                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                        "A data de fim da atividade não pode ser maior que a data fim da sala!"));
+                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A data de fim da atividade não pode ser maior que a data fim da sala!"));
             }
 
             if (activity.Weight <= 0.0)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                    "O peso da atividade deve ser um número maior que 0!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "O peso da atividade deve ser um número maior que 0!"));
+
+            var roomActivities = _uActivity.GetByRoom(room.Id);
+            var sumRoomActivities = roomActivities.Sum(a => a.Weight);
+
+            if (sumRoomActivities >= 100)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Não é possível adicionar mais atividades pois já está no limite de 100 pontos (100%)!"));
+
+            if (sumRoomActivities + activity.Weight > 100)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"O peso da atividade não pode ser maior que {100 - sumRoomActivities}, para não ultrapassar o limite da sala!"));
+
+
 
             _bActivity.SaveOrUpdate(activity, room);
             var msgType = activity.Id > 0 ? "editada" : "criada";

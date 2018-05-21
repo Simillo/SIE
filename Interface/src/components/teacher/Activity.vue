@@ -61,7 +61,7 @@
             :key='activity.Id'
           )
             .activities-sub-head
-              span.activities-sub-title Entregue {{activity.SentDate | date}}
+              span.activities-sub-title Entregue {{activity.SentDate | date}} por {{activity.Name}}
             br
             .activities-description-container
               span.activities-description {{activity.Answer}}
@@ -238,8 +238,11 @@ export default {
 }
 .room-content-activities-item {
   border: 1px solid #ccc;
-  margin: 100px 0 20px;
   min-height: 20px;
+    margin: 20px 0 20px;
+  &:first-of-type {
+    margin: 100px 0 20px;
+  }
   div {
     margin: 5px;
     display: block;

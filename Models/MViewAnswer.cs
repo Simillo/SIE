@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using SIE.Context;
+using SIE.Migrations;
 
 namespace SIE.Models
 {
@@ -18,6 +19,7 @@ namespace SIE.Models
             SentDate = answer.SentDate;
             EvaluatedDate = answer.EvaluatedDate;
             Feedback = answer.Feedback;
+            Name = answer.Person.Name;
 
         }
         public int Id { get; set; }
@@ -26,5 +28,6 @@ namespace SIE.Models
         public DateTime SentDate { get; set; }
         public DateTime? EvaluatedDate { get; set; }
         public string Feedback { get; set; }
+        public string Name { get; set; }
     }
 }
