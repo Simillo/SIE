@@ -133,7 +133,7 @@ export default {
       }
     },
     getCurrentStateSubtitle (activity) {
-      const state = activity.CurretnState
+      const state = activity.CurrentState
       const expirationDate = activity.ExpirationDate
       const endDate = activity.EndDate
 

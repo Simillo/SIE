@@ -16,10 +16,7 @@ namespace SIE.Models
             CurrentState = activity.CurrentState;
             Weight = activity.Weight;
             EndDate = activity.EndDate;
-            Answer = new MAnswer
-            {
-                Answer = answer?.UserAnswer
-            };
+            Answer = new MAnswer(answer);
             Answers = answers?.Select(a => new MViewAnswer(a)).ToList() ?? new List<MViewAnswer>();
         }
 

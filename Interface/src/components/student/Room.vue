@@ -41,10 +41,11 @@
           )
             .activities-head
               span.activities-name {{activity.Name}}
-              span.activities-state {{getCurrentStateTitle(activity.CurrentState)}}
+              span.activity-float-right {{getCurrentStateTitle(activity.CurrentState)}}
             br
             .activities-sub-head
               span.activities-sub-title {{getCurrentStateSubtitle(activity)}}
+              span.activity-float-right {{getGrade(activity.Answer.Grade, activity.Weight)}}
             br
             .activities-description-container
               span.activities-description {{activity.Description}}
@@ -122,13 +123,13 @@ export default {
       }
     },
     getCurrentStateSubtitle (activity) {
-      const state = activity.CurretnState
+      const state = activity.CurrentState
       const expirationDate = activity.ExpirationDate
       const endDate = activity.EndDate
 
       switch (state) {
         case EActivityState.InProgress.ordinal:
-          if (expirationDate === null) return ''
+          if (expirationDate === null) return 'Sem data final para entrega'
 
           return `Entregar até ${this.getFormatedDate(expirationDate)}`
         case EActivityState.Done.ordinal:
@@ -143,6 +144,9 @@ export default {
       }
 
       this.searched = this.room.Activities.filter(a => a.Name.includes(query) || (a.Description && a.Description.includes(query)))
+    },
+    getFormatedDate (date) {
+      return new Date(date).toLocaleDateString('pt-BR')
     },
     getActions (activity) {
       const alreadyAnswered = !!activity.Answer.Answer
@@ -165,6 +169,9 @@ export default {
         case EActivityState.Done.ordinal:
           return [visualize]
       }
+    },
+    getGrade (grade, weight) {
+      return grade ? `${(grade / weight * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%` : 'Atividade ainda não foi avaliada!'
     },
     exitRoom () {
       this.service.exitRoom(this.room.Code)
@@ -201,14 +208,17 @@ export default {
     margin: 5px;
     display: block;
   }
+  .activity-float-right {
+    float: right;
+  }
+  .activities-sub-title {
+    float: left;
+  }
   .activities-head {
     .activities-name {
       float: left;
       font-size: 20px;
       font-weight: bold;
-    }
-    .activities-state {
-      float: right;
     }
   }
   .activities-actions-item {
