@@ -17,7 +17,11 @@
         md-table-cell(
           md-label='Nome da sala',
           md-sort-by='Name'
-        ) {{item.Name}}
+        )
+          span(v-if='item.CanIJoin') {{item.Name}}
+          router-link(
+            v-else,
+            :to='"/student/room/"+item.Code') {{item.Name}}
         md-table-cell(
           md-label='Código da sala',
           md-sort-by='Code'
