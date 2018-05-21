@@ -108,12 +108,17 @@ html, body {
   height: 123px;
 }
 .room-container {
-  padding: 40px 0 0 40px;
-  width: 80%;
+  padding: 40px;
+  @media(max-width: 996px) {
+  }
   .room-head {
-    width: 400px;
+    width: 50%;
+    margin: 0 auto;
     min-height: 20px;
     font-weight: bold;
+    @media (max-width: 1600px) {
+      width: 100%;
+    }
     .room-head-name {
       .room-name {
         font-size: 25px;
@@ -128,12 +133,9 @@ html, body {
     }
   }
   .room-content {
-    margin-top: 40px;
+    margin: 40px auto;
     width: 50%;
     @media (max-width: 1600px) {
-      width: 70%;
-    }
-    @media (max-width: 1100px) {
       width: 100%;
     }
   }
