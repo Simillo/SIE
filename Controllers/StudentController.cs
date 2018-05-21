@@ -90,9 +90,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você não pode entrar nessa sala pois ela não está aberta!"));
 
             if (roomsIds.Contains(room.Id))
-            {
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já está nessa sala!"));
-            }
 
             _bRelStudentRoom.Save(authenticatedPersonId, room.Id);
             room.NumberOfStudents++;

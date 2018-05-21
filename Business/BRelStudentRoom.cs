@@ -28,7 +28,7 @@ namespace SIE.Business
         {
             var rel = _context
                 .RelStudentRoom
-                .FirstOrDefault(r => r.RoomId == roomId && r.PersonId == personId && r.Active);
+                .FirstOrDefault(r => r.Room.Id == roomId && r.Person.Id == personId && r.Active);
 
             if (rel == null)
                 return;

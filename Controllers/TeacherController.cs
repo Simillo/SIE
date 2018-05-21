@@ -85,7 +85,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
                     $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != authenticatedUserId)
+            if (room.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
                     "Você não tem acesso a essa sala!"));
 
@@ -115,7 +115,7 @@ namespace SIE.Controllers
             if (room == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != authenticatedUserId)
+            if (room.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int)ERoomState.Closed)
@@ -144,7 +144,7 @@ namespace SIE.Controllers
             if (room == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != authenticatedUserId)
+            if (room.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
 
@@ -166,7 +166,7 @@ namespace SIE.Controllers
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != sessionPersonId || room.PersonId != sessionPersonId)
+            if (activity.Person.Id != sessionPersonId || room.Person.Id != sessionPersonId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             var answers = _uAnswer.GetByActivity(activity.Id);
@@ -182,7 +182,7 @@ namespace SIE.Controllers
             if (room == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
-            if (room.PersonId != authenticatedUserId)
+            if (room.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int) ERoomState.Closed)
@@ -230,7 +230,7 @@ namespace SIE.Controllers
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != authenticatedUserId)
+            if (activity.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.Building)
@@ -255,7 +255,7 @@ namespace SIE.Controllers
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != authenticatedUserId)
+            if (activity.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.InProgress)
@@ -280,12 +280,12 @@ namespace SIE.Controllers
             if (answer == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A resposta não existe!"));
 
-            var activity = _uActivity.GetById(answer.ActivityId);
+            var activity = _uActivity.GetById(answer.Activity.Id);
 
             if (activity == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.PersonId != authenticatedUserId)
+            if (activity.Person.Id != authenticatedUserId)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.InProgress)

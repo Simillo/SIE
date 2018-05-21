@@ -18,7 +18,7 @@ namespace SIE.Models
             CurrentState = room.CurrentState;
             NumberOfStudents = room.NumberOfStudents;
             EndDate = room.EndDate;
-            Activities = activities.Select(a => new MViewActivity(a, answers?.FirstOrDefault(x => x.ActivityId == a.Id)));
+            Activities = activities.Select(a => new MViewActivity(a, answers?.FirstOrDefault(x => x.Activity.Id == a.Id)));
         }
 
         public string Name { get; set; }
