@@ -77,5 +77,24 @@ namespace SIE.Controllers
             HttpContext.Session.Clear();
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Saindo..."));
         }
+
+        [HttpGet]
+        [Route("Teste")]
+        public IActionResult Teste()
+        {
+            //var client = new SmtpClient("smtp.gmail.com");
+            //client.UseDefaultCredentials = false;
+            //client.Port = 587;
+            //client.EnableSsl = true;
+            //client.Credentials = new NetworkCredential("", "");
+
+            //var mailMessage = new MailMessage();
+            //mailMessage.From = new MailAddress("");
+            //mailMessage.To.Add("");
+            //mailMessage.Body = "teste";
+            //mailMessage.Subject = "teste";
+            //client.Send(mailMessage);
+            return Ok();
+        }
     }
 }
