@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -12,6 +9,7 @@ using SIE.Context;
 using SIE.Enums;
 using SIE.Helpers;
 using SIE.Models;
+using SIE.Services;
 using SIE.Utils;
 
 namespace SIE.Controllers
@@ -22,12 +20,13 @@ namespace SIE.Controllers
         private readonly BHistory _bHistory;
         private readonly BPerson _bPerson;
         private readonly UPerson _uPerson;
-
-        public PersonController(SIEContext context)
+        private readonly SEmail _sEmail;
+        public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
             _uPerson = new UPerson(context);
+            _sEmail = new SEmail(configuration);
         }
 
         [HttpPost]
@@ -82,18 +81,7 @@ namespace SIE.Controllers
         [Route("Teste")]
         public IActionResult Teste()
         {
-            //var client = new SmtpClient("smtp.gmail.com");
-            //client.UseDefaultCredentials = false;
-            //client.Port = 587;
-            //client.EnableSsl = true;
-            //client.Credentials = new NetworkCredential("", "");
-
-            //var mailMessage = new MailMessage();
-            //mailMessage.From = new MailAddress("");
-            //mailMessage.To.Add("");
-            //mailMessage.Body = "teste";
-            //mailMessage.Subject = "teste";
-            //client.Send(mailMessage);
+            _sEmail.SendEmail("teste subject", "teste body", new List<string>{""});
             return Ok();
         }
     }
