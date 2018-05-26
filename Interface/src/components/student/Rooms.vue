@@ -1,6 +1,9 @@
 <template lang='pug'>
   sidebar
+    .msg-feedback(v-if='rooms.length == 0')
+      h3 Não existem salas disponíveis ainda :(
     md-table(
+      v-else,
       v-model='rooms',
       md-sort='Name',
       md-sort-order='asc',

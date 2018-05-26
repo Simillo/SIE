@@ -140,4 +140,8 @@ html, body {
     }
   }
 }
+.msg-feedback {
+  margin-top: 100px;
+  text-align: center;
+}
 </style>

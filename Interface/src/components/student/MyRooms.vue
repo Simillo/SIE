@@ -1,6 +1,11 @@
 <template lang='pug'>
   sidebar
+    .msg-feedback(v-if='rooms.length == 0')
+      h3 Você ainda não está cadastrado em nenhuma sala :(
+      router-link(to='/student/rooms')
+        span Clique aqui para procurar uma sala
     md-table(
+      v-else,
       v-model='rooms',
       md-sort='Name',
       md-sort-order='asc',
