@@ -74,9 +74,11 @@ namespace SIE.Business
         {
             if (!login.Email.ValidEmail()) return null;
 
-            var listResult = _uPerson.GetByEmail(login.Email);
-            return listResult.FirstOrDefault(p => p.Password == login.Password.Sha256Hash());
+            var person = _uPerson.GetByEmail(login.Email);
+            if (person != null && person.Password == login.Password.Sha256Hash())
+                return person;
 
+            return null;
         }
     }
 }

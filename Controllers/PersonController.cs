@@ -22,14 +22,12 @@ namespace SIE.Controllers
         private readonly BPerson _bPerson;
         private readonly BPasswordRecovery _bPasswordRecovery;
         private readonly UPerson _uPerson;
-        private readonly SEmail _sEmail;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
-            _bPasswordRecovery = new BPasswordRecovery(context);
+            _bPasswordRecovery = new BPasswordRecovery(context, configuration);
             _uPerson = new UPerson(context);
-            _sEmail = new SEmail(configuration);
         }
 
         [HttpPost]
@@ -87,17 +85,12 @@ namespace SIE.Controllers
             if (HttpContext.Session.IsAuth())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
 
-            var person = _uPerson.GetByEmail(email).FirstOrDefault();
+            var person = _uPerson.GetByEmail(email);
             if (person == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));
 
-            var passwordRecovery = new PasswordRecovery
-            {
-                Person = person
-            };
-            _bPasswordRecovery.Save(ref passwordRecovery);
+            _bPasswordRecovery.Recovery(person);
 
-            _sEmail.SendEmail("Recuperação de senha", $"<h1>Olá, {person.Name}</h1><br/><a href='http://localhost:8080/#/password-recovery/{passwordRecovery.Token}/'>Clique aqui para cadastrar uma nova senha.</a><br/>http://localhost:8080/#/password-recovery/{passwordRecovery.Token}/", new List<string> { person.Email });
             return Ok();
         }
     }

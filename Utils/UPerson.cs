@@ -12,7 +12,7 @@ namespace SIE.Utils
         public UPerson(SIEContext context) => _context = context;
 
         public List<Person> GetByCpf(string cpf) => _context.Person.Where(p => p.Cpf == cpf.RCpf()).ToList();
-        public List<Person> GetByEmail(string email) => _context.Person.Where(p => p.Email == email).ToList();
+        public Person GetByEmail(string email) => _context.Person.FirstOrDefault(p => p.Email == email);
 
         public Person GetById(int idPerson) => _context.Person.Find(idPerson);
     }

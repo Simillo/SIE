@@ -5,10 +5,10 @@ using System.Net.Mail;
 
 namespace SIE.Services
 {
-    public class SEmail : IEmail
+    public abstract class SEmail : IEmail
     {
         private readonly IConfiguration _configuration;
-        public SEmail(IConfiguration configuration) => _configuration = configuration;
+        protected SEmail(IConfiguration configuration) => _configuration = configuration;
         public void SendEmail(string subject, string body, IEnumerable<string> destination)
         {
             var client = new SmtpClient("smtp.gmail.com")

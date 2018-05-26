@@ -2,7 +2,7 @@
 
 namespace SIE
 {
-    interface IEmail
+    public interface IEmail
     {
         void SendEmail(string subject, string body, IEnumerable<string> destination);
     }
