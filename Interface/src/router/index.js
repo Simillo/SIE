@@ -7,6 +7,7 @@ import EProfile from '../enums/EProfile'
 // EXTERN
 import Login from '@/components/login/Login'
 import Register from '@/components/register/Register'
+import PasswordRecovery from '@/components/password-recovery/PasswordRecovery'
 
 // TEACHER
 import Teacher from '@/components/teacher/Teacher'
@@ -43,6 +44,18 @@ export default new Router({
       path: '/teacher',
       name: 'Professor',
       component: Teacher
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/password-recovery',
+      name: 'Recuperar senha',
+      component: PasswordRecovery
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/password-recovery/:token',
+      name: 'Recuperarando senha',
+      component: PasswordRecovery
     },
     {
       sidebar: EProfile.Teacher,

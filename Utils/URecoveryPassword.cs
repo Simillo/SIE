@@ -13,5 +13,8 @@ namespace SIE.Utils
 
         public PasswordRecovery GetUserCurrentActive(int personId) =>
             _context.PasswordRecovery.FirstOrDefault(r => r.Person.Id == personId && r.Active);
+
+        public PasswordRecovery GetByToken(string token) =>
+            _context.PasswordRecovery.FirstOrDefault(r => r.Token == token);
     }
 }

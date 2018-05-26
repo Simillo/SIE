@@ -23,7 +23,8 @@ namespace SIE.Business
             _uInstitution = new UInstitution(_context);
             _bInstitution = new BInstitution(_context);
         }
-        public Person SaveOrUpdate(MPerson person)
+
+        public Person Save(MPerson person)
         {
             var institutionId = 0;
             if (!string.IsNullOrEmpty(person.Institution?.Name))
@@ -45,29 +46,20 @@ namespace SIE.Business
                 Profile = person.Profile
             };
 
-            if (person.Id > 0)
-            {
-                cPerson = _context.Person.Find(cPerson.Id);
-                Update(cPerson);
-            }
-            else
-            {
-                Save(cPerson);
-            }
-
+            Save(cPerson);
             _context.SaveChanges();
             return cPerson;
+        }
 
+        public void Update(Person person)
+        {
+            _context.Person.Update(person);
+            _context.SaveChanges();
         }
 
         private void Save(Person person)
         {
             _context.Person.Add(person);
-        }
-
-        private void Update(Person person)
-        {
-            _context.Person.Update(person);
         }
 
         public Person SearchForPerson(MLogin login)

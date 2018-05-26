@@ -17,7 +17,7 @@ namespace SIE.Business
             _uRecoveryPassword = new URecoveryPassword(context);
         }
 
-        public void Recovery(Person person)
+        public void Request(Person person)
         {
             var currentActive = _uRecoveryPassword.GetUserCurrentActive(person.Id);
             if (currentActive != null)
@@ -39,6 +39,14 @@ namespace SIE.Business
             _context.SaveChanges();
 
             SendEmail(passwordRecovery);
+        }
+
+        public void Recovery(PasswordRecovery passwordRecovery)
+        {
+            passwordRecovery.Active = false;
+            passwordRecovery.RecoveryDate = DateTime.Now;
+            _context.PasswordRecovery.Update(passwordRecovery);
+            _context.SaveChanges();
         }
 
         private void SendEmail(PasswordRecovery passwordRecovery)

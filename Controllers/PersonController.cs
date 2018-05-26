@@ -22,12 +22,14 @@ namespace SIE.Controllers
         private readonly BPerson _bPerson;
         private readonly BPasswordRecovery _bPasswordRecovery;
         private readonly UPerson _uPerson;
+        private readonly URecoveryPassword _uRecoveryPassword;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
             _bPasswordRecovery = new BPasswordRecovery(context, configuration);
             _uPerson = new UPerson(context);
+            _uRecoveryPassword = new URecoveryPassword(context);
         }
 
         [HttpPost]
@@ -45,7 +47,7 @@ namespace SIE.Controllers
             if (errors.Any())
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
-            var newPerson = _bPerson.SaveOrUpdate(person);
+            var newPerson = _bPerson.Save(person);
             _bHistory.SaveHistory(newPerson.Id, "Usuário registrou no sistema");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.Created, "Cadastro realizado com sucesso!"));
@@ -79,6 +81,24 @@ namespace SIE.Controllers
         }
 
         [HttpGet]
+        [Route("GetInfoByToken/{token}")]
+        public IActionResult GetInfoByToken(string token)
+        {
+            if (HttpContext.Session.IsAuth())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
+
+            var info = _uRecoveryPassword.GetByToken(token);
+
+            if (info == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
+
+            if(DateTime.Now > info.ExpirationDate || !info.Active)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
+
+            return Ok(ResponseContent.Create(new MViewInfoToken(info), HttpStatusCode.OK, null));
+        }
+
+        [HttpGet]
         [Route("Recovery/{email}")]
         public IActionResult Recovery(string email)
         {
@@ -89,9 +109,33 @@ namespace SIE.Controllers
             if (person == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));
 
-            _bPasswordRecovery.Recovery(person);
+            _bPasswordRecovery.Request(person);
 
-            return Ok();
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Solicitação enviada com sucesso, verifique sua caixa de entrada!"));
+        }
+
+        [HttpPost]
+        [Route("UpdatePassword")]
+        public IActionResult UpdatePassword([FromBody] MUpdatePassword updatePassword)
+        {
+            if (updatePassword.Password.Length < 6)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A senha deve conter ao menos 6 caracteres!"));
+
+            var passwordRecovery = _uRecoveryPassword.GetByToken(updatePassword.Token);
+
+            if (passwordRecovery == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
+
+            if (DateTime.Now > passwordRecovery.ExpirationDate || !passwordRecovery.Active)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
+
+            var newPerson = passwordRecovery.Person;
+            newPerson.Password = updatePassword.Password.Sha256Hash();
+            _bPerson.Update(newPerson);
+
+            _bPasswordRecovery.Recovery(passwordRecovery);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Senha alterada com sucesso!"));
         }
     }
 }

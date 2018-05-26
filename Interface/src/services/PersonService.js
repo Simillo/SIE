@@ -16,4 +16,13 @@ export default class {
   async logout () {
     return this._http.get('person/Logout')
   }
+  async recovery (email) {
+    return this._http.get(`person/Recovery/${email}`)
+  }
+  async updatePassword (data) {
+    return this._http.post(`person/UpdatePassword`, data)
+  }
+  async getInfoByToken (token) {
+    return this._http.get(`person/GetInfoByToken/${token}`)
+  }
 }

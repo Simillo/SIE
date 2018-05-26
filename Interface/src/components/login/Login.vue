@@ -4,7 +4,7 @@
     :height='"375px"')
     form(
       novalidate,
-      @submit.prevent='validate'
+      @submit.prevent='validate',
       @keypress.enter='validate'
       )
       md-field(:class='getValidationClass("Email")')
@@ -24,7 +24,8 @@
         router-link(to='/register')
           a Não possui conta?
       .float-right
-        a Esqueceu a senha?
+        router-link(to='/password-recovery')
+          a Esqueceu a senha?
       div
         md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
           @click.prevent='validate') Entrar
