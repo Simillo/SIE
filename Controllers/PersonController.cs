@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Configuration;
@@ -19,12 +20,14 @@ namespace SIE.Controllers
     {
         private readonly BHistory _bHistory;
         private readonly BPerson _bPerson;
+        private readonly BPasswordRecovery _bPasswordRecovery;
         private readonly UPerson _uPerson;
         private readonly SEmail _sEmail;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
+            _bPasswordRecovery = new BPasswordRecovery(context);
             _uPerson = new UPerson(context);
             _sEmail = new SEmail(configuration);
         }
@@ -78,10 +81,23 @@ namespace SIE.Controllers
         }
 
         [HttpGet]
-        [Route("Teste")]
-        public IActionResult Teste()
+        [Route("Recovery/{email}")]
+        public IActionResult Recovery(string email)
         {
-            _sEmail.SendEmail("teste subject", "teste body", new List<string>{""});
+            if (HttpContext.Session.IsAuth())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
+
+            var person = _uPerson.GetByEmail(email).FirstOrDefault();
+            if (person == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));
+
+            var passwordRecovery = new PasswordRecovery
+            {
+                Person = person
+            };
+            _bPasswordRecovery.Save(ref passwordRecovery);
+
+            _sEmail.SendEmail("Recuperação de senha", $"<h1>Olá, {person.Name}</h1><br/><a href='http://localhost:8080/#/password-recovery/{passwordRecovery.Token}/'>Clique aqui para cadastrar uma nova senha.</a><br/>http://localhost:8080/#/password-recovery/{passwordRecovery.Token}/", new List<string> { person.Email });
             return Ok();
         }
     }

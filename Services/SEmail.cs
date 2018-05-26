@@ -23,6 +23,7 @@ namespace SIE.Services
             {
                 From = new MailAddress(_configuration["Email:Username"]),
                 Body = body,
+                IsBodyHtml = true,
                 Subject = subject
             };
             foreach (var email in destination)

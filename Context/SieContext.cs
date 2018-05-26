@@ -16,5 +16,6 @@ namespace SIE.Context
         public DbSet<Activity> Activity { get; set; }
         public DbSet<RelStudentRoom> RelStudentRoom { get; set; }
         public DbSet<Answer> Answer { get; set; }
+        public DbSet<PasswordRecovery> PasswordRecovery { get; set; }
     }
 }
