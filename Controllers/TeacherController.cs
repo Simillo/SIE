@@ -56,6 +56,9 @@ namespace SIE.Controllers
             if (errors.Any())
                 return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, "Campo(s) inválido(s)!"));
 
+            if (newRoom.ExpirationDate != null && newRoom.ExpirationDate < DateTime.Now)
+                return BadRequest(ResponseContent.Create(errors, HttpStatusCode.BadRequest, $"A data do fim da sala deve ser maior que hoje, {DateTime.Now:dd/MM/yyyy}!"));
+
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             _bRoom.Save(newRoom, authenticatedUserId);
 
@@ -82,19 +85,16 @@ namespace SIE.Controllers
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
             var room = _uRoom.GetByCode(roomCode);
             if (room == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                    $"A sala com código \"{roomCode}\" não existe!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized,
-                    "Você não tem acesso a essa sala!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int) ERoomState.Open)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A sala já está aberta!"));
 
             if (room.CurrentState == (int) ERoomState.Closed)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest,
-                    "A não pode ser aberta depois de fechada!"));
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A não pode ser aberta depois de fechada!"));
 
             room.CurrentState = (int) ERoomState.Open;
             room.StartDate = DateTime.Now;
@@ -191,7 +191,7 @@ namespace SIE.Controllers
             if (activity.ExpirationDate != null)
             {
                 if (activity.ExpirationDate < DateTime.Now)
-                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A data de fim da atividade não pode ser menor que a data atual!"));
+                    return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A data do fim da atividade deve ser maior que hoje, {DateTime.Now:dd/MM/yyyy}!"));
 
                 if (room.ExpirationDate != null && activity.ExpirationDate > room.ExpirationDate)
                     return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A data de fim da atividade não pode ser maior que a data fim da sala!"));

@@ -1,7 +1,7 @@
 <template lang='pug'>
   box(
     :hasClass='true',
-    :height='"375px"')
+    :height='"305px"')
     form(
       novalidate,
       @submit.prevent='validate',

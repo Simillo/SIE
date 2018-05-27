@@ -110,7 +110,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));
 
             _bPasswordRecovery.Request(person);
-
+            _bHistory.SaveHistory(person.Id, "Usuário solicitou a recuperação da senha");
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Solicitação enviada com sucesso, verifique sua caixa de entrada!"));
         }
 
@@ -135,6 +135,7 @@ namespace SIE.Controllers
 
             _bPasswordRecovery.Recovery(passwordRecovery);
 
+            _bHistory.SaveHistory(newPerson.Id, "Usuário alterou a senha através da recuperação de senhas");
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Senha alterada com sucesso!"));
         }
     }

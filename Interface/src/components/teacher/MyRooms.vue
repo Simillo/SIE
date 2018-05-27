@@ -1,6 +1,11 @@
 <template lang='pug'>
   sidebar
+    .msg-feedback(v-if='rooms.length == 0')
+      h3 Você ainda não criou nenhuma sala :(
+      router-link(to='/teacher/new-room')
+        span Clique aqui para criar uma
     md-table(
+      v-else,
       v-model='rooms',
       md-sort='Name',
       md-sort-order='asc',

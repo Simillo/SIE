@@ -23,10 +23,10 @@
         md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
           @click.prevent='validate') Solicitar
     form(
-      v-else
+      v-else,
       novalidate,
-      @submit.prevent='validatePassword',
-      @keypress.enter='validatePassword'
+      @submit.prevent='validate',
+      @keypress.enter='validate'
     )
       md-field(:class='getValidationClass("Password")')
         label(for='password') Nova senha
@@ -37,11 +37,21 @@
         span.md-error(v-if='!$v.form.Password.required') Obrigatório!
         span.md-error(v-else-if='!$v.form.Password.minLength') A senha deve ter no mínimo 6 caracteres!
         span.md-error(v-else-if='!$v.form.Password.validPassword') A senha deve contém ao letra(s) e número(s)!
+
+      md-field(:class='getValidationClass("PasswordCheck")')
+        label(for='passwordCheck') Confirmar a senha
+        md-input#passwordCheck(
+          name='passwordCheck',
+          type='password',
+          v-model='form.PasswordCheck')
+        span.md-error(v-if='!$v.form.PasswordCheck.required') Obrigatório!
+        span.md-error(v-else-if='!$v.form.PasswordCheck.validPassword') A senha deve contém ao letra(s) e número(s)!
+        span.md-error(v-else-if='!$v.form.PasswordCheck.sameAs') As senhas devem ser iguais
       div
         router-link(to='/')
           md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
         md-button.md-raised.md-primary.no-margin.float-right.pull-bottom(
-          @click.prevent='validatePassword') Alterar a senha
+          @click.prevent='validate') Alterar a senha
 </template>
 
 <script>
@@ -50,7 +60,8 @@ import { validationMixin } from 'vuelidate'
 import {
   minLength,
   required,
-  email
+  email,
+  sameAs
 } from 'vuelidate/lib/validators'
 import { validPassword } from '../../services/Utils'
 import PersonService from '../../services/PersonService'
@@ -65,26 +76,40 @@ export default {
       token: this.$route.params.token,
       form: {
         Email: '',
-        Password: ''
+        Password: '',
+        PasswordCheck: ''
       },
-      hasToken: false
+      hasToken: !!this.$route.params.token
     }
   },
-  validations: {
-    form: {
-      Email: {
-        required,
-        email
-      },
-      Password: {
-        required,
-        validPassword,
-        minLength: minLength(6)
+  validations () {
+    if (!this.hasToken) {
+      return {
+        form: {
+          Email: {
+            required,
+            email
+          }
+        }
+      }
+    } else {
+      return {
+        form: {
+          Password: {
+            required,
+            validPassword,
+            minLength: minLength(6)
+          },
+          PasswordCheck: {
+            required,
+            validPassword,
+            sameAs: sameAs('Password')
+          }
+        }
       }
     }
   },
   async created () {
-    this.hasToken = !!this.token
     this.service = new PersonService(this.$http)
     if (this.hasToken) {
       this.service.getInfoByToken(this.token)
@@ -115,15 +140,10 @@ export default {
     },
     validate () {
       this.$v.$touch()
-      if (!this.$v.form.Email.$invalid) {
-        this.recovery()
-      }
-    },
-    validatePassword () {
-      this.$v.$touch()
-      if (!this.$v.$invalid) {
-        this.updatePassword()
-      }
+      if (this.$v.$invalid) return
+
+      if (this.hasToken) this.updatePassword()
+      else this.recovery()
     },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
