@@ -19,7 +19,7 @@ namespace SIE.Business
             _sEmail = new EmailService(configuration);
         }
 
-        public void Request(Person person)
+        public void Request(Person person, ref bool hasOpenRequest)
         {
             var currentActive = _uRecoveryPassword.GetUserCurrentActive(person.Id);
             if (currentActive != null)
@@ -27,6 +27,7 @@ namespace SIE.Business
                 currentActive.Active = false;
                 currentActive.CancelationDate = DateTime.Now;
                 _context.PasswordRecovery.Update(currentActive);
+                hasOpenRequest = true;
             }
 
             var passwordRecovery = new PasswordRecovery
@@ -43,10 +44,8 @@ namespace SIE.Business
             SendEmail(passwordRecovery);
         }
 
-        public void Recovery(PasswordRecovery passwordRecovery)
+        public void Update(PasswordRecovery passwordRecovery)
         {
-            passwordRecovery.Active = false;
-            passwordRecovery.RecoveryDate = DateTime.Now;
             _context.PasswordRecovery.Update(passwordRecovery);
             _context.SaveChanges();
         }

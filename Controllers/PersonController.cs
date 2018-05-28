@@ -64,6 +64,16 @@ namespace SIE.Controllers
             if (person == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail e/ou senha incorreto(s)!"));
 
+            var passwordRecoveryRequest = _uRecoveryPassword.GetUserCurrentActive(person.Id);
+
+            if (passwordRecoveryRequest != null)
+            {
+                passwordRecoveryRequest.CancelationDate = DateTime.Now;
+                passwordRecoveryRequest.Active = false;
+                _bPasswordRecovery.Update(passwordRecoveryRequest);
+                _bHistory.SaveHistory(person.Id, "Usuário cancelou uma solicitação de recuperação da senha através do login");
+            }
+
             HttpContext.Session.Authenticate(person);
             var res = person.Profile == (int)EProfile.Teacher ? "/teacher" : "/student";
 
@@ -87,15 +97,15 @@ namespace SIE.Controllers
             if (HttpContext.Session.IsAuth())
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
 
-            var info = _uRecoveryPassword.GetByToken(token);
+            var passwordRecoveryRequest = _uRecoveryPassword.GetByToken(token);
 
-            if (info == null)
+            if (passwordRecoveryRequest == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
 
-            if(DateTime.Now > info.ExpirationDate || !info.Active)
+            if (DateTime.Now > passwordRecoveryRequest.ExpirationDate || !passwordRecoveryRequest.Active)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
 
-            return Ok(ResponseContent.Create(new MViewInfoToken(info), HttpStatusCode.OK, null));
+            return Ok(ResponseContent.Create(new MViewInfoToken(passwordRecoveryRequest), HttpStatusCode.OK, null));
         }
 
         [HttpGet]
@@ -109,7 +119,11 @@ namespace SIE.Controllers
             if (person == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));
 
-            _bPasswordRecovery.Request(person);
+            var hasOpenRequest = false;
+            _bPasswordRecovery.Request(person, ref hasOpenRequest);
+            if (hasOpenRequest)
+                _bHistory.SaveHistory(person.Id, "Usuário cancelou uma solicitação de recuperação da senha através da solicitação de uma nova");
+
             _bHistory.SaveHistory(person.Id, "Usuário solicitou a recuperação da senha");
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Solicitação enviada com sucesso, verifique sua caixa de entrada!"));
         }
@@ -132,8 +146,9 @@ namespace SIE.Controllers
             var newPerson = passwordRecovery.Person;
             newPerson.Password = updatePassword.Password.Sha256Hash();
             _bPerson.Update(newPerson);
-
-            _bPasswordRecovery.Recovery(passwordRecovery);
+            passwordRecovery.RecoveryDate = DateTime.Now;
+            passwordRecovery.Active = false;
+            _bPasswordRecovery.Update(passwordRecovery);
 
             _bHistory.SaveHistory(newPerson.Id, "Usuário alterou a senha através da recuperação de senhas");
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Senha alterada com sucesso!"));
