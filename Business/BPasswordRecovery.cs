@@ -7,14 +7,16 @@ using SIE.Utils;
 
 namespace SIE.Business
 {
-    public class BPasswordRecovery : SEmail
+    public class BPasswordRecovery
     {
         private readonly SIEContext _context;
         private readonly URecoveryPassword _uRecoveryPassword;
-        public BPasswordRecovery(SIEContext context, IConfiguration configuration) : base(configuration)
+        private readonly EmailService _sEmail;
+        public BPasswordRecovery(SIEContext context, IConfiguration configuration)
         {
             _context = context;
             _uRecoveryPassword = new URecoveryPassword(context);
+            _sEmail = new EmailService(configuration);
         }
 
         public void Request(Person person)
@@ -56,7 +58,7 @@ namespace SIE.Business
                        " para cadastrar uma nova senha.<br/>" +
                        $"http://localhost:8080/#/password-recovery/{passwordRecovery.Token}/";
 
-            SendEmail("Recuperação de senha", body, new List<string> { passwordRecovery.Person.Email });
+            _sEmail.SendEmail("Recuperação de senha", body, new List<string> { passwordRecovery.Person.Email });
         }
     }
 }
