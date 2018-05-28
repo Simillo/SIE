@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using Interfaces.SIE;
 
 namespace SIE.Services
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SIE
+namespace Interfaces.SIE
 {
     public interface IEmail
     {
