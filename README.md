@@ -76,3 +76,11 @@ Execute os comandos:
 > na pasta `/SIE/` digite `dotnet ef database update`
 
 > na pasta `/SIE/interface/` digite `npm i` e logo em seguida `npm run dev`
+
+Altere a propriedade  `setProfileEnvironment` no arquivo `%WINDIR%\System32\inetsrv\config\applicationHost.config` para:
+
+```
+<add name="DefaultAppPool" autoStart="true" enable32BitAppOnWin64="true" managedRuntimeVersion="v4.0" startMode="AlwaysRunning">
+    <processModel setProfileEnvironment="true" />
+</add>
+```
