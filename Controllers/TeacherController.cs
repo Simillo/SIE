@@ -10,7 +10,6 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
-using Newtonsoft.Json;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -88,7 +87,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int) ERoomState.Open)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A sala já está aberta!"));
@@ -116,7 +115,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int)ERoomState.Closed)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A sala já está fechada!"));
@@ -145,7 +144,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
 
             var activities = _uActivity.GetByRoom(room.Id);
@@ -167,7 +166,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
             if (activity.Person.Id != sessionPersonId || room.Person.Id != sessionPersonId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             var answers = _uAnswer.GetByActivity(activity.Id);
             return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers), HttpStatusCode.OK, null));
@@ -183,7 +182,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A sala com código \"{roomCode}\" não existe!"));
 
             if (room.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala!"));
 
             if (room.CurrentState == (int) ERoomState.Closed)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Essa sala está fechada!"));
@@ -231,7 +230,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
             if (activity.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.Building)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser iniciada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
@@ -256,7 +255,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
             if (activity.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.InProgress)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser encerrada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));
@@ -286,7 +285,7 @@ namespace SIE.Controllers
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
             if (activity.Person.Id != authenticatedUserId)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
             if (activity.CurrentState != (int)EActivityState.InProgress)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"A atividade não pode ser avaliada pois ela está {((EActivityState)activity.CurrentState).Description().ToLower()}!"));

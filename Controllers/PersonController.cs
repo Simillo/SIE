@@ -95,15 +95,15 @@ namespace SIE.Controllers
         public IActionResult GetInfoByToken(string token)
         {
             if (HttpContext.Session.IsAuth())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
 
             var passwordRecoveryRequest = _uRecoveryPassword.GetByToken(token);
 
             if (passwordRecoveryRequest == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
 
             if (DateTime.Now > passwordRecoveryRequest.ExpirationDate || !passwordRecoveryRequest.Active)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
 
             return Ok(ResponseContent.Create(new MViewInfoToken(passwordRecoveryRequest), HttpStatusCode.OK, null));
         }
@@ -113,7 +113,7 @@ namespace SIE.Controllers
         public IActionResult Recovery(string email)
         {
             if (HttpContext.Session.IsAuth())
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
 
             var person = _uPerson.GetByEmail(email);
             if (person == null)
@@ -138,10 +138,10 @@ namespace SIE.Controllers
             var passwordRecovery = _uRecoveryPassword.GetByToken(updatePassword.Token);
 
             if (passwordRecovery == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
 
             if (DateTime.Now > passwordRecovery.ExpirationDate || !passwordRecovery.Active)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
 
             var newPerson = passwordRecovery.Person;
             newPerson.Password = updatePassword.Password.Sha256Hash();
