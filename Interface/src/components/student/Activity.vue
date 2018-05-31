@@ -3,7 +3,7 @@
     md-dialog-confirm(
       :md-active.sync='active',
       md-title='Atenção',
-      md-content='Deseja responder agora a pergunta?<br/>Após o envio <b>não</b> será mais possível altera-la.',
+      md-content='Deseja responder agora a pergunta?<br/>Após o envio <b>não</b> será mais possível alterá-la.',
       md-confirm-text='Continuar',
       md-cancel-text='Cancelar',
       @md-confirm='validate'
