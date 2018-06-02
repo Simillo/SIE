@@ -13,11 +13,12 @@ namespace SIE.Business
         private readonly UPasswordRecovery _uPasswordRecovery;
         private readonly EmailService _sEmail;
 
-        public BPasswordRecovery(SIEContext context, IConfiguration configuration)
+        public BPasswordRecovery(SIEContext context, IConfiguration configuration = null)
         {
             _context = context;
             _uPasswordRecovery = new UPasswordRecovery(context);
-            _sEmail = new EmailService(configuration);
+            if (configuration != null)
+                _sEmail = new EmailService(configuration);
         }
 
         public void Request(Person person, ref bool hasOpenRequest)
@@ -41,8 +42,9 @@ namespace SIE.Business
             };
             _context.PasswordRecovery.Add(passwordRecovery);
             _context.SaveChanges();
-
-            SendEmail(passwordRecovery);
+            
+            if (_sEmail != null)
+                SendEmail(passwordRecovery);
         }
 
         public void Update(PasswordRecovery passwordRecovery)

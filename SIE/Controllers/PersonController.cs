@@ -102,7 +102,7 @@ namespace SIE.Controllers
             if (passwordRecoveryRequest == null)
                 return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação não existe!"));
 
-            if (DateTime.Now > passwordRecoveryRequest.ExpirationDate || !passwordRecoveryRequest.Active)
+            if (!passwordRecoveryRequest.Active)
                 return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Essa solicitação já expirou!"));
 
             return Ok(ResponseContent.Create(new MViewInfoToken(passwordRecoveryRequest), HttpStatusCode.OK, null));
