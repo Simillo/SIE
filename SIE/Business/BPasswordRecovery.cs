@@ -10,18 +10,19 @@ namespace SIE.Business
     public class BPasswordRecovery
     {
         private readonly SIEContext _context;
-        private readonly URecoveryPassword _uRecoveryPassword;
+        private readonly UPasswordRecovery _uPasswordRecovery;
         private readonly EmailService _sEmail;
+
         public BPasswordRecovery(SIEContext context, IConfiguration configuration)
         {
             _context = context;
-            _uRecoveryPassword = new URecoveryPassword(context);
+            _uPasswordRecovery = new UPasswordRecovery(context);
             _sEmail = new EmailService(configuration);
         }
 
         public void Request(Person person, ref bool hasOpenRequest)
         {
-            var currentActive = _uRecoveryPassword.GetUserCurrentActive(person.Id);
+            var currentActive = _uPasswordRecovery.GetUserCurrentActive(person.Id);
             if (currentActive != null)
             {
                 currentActive.Active = false;

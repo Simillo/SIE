@@ -22,14 +22,14 @@ namespace SIE.Controllers
         private readonly BPerson _bPerson;
         private readonly BPasswordRecovery _bPasswordRecovery;
         private readonly UPerson _uPerson;
-        private readonly URecoveryPassword _uRecoveryPassword;
+        private readonly UPasswordRecovery _uRecoveryPassword;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
             _bPasswordRecovery = new BPasswordRecovery(context, configuration);
             _uPerson = new UPerson(context);
-            _uRecoveryPassword = new URecoveryPassword(context);
+            _uRecoveryPassword = new UPasswordRecovery(context);
         }
 
         [HttpPost]
