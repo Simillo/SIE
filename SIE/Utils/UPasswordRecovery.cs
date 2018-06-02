@@ -15,5 +15,6 @@ namespace SIE.Utils
             _context.PasswordRecovery.FirstOrDefault(r => r.Person.Id == personId && r.Active && r.ExpirationDate > DateTime.Now);
 
         public PasswordRecovery GetByToken(string token) => _context.PasswordRecovery.FirstOrDefault(r => r.Token == token);
+        public IEnumerable<PasswordRecovery> Get() => _context.PasswordRecovery;
     }
 }
