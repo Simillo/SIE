@@ -57,14 +57,34 @@ namespace SIE.Scheduler.Scheduler.Tasks
 
                 foreach (var student in students)
                 {
-                    var body = "<h3>Atividades a serem entregues na próxima semana</h3><br/>";
-                    toExpire
+                
+                    var listActivities = toExpire
                         .Where(a => a.Room.Id == student.Room.Id && uAnswer.GetByUser(a.Id, student.Person.Id) == null)
                         .OrderBy(a => a.ExpirationDate)
-                        .ForEach(t => { body += $"<li><b><a href='http://localhost:8080/#/student/room/{t.Room.Code}/activity/{t.Id}'>{t.Title}</a></b>" +
-                                                        $" para o dia <b>{t.ExpirationDate:dd/MM/yyyy}</b>.";});
+                        .ToList();
+                    if (!listActivities.Any()) continue;
 
-                    sEmail.SendEmail("Suas atividades a serem entregues durante a próxima semana", body, new List<string> { student.Person.Email });
+                    var body = "<h3>Atividades a serem entregues na próxima semana</h3><br/>" +
+                               "<table border='1' cellpadding='2' cellspacing='0' height='100%' width='100%'>" +
+                               "<thead>" +
+                               "<tr><td>Título</td><td>Descrição</td><td>Data final para entrega</td></tr>" +
+                               "</thead>" +
+                               "<tbody>";
+
+                    listActivities
+                        .ForEach(t =>
+                        {
+                            body += "<tr>" +
+                                    $"<td><a href='http://localhost:8080/#/student/room/{t.Room.Code}/activity/{t.Id}'>{t.Title}</a></td>" +
+                                    $"<td>{(!string.IsNullOrEmpty(t.Description) ? t.Description : "-")}</td>"+
+                                    $"<td>{t.ExpirationDate:dd/MM/yyyy}</td>"+
+                                    "</tr>";
+                        });
+
+                    body += "</tbody>" +
+                            "</table>";
+
+                    sEmail.SendEmail("Suas atividades a serem entregues nos próximos dias", body, new List<string> { student.Person.Email });
                 }
             }
         }
