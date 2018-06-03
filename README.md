@@ -13,12 +13,7 @@ O SIE é desenvolvido usando as ferramentes [ASP.NET Core 2](https://docs.micros
 
 ## Árvore de diretórios
 ```bash
-├───Auxiliary/ #métodos auxiliares
-├───Business/ #métodos para salvar, alterar, deletar
-├───Context/ #métodos de contexto do banco usando migrations
-├───Controllers/ #métodos controlares que interagem com a interface
-├───Helpers/ #métodos para facilicar o desenvolvimento
-├───Interface/ #diretório de interface 
+|───Interface/ #diretório de interface 
 │   ├───build/ #arquivos para gerar release
 │   ├───config/ #arquivos de ambiente
 │   ├───src/ #pasta com os arquivos source da interface
@@ -31,31 +26,52 @@ O SIE é desenvolvido usando as ferramentes [ASP.NET Core 2](https://docs.micros
 │   │   ├───bus.js #arquivo de emissão e sinais
 │   │   └───main.js #arquivo principal para carregar o vue
 │   ├───static/
-│   ├───.babelrc
-│   ├───.editorconfig
-│   ├───.eslintignore
-│   ├───.eslintrc.js
-│   ├───.gitignore
-│   ├───.postcssrc.js
-│   ├───README.md
-│   ├───index.html
-│   ├───package-lock.json
-│   └───package.json
-├───Migrations/ #histório de mudanças do banco
-├───Models/ #classes modelos para facilicar o desenvolvimento
-├───Properties/ #configurações de desenvolvimento
+│   ├───.babelrc #confis do babel
+│   ├───.editorconfig #configs do editor
+│   ├───.eslintignore #configs de ignore do lint
+│   ├───.eslintrc.js #configs do lint
+│   ├───.gitignore #arquivos para ignorar no git
+│   ├───index.html #arquivo raiz
+│   ├───package-lock.json #versionamento de pacotes
+│   ├───package.json #versionamento de pacotes
+├───SIE
+|   ├───Auxiliary/ #métodos auxiliares
+|   ├───Business/ #métodos para salvar, alterar, deletar
+|   ├───Context/ #métodos de contexto do banco usando migrations
+|   ├───Controllers/ #métodos controlares que interagem com a interface
+|   ├───Enums/ #enums da aplicação
+|   ├───Helpers/ #métodos para facilicar o desenvolvimento
+|   ├───Interfaces/ #interfaces dos sistema
+|   ├───Middleware/ #classes arquivos para interceptar requisições do sistema
+|   ├───Migrations/ #histórico de mudanças do banco
+|   ├───Models/ #classes modelos para facilicar o desenvolvimento
+|   ├───Properties/ #configurações de desenvolvimento
+|   ├───Services/ #serviços da aplicação
+|   ├───Utils/ #classes de buscas do banco
+|   ├───Validations/ #classes de validações do sistema
+|   ├───Program.cs #classe de carregamento da aplicação
+|   ├───SIE.csproj #versionamento de pacotes da aplicação
+|   ├───SIE.sln #solução da aplicação
+|   ├───Startup.cs #classe de configuração runtime da aplicação
+|   ├───appsettings.Development.json #arquivo json de variáveis de desenvolvimento da aplicação
+|   ├───appsettings.json #arquivo json de variáveis de release da aplicação
+|   ├───web.config #arquivo de configurações
+├───SIE.Scheduler #Aplicação do scheduler separado da aplicação
+|   ├───Cron/ #métodos para utilizar o CRON, exemplo: "0 0 * * *" o job roda todos os dias as 00:00
+|   ├───Extensions/ #métodos de extensão do cron do scheduler
+|   ├───Interfaces/ #interfaces do scheduler
+|   ├───Scheduler/ #principais classes do scheduler
+|   |   └───Tasks/ #tarefas que serão executadas
+|   ├───Program.cs #classe de carregamento da aplicação
+|   ├───SIE.Scheduler.csproj #versionamento de pacotes da aplicação
+|   ├───SIE.Scheduler.sln #solução da aplicação
+|   ├───Startup.cs #classe de configuração runtime da aplicação
+|   ├───appsettings.Development.json #arquivo json de variáveis de desenvolvimento da aplicação
+|   ├───appsettings.json #arquivo json de variáveis de release da aplicação
+|   ├───web.config #arquivo de configurações
 ├───SIE prototipos/ #protótipos
-├───Utils/ #classes de buscas do banco
-├───.gitignore
-├───Program.cs #classe de carregamento da aplicação
-├───README.md #leia-me
-├───SIE.csproj
-├───SIE.csproj.user
-├───SIE.sln
-├───Startup.cs
-├───appsettings.Development.json
-├───appsettings.json
-└───web.config
+├───.gitignore #arquivos para ignorar no git
+└───README.md #leia-me
 ```
 
 ## Executando a aplicação
@@ -73,9 +89,9 @@ Instale os seguintes programas:
   * Para executar o build use o comando `dotnet build`.
 
 Execute os comandos:
-> na pasta `/SIE/` digite `dotnet ef database update`
+> na pasta `/SIE/SIE/` digite `dotnet ef database update`
 
-> na pasta `/SIE/interface/` digite `npm i` e logo em seguida `npm run dev`
+> na pasta `/SIE/Interface/` digite `npm i` e logo em seguida `npm run dev`
 
 Altere a propriedade  `setProfileEnvironment` no arquivo `%WINDIR%\System32\inetsrv\config\applicationHost.config` para:
 
@@ -84,3 +100,6 @@ Altere a propriedade  `setProfileEnvironment` no arquivo `%WINDIR%\System32\inet
     <processModel setProfileEnvironment="true" />
 </add>
 ```
+
+Para executar o Job Scheduler do sistema:
+> na pasta `/SIE/SIE.Scheduler/` digite `dotnet restore` e logo em seguida `dotnet run`
