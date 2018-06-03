@@ -12,34 +12,31 @@ namespace SIE.Scheduler.Scheduler.Tasks
 {
     public class ExpireTokenTask : IScheduledTask
     {
-        public string Schedule => "0 0 * * *";
-
-        private readonly UPasswordRecovery _uPasswordRecovery;
-        private readonly BPasswordRecovery _bPasswordRecovery;
-        private readonly BHistory _bHistory;
+        public string Schedule => "* * * * *";
+        private readonly IServiceProvider _serviceProvider;
         public ExpireTokenTask(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider
-                .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope()
-                .ServiceProvider
-                .GetService<SIEContext>();
-
-            _uPasswordRecovery = new UPasswordRecovery(context);
-            _bPasswordRecovery = new BPasswordRecovery(context);
-            _bHistory = new BHistory(context);
+            _serviceProvider = serviceProvider;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var now = DateTime.Now;
-            var expired = _uPasswordRecovery.Get().Where(r => r.Active && now > r.ExpirationDate);
-            foreach (var passwordRecovery in expired)
+            var serviceProvider = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = serviceProvider.CreateScope())
             {
-                passwordRecovery.Active = false;
-                passwordRecovery.CancelationDate = now;
-                _bPasswordRecovery.Update(passwordRecovery);
-                _bHistory.SaveHistory(passwordRecovery.Person.Id, "Solicitação de recuperar senha do usuário foi cancelada pois expirou");
+                var context = scope.ServiceProvider.GetService<SIEContext>();
+                var uPasswordRecovery = new UPasswordRecovery(context);
+                var bPasswordRecovery = new BPasswordRecovery(context);
+                var bHistory = new BHistory(context);
+                var now = DateTime.Now;
+                var expired = uPasswordRecovery.Get().Where(r => r.Active && now > r.ExpirationDate);
+                foreach (var passwordRecovery in expired)
+                {
+                    passwordRecovery.Active = false;
+                    passwordRecovery.CancelationDate = now;
+                    bPasswordRecovery.Update(passwordRecovery);
+                    bHistory.SaveHistory(passwordRecovery.Person.Id, "Solicitação de recuperar senha do usuário foi cancelada pois expirou");
+                }
             }
         }
     }
