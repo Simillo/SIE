@@ -12,8 +12,8 @@ namespace SIE.Utils
 
         public UActivity(SIEContext context) => _context = context;
 
+        public List<Activity> Get() => _context.Activity.ToList();
         public Activity GetById(int id) => _context.Activity.Find(id);
-
         public List<Activity> GetByUser(int personId) => _context.Activity.Where(a => a.Person.Id == personId).ToList();
         public List<Activity> GetByRoom(int roomId) => _context.Activity.Where(a => a.Room.Id == roomId).ToList();
 

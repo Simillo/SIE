@@ -33,6 +33,7 @@ namespace SIE.Scheduler
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddSingleton<IScheduledTask, ExpireTokenTask>();
+            services.AddSingleton<IScheduledTask, ActivitiesExpiringTask>();
 
             services.AddScheduler((sender, args) =>
             {

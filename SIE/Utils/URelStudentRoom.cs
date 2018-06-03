@@ -12,9 +12,16 @@ namespace SIE.Utils
         public URelStudentRoom(SIEContext context) => _context = context;
 
         public List<int> GetRoomIdByPersonId(int personId) =>
-            _context.RelStudentRoom
-            .Where(r => r.Person.Id == personId && r.Active)
-            .Select(p => p.Room.Id)
-            .ToList();
+            _context
+                .RelStudentRoom
+                .Where(r => r.Person.Id == personId && r.Active)
+                .Select(p => p.Room.Id)
+                .ToList();
+
+        public List<RelStudentRoom> GetByRoom(int roomId) =>
+            _context
+                .RelStudentRoom
+                .Where(r => r.Room.Id == roomId)
+                .ToList();
     }
 }
