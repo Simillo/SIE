@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MoreLinq;
-using SIE.Business;
 using SIE.Context;
 using SIE.Enums;
 using SIE.Scheduler.Interfaces;
