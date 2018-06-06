@@ -65,8 +65,8 @@ export default {
   },
   async created () {
     this.service = new PersonService(this.$http)
-    this.form.Email = 'simillonakai@gmail1.com'
-    this.form.Password = '123123a'
+    // this.form.Email = 'simillonakai@gmail1.com'
+    // this.form.Password = '123123a'
   },
   methods: {
     async login () {
