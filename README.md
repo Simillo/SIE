@@ -104,5 +104,20 @@ Altere a propriedade  `setProfileEnvironment` no arquivo `%WINDIR%\System32\inet
 Para executar o Job Scheduler do sistema:
 > na pasta `/SIE/SIE.Scheduler/` digite `dotnet restore` e logo em seguida `dotnet run`
 
-## Boas práticas
-* 
+## Padrões
+### Api
+* Separação de responsabilidades
+  * Controllers
+  * Utils
+  * Services
+  * Context
+  * Auxiliary/helpers
+* Seguir estrutura do diretório
+* Código deverá ser escrito em inglês, salvo mensagens de retorno ao usuário
+* Manter o código legível
+* Mensagens de feedback deverá ser enviado da Api, nunca do Client
+### Client
+* Usar SPA (Single Page Application)
+* Components Single-File
+* Código deverá ser escrito em inglês, salvo mensagens de retorno ao usuário
+* Não enviar mensagem de feedback diretamente pelo Client
