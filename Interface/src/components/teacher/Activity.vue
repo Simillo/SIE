@@ -72,10 +72,11 @@
                   md-tooltip(md-direction='top') Avaliar
               .activities-actions-grade(v-if='activity.Open')
                 md-field
-                  label(for='grade') Nota
+                  label(for='grade') Nota (máximo: {{form.Weight}})
                   md-input#grade(
                     name='grade',
                     type='number',
+                    :max='form.Weight',
                     v-model='activity.Grade'
                   )
                 md-field
