@@ -89,7 +89,7 @@ Instale os seguintes programas:
   * Para executar o build use o comando `dotnet build`.
 
 Execute os comandos:
-> na pasta `/SIE/SIE/` digite `dotnet ef database update`
+> na pasta `/SIE/SIE/` digite `dotnet restore`, `dotnet build`, `dotnet ef database update`
 
 > na pasta `/SIE/Interface/` digite `npm i` e logo em seguida `npm run dev`
 
@@ -103,3 +103,6 @@ Altere a propriedade  `setProfileEnvironment` no arquivo `%WINDIR%\System32\inet
 
 Para executar o Job Scheduler do sistema:
 > na pasta `/SIE/SIE.Scheduler/` digite `dotnet restore` e logo em seguida `dotnet run`
+
+## Boas práticas
+* 
