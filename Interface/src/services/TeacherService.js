@@ -15,7 +15,7 @@ export default class {
   async loadRoom (roomCode) {
     return this._http.get(`teacher/LoadRoom/${roomCode}`)
   }
-  async saveOrUpdateActivity (data, roomCode) {
+  saveOrUpdateActivity (data, roomCode) {
     return this._http.post(`teacher/SaveActivity/${roomCode}`, data)
   }
   async loadActivity (roomCode, activityId) {
@@ -35,5 +35,12 @@ export default class {
   }
   async evaluate (activity, roomCode) {
     return this._http.post(`teacher/Evaluate/${roomCode}`, activity)
+  }
+  async uploadActivities (files, activityId) {
+    return this._http.post(`teacher/UploadActivity/${activityId}`, files, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }

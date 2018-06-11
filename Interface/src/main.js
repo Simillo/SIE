@@ -57,7 +57,7 @@ Vue.http.interceptors.push((request, next) => {
   })
 })
 
-Vue.http.options.root = 'http://localhost:5000/api'
+Vue.http.options.root = 'http://localhost/sie/api'
 
 Vue.filter('date', (value) => value ? moment(String(value)).format('DD/MM/YYYY') : null)
 

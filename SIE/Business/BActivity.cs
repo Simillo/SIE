@@ -20,7 +20,7 @@ namespace SIE.Business
                 Save(activity);
         }
 
-        public void SaveOrUpdate(MNewActivity newActivity, Room room)
+        public Activity SaveOrUpdate(MNewActivity newActivity, Room room)
         {
             var activity = new Activity
             {
@@ -38,6 +38,7 @@ namespace SIE.Business
                 Update(activity);
             else
                 Save(activity);
+            return activity;
         }
 
         public void CloseAll(List<Activity> activities)

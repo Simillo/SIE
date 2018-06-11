@@ -19,6 +19,20 @@
               :disabled='!canIEdit',
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
+          //  <md-field>
+          //   <label>Upload files</label>
+          //   <md-file v-model="placeholder" placeholder="A nice input placeholder" />
+          // </md-field>
+
+          md-field
+            label Upload de arquivos
+            md-file(
+              v-model='upload',
+              multiple,
+              name='files',
+              @change='fnUpload($event.target.files)'
+            )
+
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
             md-textarea#description(
@@ -114,6 +128,8 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      upload: '',
+      files: null,
       search: '',
       searched: [],
       original: [],
@@ -144,6 +160,12 @@ export default {
     else this.loadRoom()
   },
   methods: {
+    fnUpload (fileList) {
+      this.files = new FormData()
+      for (let i = 0; i < fileList.length; ++i) {
+        this.files.append(`file_${i}`, fileList[i], fileList[i].name)
+      }
+    },
     async loadActivity () {
       try {
         this.search = ''
@@ -181,12 +203,17 @@ export default {
         this.save()
       }
     },
-    async save () {
+    save () {
       const params = this.$route.params
       this.form.Id = params.activityId || 0
-      await this.service.saveOrUpdateActivity(this.form, params.roomCode)
-        .then(() => this.$router.push(`/teacher/room/${this.$route.params.roomCode}`))
+      this.service.saveOrUpdateActivity(this.form, params.roomCode)
+        .then(response => {
+          debugger
+          this.service.uploadActivities(this.files, response.body.entity)
+          this.$router.push(`/teacher/room/${this.$route.params.roomCode}`)
+        })
         .catch(err => {
+          console.log(err)
           if (err.body.status === 401) this.$router.push('/teacher/my-rooms')
         })
     },

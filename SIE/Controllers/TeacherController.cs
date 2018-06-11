@@ -210,12 +210,12 @@ namespace SIE.Controllers
 
 
 
-            _bActivity.SaveOrUpdate(activity, room);
+            var bdActivity = _bActivity.SaveOrUpdate(activity, room);
             var msgType = activity.Id > 0 ? "editada" : "criada";
 
             _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova atividade");
 
-            return Ok(ResponseContent.Create(null, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
+            return Ok(ResponseContent.Create(bdActivity.Id, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }
 
 
@@ -304,6 +304,18 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedUserId, "Usuário avaliou uma resposta");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Resposta foi avaliada!"));
+        }
+
+        [HttpPost]
+        [Route("UploadActivity/{activityId}")]
+        public IActionResult UploadActivity(int activityId)
+        {
+            var files = Request.Form.Files;
+
+            var fileName = Upload.Files(files);
+
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
+
         }
     }
 }
