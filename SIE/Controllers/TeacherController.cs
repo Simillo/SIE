@@ -22,6 +22,8 @@ namespace SIE.Controllers
         private readonly BActivity _bActivity;
         private readonly BRoom _bRoom;
         private readonly BAnswer _bAnswer;
+        private readonly BDocument _bDocument;
+        private readonly BRelUploadActivity _bRelUploadActivity;
 
         private readonly UActivity _uActivity;
         private readonly URoom _uRoom;
@@ -33,6 +35,8 @@ namespace SIE.Controllers
             _bActivity = new BActivity(context);
             _bRoom = new BRoom(context);
             _bAnswer = new BAnswer(context);
+            _bDocument = new BDocument(context);
+            _bRelUploadActivity = new BRelUploadActivity(context);
 
             _uActivity = new UActivity(context);
             _uRoom = new URoom(context);
@@ -310,9 +314,25 @@ namespace SIE.Controllers
         [Route("UploadActivity/{activityId}")]
         public IActionResult UploadActivity(int activityId)
         {
+
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var activity = _uActivity.GetById(activityId);
+            if (activity == null)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+
+            if (activity.Person.Id != authenticatedUserId)
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+
+            if (activity.CurrentState != (int)EActivityState.Building)
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Não é possível adicionar arquivos a essa atividade pois ela não está em construção!"));
+
             var files = Request.Form.Files;
 
-            var fileName = Upload.Files(files);
+            var filesName = Upload.Files(files);
+
+            var documents = _bDocument.Save(filesName, activity.Person);
+
+            _bRelUploadActivity.Save(documents, activity);
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
 

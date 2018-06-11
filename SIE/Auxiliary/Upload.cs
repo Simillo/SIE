@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
@@ -10,12 +8,13 @@ namespace SIE.Auxiliary
 {
     public static class Upload
     {
+        private const string DIR_PATH = "../Interface/static/uploads";
         public static List<string> Files(IFormFileCollection files)
         {
             var pathList = new List<string>();
-            if (!Directory.Exists("../Interface/static/uploads"))
+            if (!Directory.Exists(DIR_PATH))
             {
-                Directory.CreateDirectory("../Interface/static/uploads");
+                Directory.CreateDirectory(DIR_PATH);
             }
             foreach (var file in files)
             {
@@ -30,7 +29,7 @@ namespace SIE.Auxiliary
 
                 pathList.Add(newFileName);
 
-                fileName = Path.Combine("../Interface/static/uploads", $"{newFileName}");
+                fileName = Path.Combine(DIR_PATH, $"{newFileName}");
 
                 using (var fs = File.Create(fileName))
                 {

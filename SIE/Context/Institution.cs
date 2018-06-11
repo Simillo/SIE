@@ -1,6 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-using SIE.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SIE.Context
 {

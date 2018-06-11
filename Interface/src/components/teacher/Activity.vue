@@ -208,7 +208,6 @@ export default {
       this.form.Id = params.activityId || 0
       this.service.saveOrUpdateActivity(this.form, params.roomCode)
         .then(response => {
-          debugger
           this.service.uploadActivities(this.files, response.body.entity)
           this.$router.push(`/teacher/room/${this.$route.params.roomCode}`)
         })

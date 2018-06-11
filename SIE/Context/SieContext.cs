@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SIE.Models;
 
 namespace SIE.Context
 {
@@ -17,5 +16,7 @@ namespace SIE.Context
         public DbSet<RelStudentRoom> RelStudentRoom { get; set; }
         public DbSet<Answer> Answer { get; set; }
         public DbSet<PasswordRecovery> PasswordRecovery { get; set; }
+        public DbSet<Document> Document { get; set; }
+        public DbSet<RelUploadActivity> RelUploadActivity { get; set; }
     }
 }
