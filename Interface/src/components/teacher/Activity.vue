@@ -27,13 +27,14 @@
               name='files',
               @change='fnUpload($event.target.files)'
             )
-          div(
-            v-for='(item, index) in preViewUploads',
-            :key='index'
-            )
-            img(
-              :src='item',
-              v-if='isImage(item)')
+          .preview
+            .preview-uploads(
+              v-for='(item, index) in preViewUploads',
+              :key='index'
+              )
+              img.preview-image(
+                :src='item',
+                v-if='isImage(item)')
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -317,6 +318,19 @@ export default {
         float: right;
         margin-top: -35px;
       }
+    }
+  }
+}
+.preview {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+  .preview-uploads {
+    margin: 10px;
+    width: 100px;
+    .preview-image {
+      width: 250px;
     }
   }
 }
