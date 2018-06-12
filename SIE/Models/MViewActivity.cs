@@ -7,7 +7,7 @@ namespace SIE.Models
 {
     public class MViewActivity
     {
-        public MViewActivity(Activity activity, Answer answer = null, List<Answer> answers = null)
+        public MViewActivity(Activity activity, Answer answer = null, List<Answer> answers = null, List<RelUploadActivity> uploads = null)
         {
             Id = activity.Id;
             Name = activity.Title;
@@ -18,6 +18,7 @@ namespace SIE.Models
             EndDate = activity.EndDate;
             Answer = new MAnswer(answer);
             Answers = answers?.Select(a => new MViewAnswer(a)).ToList() ?? new List<MViewAnswer>();
+            Uploads = uploads?.Select(u => new MViewDocument(u.Document)).ToList() ?? new List<MViewDocument>();
         }
 
         public int Id { get; set; }
@@ -29,5 +30,6 @@ namespace SIE.Models
         public double Weight { get; set; }
         public MAnswer Answer { get; set; }
         public List<MViewAnswer> Answers { get; set; }
+        public List<MViewDocument> Uploads { get; set; }
     }
 }

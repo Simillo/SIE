@@ -19,11 +19,6 @@
               :disabled='!canIEdit',
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
-          //  <md-field>
-          //   <label>Upload files</label>
-          //   <md-file v-model="placeholder" placeholder="A nice input placeholder" />
-          // </md-field>
-
           md-field
             label Upload de arquivos
             md-file(
@@ -32,6 +27,13 @@
               name='files',
               @change='fnUpload($event.target.files)'
             )
+          div(
+            v-for='(item, index) in preViewUploads',
+            :key='index'
+            )
+            img(
+              :src='item',
+              v-if='isImage(item)')
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -129,6 +131,7 @@ export default {
   data () {
     return {
       upload: '',
+      preViewUploads: [],
       files: null,
       search: '',
       searched: [],
@@ -180,6 +183,7 @@ export default {
           Weight: this.activity.Weight,
           ExpirationDate: this.activity.ExpirationDate
         }
+        this.preViewUploads = this.activity.Uploads.map(u => u.Path)
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
           return a
@@ -233,6 +237,9 @@ export default {
         .then(() => {
           this.toggleGrade(index)
         })
+    },
+    isImage (image) {
+      return /\.(png|jpe?g)$/.test(image)
     }
   }
 }
