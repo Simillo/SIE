@@ -19,22 +19,8 @@
               :disabled='!canIEdit',
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
-          md-field
-            label Upload de arquivos
-            md-file(
-              v-model='upload',
-              multiple,
-              name='files',
-              @change='fnUpload($event.target.files)'
-            )
-          .preview
-            .preview-uploads(
-              v-for='(item, index) in preViewUploads',
-              :key='index'
-              )
-              img.preview-image(
-                :src='item',
-                v-if='isImage(item)')
+
+          upload(:data='preViewUploads') 1213123
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -318,19 +304,6 @@ export default {
         float: right;
         margin-top: -35px;
       }
-    }
-  }
-}
-.preview {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 20px;
-  .preview-uploads {
-    margin: 10px;
-    width: 100px;
-    .preview-image {
-      width: 250px;
     }
   }
 }

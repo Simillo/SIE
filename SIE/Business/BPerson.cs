@@ -44,10 +44,9 @@ namespace SIE.Business
                 Password = person.Password.Sha256Hash(),
                 Profile = person.Profile
             };
+
             if (institutionId != 0)
-            {
                 cPerson.InstitutionId = institutionId;
-            }
 
             Save(cPerson);
             _context.SaveChanges();

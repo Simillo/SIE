@@ -13,6 +13,7 @@ import VueCharts from 'vue-chartjs'
 import router from './router'
 import moment from 'moment'
 import bus from './bus'
+import UploadComponent from './components/upload/UploadComponent.vue'
 
 Vue.config.productionTip = false
 
@@ -60,6 +61,8 @@ Vue.http.interceptors.push((request, next) => {
 Vue.http.options.root = 'http://localhost/sie/api'
 
 Vue.filter('date', (value) => value ? moment(String(value)).format('DD/MM/YYYY') : null)
+
+Vue.component('upload', UploadComponent)
 
 /* eslint-disable no-new */
 new Vue({
