@@ -20,7 +20,11 @@
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
 
-          upload(:data='preViewUploads') 1213123
+          upload(
+            @update:files='files = $event',
+            :fileName='"atividade"',
+            :canUpload='true'
+          )
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -117,9 +121,7 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
-      upload: '',
-      preViewUploads: [],
-      files: null,
+      files: [],
       search: '',
       searched: [],
       original: [],
@@ -150,12 +152,6 @@ export default {
     else this.loadRoom()
   },
   methods: {
-    fnUpload (fileList) {
-      this.files = new FormData()
-      for (let i = 0; i < fileList.length; ++i) {
-        this.files.append(`file_${i}`, fileList[i], fileList[i].name)
-      }
-    },
     async loadActivity () {
       try {
         this.search = ''
@@ -170,7 +166,6 @@ export default {
           Weight: this.activity.Weight,
           ExpirationDate: this.activity.ExpirationDate
         }
-        this.preViewUploads = this.activity.Uploads.map(u => u.Path)
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
           return a
@@ -189,6 +184,7 @@ export default {
       }
     },
     validate () {
+      console.log(this.files)
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.save()
@@ -199,7 +195,6 @@ export default {
       this.form.Id = params.activityId || 0
       this.service.saveOrUpdateActivity(this.form, params.roomCode)
         .then(response => {
-          this.service.uploadActivities(this.files, response.body.entity)
           this.$router.push(`/teacher/room/${this.$route.params.roomCode}`)
         })
         .catch(err => {
@@ -224,9 +219,6 @@ export default {
         .then(() => {
           this.toggleGrade(index)
         })
-    },
-    isImage (image) {
-      return /\.(png|jpe?g)$/.test(image)
     }
   }
 }

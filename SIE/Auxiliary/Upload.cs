@@ -8,13 +8,14 @@ namespace SIE.Auxiliary
 {
     public static class Upload
     {
-        private const string DIR_PATH = "../Interface/static/uploads";
-        public static List<string> Files(IFormFileCollection files)
+        private const string DIR_PATH = "../Interface/static/{0}";
+        public static List<string> Files(IFormFileCollection files, string dir)
         {
+            var path = string.Format(DIR_PATH, dir);
             var pathList = new List<string>();
-            if (!Directory.Exists(DIR_PATH))
+            if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory(DIR_PATH);
+                Directory.CreateDirectory(path);
             }
             foreach (var file in files)
             {
@@ -27,9 +28,9 @@ namespace SIE.Auxiliary
 
                 var newFileName = myUniqueFileName + fileExtension;
 
-                pathList.Add(newFileName);
+                pathList.Add($"static/{dir}/{newFileName}");
 
-                fileName = Path.Combine(DIR_PATH, $"{newFileName}");
+                fileName = Path.Combine(path, $"{newFileName}");
 
                 using (var fs = File.Create(fileName))
                 {

@@ -313,32 +313,32 @@ namespace SIE.Controllers
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Resposta foi avaliada!"));
         }
 
-        [HttpPost]
-        [Route("UploadActivity/{activityId}")]
-        public IActionResult UploadActivity(int activityId)
-        {
+        //[HttpPost]
+        //[Route("UploadActivity/{activityId}")]
+        //public IActionResult UploadActivity(int activityId)
+        //{
 
-            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            var activity = _uActivity.GetById(activityId);
-            if (activity == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
+        //    var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+        //    var activity = _uActivity.GetById(activityId);
+        //    if (activity == null)
+        //        return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
 
-            if (activity.Person.Id != authenticatedUserId)
-                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
+        //    if (activity.Person.Id != authenticatedUserId)
+        //        return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
 
-            if (activity.CurrentState != (int)EActivityState.Building)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Não é possível adicionar arquivos a essa atividade pois ela não está em construção!"));
+        //    if (activity.CurrentState != (int)EActivityState.Building)
+        //        return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Não é possível adicionar arquivos a essa atividade pois ela não está em construção!"));
 
-            var files = Request.Form.Files;
+        //    var files = Request.Form.Files;
 
-            var filesName = Upload.Files(files);
+        //    var filesName = Upload.Files(files);
 
-            var documents = _bDocument.Save(filesName, activity.Person);
+        //    var documents = _bDocument.Save(filesName, activity.Person);
 
-            _bRelUploadActivity.Save(documents, activity);
+        //    _bRelUploadActivity.Save(documents, activity);
 
-            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
+        //    return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
 
-        }
+        //}
     }
 }
