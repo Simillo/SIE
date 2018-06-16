@@ -41,5 +41,24 @@ namespace SIE.Auxiliary
 
             return pathList;
         }
+
+        public static List<string> CopyFromTo(List<string> files, string dirSource, string dirTarget)
+        {
+            var result = new List<string>();
+            if (!Directory.Exists($"../Interface/static/{dirTarget}"))
+            {
+                Directory.CreateDirectory($"../Interface/static/{dirTarget}");
+            }
+            foreach (var file in files)
+            {
+                var newFile = file.Replace("\\", "/").Replace($"/{dirSource}/", $"/{dirTarget}/");
+                var currentLocation = $"../Interface/{file}";
+                var targetLocation = $"../Interface/{newFile}";
+                File.Copy(currentLocation, targetLocation, true);
+                result.Add(newFile);
+            }
+
+            return result;
+        }
     }
 }

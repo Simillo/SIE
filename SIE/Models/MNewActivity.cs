@@ -11,6 +11,7 @@ namespace SIE.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public double Weight { get; set; }
+        public List<string> Files { get; set; }
         public DateTime? ExpirationDate { get; set; }
     }
 }

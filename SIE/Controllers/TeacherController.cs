@@ -10,6 +10,7 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -30,7 +31,9 @@ namespace SIE.Controllers
         private readonly UAnswer _uAnswer;
         private readonly URelUploadActivity _uRelUploadActivity;
 
-        public TeacherController(SIEContext context)
+        private readonly IConfiguration _configuration;
+
+        public TeacherController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bActivity = new BActivity(context);
@@ -43,6 +46,8 @@ namespace SIE.Controllers
             _uRoom = new URoom(context);
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
+
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -218,6 +223,14 @@ namespace SIE.Controllers
 
 
             var bdActivity = _bActivity.SaveOrUpdate(activity, room);
+
+            if (activity.Files != null && activity.Files.Any())
+            {
+                var filesName = Upload.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
+                var documents = _bDocument.Save(filesName, bdActivity.Person);
+                _bRelUploadActivity.Save(documents, bdActivity);
+            }
+
             var msgType = activity.Id > 0 ? "editada" : "criada";
 
             _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova atividade");
@@ -312,33 +325,5 @@ namespace SIE.Controllers
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Resposta foi avaliada!"));
         }
-
-        //[HttpPost]
-        //[Route("UploadActivity/{activityId}")]
-        //public IActionResult UploadActivity(int activityId)
-        //{
-
-        //    var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-        //    var activity = _uActivity.GetById(activityId);
-        //    if (activity == null)
-        //        return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
-
-        //    if (activity.Person.Id != authenticatedUserId)
-        //        return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
-
-        //    if (activity.CurrentState != (int)EActivityState.Building)
-        //        return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Não é possível adicionar arquivos a essa atividade pois ela não está em construção!"));
-
-        //    var files = Request.Form.Files;
-
-        //    var filesName = Upload.Files(files);
-
-        //    var documents = _bDocument.Save(filesName, activity.Person);
-
-        //    _bRelUploadActivity.Save(documents, activity);
-
-        //    return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
-
-        //}
     }
 }

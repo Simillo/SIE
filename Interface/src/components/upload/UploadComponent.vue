@@ -21,15 +21,15 @@
 <script>
 import UploadService from '../../services/UploadService.js'
 export default {
-  props: ['fileName', 'canUpload'],
+  props: ['fileName', 'canUpload', 'files'],
   data () {
     return {
-      uploads: '',
       fileList: [],
       form: new FormData()
     }
   },
   created () {
+    this.fileList = this.files
     this.service = new UploadService(this.$http)
   },
   methods: {

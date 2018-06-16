@@ -23,7 +23,8 @@
           upload(
             @update:files='files = $event',
             :fileName='"atividade"',
-            :canUpload='true'
+            :canUpload='true',
+            :files.sync='files'
           )
 
           md-field(:class='getValidationClass("Description")')
@@ -166,6 +167,7 @@ export default {
           Weight: this.activity.Weight,
           ExpirationDate: this.activity.ExpirationDate
         }
+        this.files = this.activity.Uploads
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
           return a
@@ -184,7 +186,6 @@ export default {
       }
     },
     validate () {
-      console.log(this.files)
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.save()
@@ -193,6 +194,7 @@ export default {
     save () {
       const params = this.$route.params
       this.form.Id = params.activityId || 0
+      this.form.Files = this.files
       this.service.saveOrUpdateActivity(this.form, params.roomCode)
         .then(response => {
           this.$router.push(`/teacher/room/${this.$route.params.roomCode}`)
