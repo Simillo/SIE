@@ -59,7 +59,7 @@ export default {
   margin-bottom: 20px;
   border: 1px solid #999;
   border-radius: .2em;
-  padding: 10px;
+  padding: 10px 10px 0px;
 }
 .file-list {
   text-align: center;
