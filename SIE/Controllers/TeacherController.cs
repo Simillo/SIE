@@ -222,7 +222,7 @@ namespace SIE.Controllers
 
             var bdActivity = _bActivity.SaveOrUpdate(activity, room);
 
-            if (activity.Files != null && activity.Files.Any())
+            if (activity.Files != null)
             {
                 var filesName = FileExtensions.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
                 var documents = _bDocument.Save(filesName, bdActivity.Person);
