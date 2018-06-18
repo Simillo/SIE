@@ -26,6 +26,8 @@ namespace SIE.Controllers
         private readonly URelStudentRoom _uRelStudentRoom;
         private readonly UAnswer _uAnswer;
         private readonly URoom _uRoom;
+        private readonly URelUploadActivity _uRelUploadActivity;
+
 
         public StudentController(SIEContext context)
         {
@@ -37,6 +39,7 @@ namespace SIE.Controllers
             _uRoom = new URoom(context);
             _bRelStudentRoom = new BRelStudentRoom(context);
             _bAnswer = new BAnswer(context);
+            _uRelUploadActivity = new URelUploadActivity(context);
         }
 
         [HttpGet]
@@ -171,7 +174,8 @@ namespace SIE.Controllers
                 return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa sala/atividade!"));
 
             var answer = _uAnswer.GetByUser(activityId, authenticatedPersonId);
-            return Ok(ResponseContent.Create(new MViewActivity(activity, answer), HttpStatusCode.OK, null));
+            var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
+            return Ok(ResponseContent.Create(new MViewActivity(activity, answer, null, uploads), HttpStatusCode.OK, null));
         }
 
         [HttpPost]

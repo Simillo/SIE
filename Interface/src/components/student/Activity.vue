@@ -19,6 +19,13 @@
           br
           span {{activity.Description}}
       .room-content
+        div(v-if='loaded && files.length > 0')
+          upload(
+            @update:files='files = $event',
+            :fileName='"atividade"',
+            :canUpload='false',
+            :files='files'
+          )
         form(
           novalidate,
           @submit.prevent='active = true'
@@ -56,6 +63,8 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      files: [],
+      loaded: false,
       activity: {},
       active: false,
       form: {
@@ -81,6 +90,8 @@ export default {
       this.service.loadActivity(params.roomCode, params.activityId)
         .then(res => {
           this.activity = res.body.entity
+          this.files = this.activity.Uploads
+          this.loaded = true
           this.form = res.body.entity.Answer
           this.canIAnswer = !res.body.entity.Answer.Answer && res.body.entity.CurrentState === EActivityState.InProgress.ordinal
         })
