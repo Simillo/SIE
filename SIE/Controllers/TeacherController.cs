@@ -226,6 +226,7 @@ namespace SIE.Controllers
             {
                 var filesName = FileExtensions.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
                 var documents = _bDocument.Save(filesName, bdActivity.Person);
+                _bRelUploadActivity.DeactivateByActivity(activity.Id);
                 _bRelUploadActivity.Save(documents, bdActivity);
             }
 
