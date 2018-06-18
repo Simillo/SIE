@@ -59,7 +59,7 @@ namespace SIE.Auxiliary
                     File.Copy(currentLocation, targetLocation, true);
                     File.Delete(currentLocation);
                 }
-                result.Add(newFile);
+                result.Add("/" + newFile);
             }
 
             return result;

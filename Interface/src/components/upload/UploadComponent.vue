@@ -16,7 +16,10 @@
           :href='file',
           target='_blank'
         ) {{generateName(file, index)}}
-        span.file-list-item-icon(@click='deleteFile(index)')
+        span.file-list-item-icon(
+          @click='deleteFile(index)',
+          v-if='canUpload'
+        )
           md-tooltip.margin-tooltip Excluir
           md-icon close
 
