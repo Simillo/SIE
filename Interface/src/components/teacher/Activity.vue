@@ -20,12 +20,13 @@
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
 
-          upload(
-            @update:files='files = $event',
-            :fileName='"atividade"',
-            :canUpload='true',
-            :files.sync='files'
-          )
+          div(v-if='loaded')
+            upload(
+              @update:files='files = $event',
+              :fileName='"atividade"',
+              :canUpload='true',
+              :files='files'
+            )
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -122,6 +123,7 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      loaded: false,
       files: [],
       search: '',
       searched: [],
@@ -150,7 +152,10 @@ export default {
   async created () {
     this.service = new TeacherService(this.$http)
     if (this.$route.params.activityId) this.loadActivity()
-    else this.loadRoom()
+    else {
+      this.loadRoom()
+      this.loaded = true
+    }
   },
   methods: {
     async loadActivity () {
@@ -168,6 +173,7 @@ export default {
           ExpirationDate: this.activity.ExpirationDate
         }
         this.files = this.activity.Uploads
+        this.loaded = true
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
           return a

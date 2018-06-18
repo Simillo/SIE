@@ -6,7 +6,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace SIE.Auxiliary
 {
-    public static class Upload
+    public static class FileExtensions
     {
         private const string DIR_PATH = "../Interface/static/{0}";
         public static List<string> Files(IFormFileCollection files, string dir)
@@ -45,16 +45,17 @@ namespace SIE.Auxiliary
         public static List<string> CopyFromTo(List<string> files, string dirSource, string dirTarget)
         {
             var result = new List<string>();
+
             if (!Directory.Exists($"../Interface/static/{dirTarget}"))
-            {
                 Directory.CreateDirectory($"../Interface/static/{dirTarget}");
-            }
+
             foreach (var file in files)
             {
                 var newFile = file.Replace("\\", "/").Replace($"/{dirSource}/", $"/{dirTarget}/");
                 var currentLocation = $"../Interface/{file}";
                 var targetLocation = $"../Interface/{newFile}";
                 File.Copy(currentLocation, targetLocation, true);
+                File.Delete(currentLocation);
                 result.Add(newFile);
             }
 

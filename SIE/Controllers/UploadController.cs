@@ -17,7 +17,7 @@ namespace SIE.Controllers
         {
             var files = Request.Form.Files;
 
-            var filesName = Auxiliary.Upload.Files(files, _configuration["Directory:TEMP"]);
+            var filesName = Auxiliary.FileExtensions.Files(files, _configuration["Directory:TEMP"]);
 
             return Ok(ResponseContent.Create(filesName, HttpStatusCode.OK, null));
 

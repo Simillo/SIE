@@ -220,20 +220,19 @@ namespace SIE.Controllers
             if (sumRoomActivities + activity.Weight > 100)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"O peso da atividade não pode ser maior que {100 - sumRoomActivities}, para não ultrapassar o limite da sala!"));
 
-
-
             var bdActivity = _bActivity.SaveOrUpdate(activity, room);
 
             if (activity.Files != null && activity.Files.Any())
             {
-                var filesName = Upload.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
+                var filesName = FileExtensions.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
                 var documents = _bDocument.Save(filesName, bdActivity.Person);
                 _bRelUploadActivity.Save(documents, bdActivity);
             }
 
+            var msgTypePastTense = activity.Id > 0 ? "editou" : "criou";
             var msgType = activity.Id > 0 ? "editada" : "criada";
 
-            _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova atividade");
+            _bHistory.SaveHistory(authenticatedUserId, $"Usuário {msgTypePastTense} atividade");
 
             return Ok(ResponseContent.Create(bdActivity.Id, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }
