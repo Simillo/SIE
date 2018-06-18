@@ -192,6 +192,7 @@ export default {
       }
     },
     validate () {
+      console.log(this.files)
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.save()

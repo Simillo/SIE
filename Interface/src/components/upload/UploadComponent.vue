@@ -16,6 +16,10 @@
           :href='file',
           target='_blank'
         ) {{generateName(file, index)}}
+        span.file-list-item-icon(@click='deleteFile(index)')
+          md-tooltip.margin-tooltip Excluir
+          md-icon close
+
 </template>
 
 <script>
@@ -47,6 +51,9 @@ export default {
     generateName (file, index) {
       const extension = file.match(/\.(.*)$/gi)
       return `${this.fileName}_${index + 1}${extension}`
+    },
+    deleteFile (index) {
+      this.fileList.splice(index, 1)
     }
   }
 }
@@ -65,7 +72,20 @@ export default {
   text-align: center;
   margin-bottom: 20px;
   .file-list-item {
+    border-radius: .2em;
+    padding: 5px 0 5px;
+    border: 1px solid #999;
     margin: 10px;
+    .file-list-item-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      .md-icon {
+        color: #f00;
+        a {
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
 </style>

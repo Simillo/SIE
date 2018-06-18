@@ -54,8 +54,11 @@ namespace SIE.Auxiliary
                 var newFile = file.Replace("\\", "/").Replace($"/{dirSource}/", $"/{dirTarget}/");
                 var currentLocation = $"../Interface/{file}";
                 var targetLocation = $"../Interface/{newFile}";
-                File.Copy(currentLocation, targetLocation, true);
-                File.Delete(currentLocation);
+                if (currentLocation != targetLocation)
+                {
+                    File.Copy(currentLocation, targetLocation, true);
+                    File.Delete(currentLocation);
+                }
                 result.Add(newFile);
             }
 

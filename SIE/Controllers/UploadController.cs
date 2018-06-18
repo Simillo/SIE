@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SIE.Helpers;
+using SIE.Auxiliary;
 
 namespace SIE.Controllers
 {
@@ -17,7 +18,7 @@ namespace SIE.Controllers
         {
             var files = Request.Form.Files;
 
-            var filesName = Auxiliary.FileExtensions.Files(files, _configuration["Directory:TEMP"]);
+            var filesName = FileExtensions.Files(files, _configuration["Directory:TEMP"]);
 
             return Ok(ResponseContent.Create(filesName, HttpStatusCode.OK, null));
 
