@@ -24,7 +24,8 @@
             @update:files='files = $event',
             :fileName='"atividade"',
             :canUpload='false',
-            :files='files'
+            :files='files',
+            :title='"Arquivo(s) anexado(s) pelo professor"'
           )
         form(
           novalidate,

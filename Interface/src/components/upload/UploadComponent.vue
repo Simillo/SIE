@@ -1,7 +1,7 @@
 <template lang='pug'>
   .uploads
+    span.title {{title}}
     md-field(v-if='canUpload')
-      label Upload de arquivos
       md-file(
         multiple,
         name='files',
@@ -28,7 +28,7 @@
 <script>
 import UploadService from '../../services/UploadService.js'
 export default {
-  props: ['fileName', 'canUpload', 'files'],
+  props: ['fileName', 'canUpload', 'files', 'title'],
   data () {
     return {
       fileList: [],
@@ -70,6 +70,11 @@ export default {
   border: 1px solid #999;
   border-radius: .2em;
   padding: 10px 10px 0px;
+  .title {
+    text-align: center;
+    display: block;
+    font-size: 15px;
+  }
 }
 .file-list {
   text-align: center;

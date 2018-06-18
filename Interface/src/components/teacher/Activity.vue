@@ -24,8 +24,9 @@
             upload(
               @update:files='files = $event',
               :fileName='"atividade"',
-              :canUpload='true',
-              :files='files'
+              :canUpload='canIEdit',
+              :files='files',
+              :title='"Upload de arquivo(s)"'
             )
 
           md-field(:class='getValidationClass("Description")')
