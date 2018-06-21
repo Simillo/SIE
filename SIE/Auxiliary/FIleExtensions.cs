@@ -28,9 +28,9 @@ namespace SIE.Auxiliary
 
                 var newFileName = myUniqueFileName + fileExtension;
 
-                pathList.Add($"static/{dir}/{newFileName}");
+                pathList.Add($"/static/{dir}/{newFileName}");
 
-                fileName = Path.Combine(path, $"{newFileName}");
+                fileName = Path.Combine(path, newFileName);
 
                 using (var fs = File.Create(fileName))
                 {
@@ -59,7 +59,7 @@ namespace SIE.Auxiliary
                     File.Copy(currentLocation, targetLocation, true);
                     File.Delete(currentLocation);
                 }
-                result.Add("/" + newFile);
+                result.Add(newFile);
             }
 
             return result;

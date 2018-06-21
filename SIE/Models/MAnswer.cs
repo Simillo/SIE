@@ -22,5 +22,6 @@ namespace SIE.Models
         public string Answer { get; set; }
         public double? Grade { get; set; }
         public string Feedback { get; set; }
+        public List<string> Attachments { get; set; }
     }
 }

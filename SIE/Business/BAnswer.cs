@@ -13,7 +13,7 @@ namespace SIE.Business
         private readonly SIEContext _context;
         public BAnswer(SIEContext context) => _context = context;
 
-        public void Save(int personId, int activityId, int roomId, string answer)
+        public Answer Save(int personId, int activityId, int roomId, string answer)
         {
             var newAnswer = new Answer
             {
@@ -26,6 +26,7 @@ namespace SIE.Business
 
             _context.Answer.Add(newAnswer);
             _context.SaveChanges();
+            return newAnswer;
         }
 
         public void Update(Answer answer)

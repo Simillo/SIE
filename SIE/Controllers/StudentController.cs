@@ -8,6 +8,7 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -17,29 +18,39 @@ namespace SIE.Controllers
     public class StudentController : Controller
     {
         private readonly BHistory _bHistory;
-
         private readonly BRelStudentRoom _bRelStudentRoom;
         private readonly BAnswer _bAnswer;
         private readonly BRoom _bRoom;
+        private readonly BDocument _bDocument;
+        private readonly BRelUploadAnswer _bRelUploadAnswer;
 
         private readonly UActivity _uActivity;
         private readonly URelStudentRoom _uRelStudentRoom;
         private readonly UAnswer _uAnswer;
         private readonly URoom _uRoom;
         private readonly URelUploadActivity _uRelUploadActivity;
+        private readonly URelUploadAnswer _uRelUploadAnswer;
+
+        private readonly IConfiguration _configuration;
 
 
-        public StudentController(SIEContext context)
+        public StudentController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
+            _bRelStudentRoom = new BRelStudentRoom(context);
+            _bRoom = new BRoom(context);
+            _bAnswer = new BAnswer(context);
+            _bDocument = new BDocument(context);
+            _bRelUploadAnswer = new BRelUploadAnswer(context);
+
             _uActivity = new UActivity(context);
             _uRelStudentRoom = new URelStudentRoom(context);
-            _uAnswer = new UAnswer(context);
-            _bRoom = new BRoom(context);
             _uRoom = new URoom(context);
-            _bRelStudentRoom = new BRelStudentRoom(context);
-            _bAnswer = new BAnswer(context);
+            _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
+            _uRelUploadAnswer = new URelUploadAnswer(context);
+
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -175,7 +186,15 @@ namespace SIE.Controllers
 
             var answer = _uAnswer.GetByUser(activityId, authenticatedPersonId);
             var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
-            return Ok(ResponseContent.Create(new MViewActivity(activity, answer, null, uploads), HttpStatusCode.OK, null));
+            var attachments = _uRelUploadAnswer.GetByAnswer(answer.Id);
+            var response = new MViewActivity(activity, answer, null, uploads)
+            {
+                Answer =
+                {
+                    Attachments = attachments?.Select(a => a.Document.FileName).ToList()
+                }
+            };
+            return Ok(ResponseContent.Create(response, HttpStatusCode.OK, null));
         }
 
         [HttpPost]
@@ -207,7 +226,15 @@ namespace SIE.Controllers
             if (_uAnswer.GetByUser(activity.Id, authenticatedPersonId) != null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Você já respondeu essa atividade!"));
 
-            _bAnswer.Save(authenticatedPersonId, activity.Id, room.Id, answer.Answer);
+            var answerDb = _bAnswer.Save(authenticatedPersonId, activity.Id, room.Id, answer.Answer);
+
+            if (answer.Attachments != null)
+            {
+                var filesName = FileExtensions.CopyFromTo(answer.Attachments, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
+                var documents = _bDocument.Save(filesName, answerDb.Person);
+                _bRelUploadAnswer.Save(documents, answerDb);
+            }
+
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário respondeu a uma atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade respondida!"));

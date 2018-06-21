@@ -19,7 +19,7 @@
           br
           span {{activity.Description}}
       .room-content
-        div(v-if='loaded && files.length > 0')
+        div(v-if='loadedFiles && files.length > 0')
           upload(
             @update:files='files = $event',
             :fileName='"atividade"',
@@ -39,6 +39,14 @@
               :disabled='!canIAnswer'
             )
             span.md-error(v-if='!$v.form.Answer.required') Obrigatório!
+          div(v-if='loadedAttachments')
+            upload(
+              @update:files='attachments = $event',
+              :fileName='"anexo"',
+              :canUpload='canIAnswer',
+              :files='attachments',
+              :title='labelAttachments'
+            )
           div
             router-link(:to='"/student/room/"+$route.params.roomCode')
               md-button.md-raised.md-primary.no-margin.float-left Voltar
@@ -65,9 +73,12 @@ export default {
   data () {
     return {
       files: [],
-      loaded: false,
+      attachments: [],
+      loadedAttachments: false,
+      loadedFiles: false,
       activity: {},
       active: false,
+      labelAttachments: 'Anexe seus arquivos aqui',
       form: {
         Answer: ''
       },
@@ -84,6 +95,7 @@ export default {
   async created () {
     this.service = new StudentService(this.$http)
     if (this.$route.params.activityId) this.loadActivity()
+    else this.loadedAttachments = true
   },
   methods: {
     loadActivity () {
@@ -92,9 +104,12 @@ export default {
         .then(res => {
           this.activity = res.body.entity
           this.files = this.activity.Uploads
-          this.loaded = true
+          this.loadedFiles = this.files.length > 0
           this.form = res.body.entity.Answer
+          this.attachments = this.form.Attachments
+          this.loadedAttachments = this.attachments.length > 0
           this.canIAnswer = !res.body.entity.Answer.Answer && res.body.entity.CurrentState === EActivityState.InProgress.ordinal
+          this.labelAttachments = this.loadedAttachments ? 'Arquivo(s) anexado por você' : ''
         })
         .catch(() => {
           this.$router.push('/student/my-rooms')
@@ -102,7 +117,7 @@ export default {
     },
     async save () {
       const params = this.$route.params
-      await this.service.answer(params.roomCode, params.activityId, this.form.Answer)
+      await this.service.answer(params.roomCode, params.activityId, this.form.Answer, this.attachments)
         .then(() => this.$router.push(`/student/room/${this.$route.params.roomCode}`))
         .catch(err => {
           if (err.body.status === 401) this.$router.push('/student/my-rooms')
