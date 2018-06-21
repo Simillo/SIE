@@ -5,5 +5,6 @@ export default class {
     this.Description = ''
     this.Weight = ''
     this.ExpirationDate = null
+    this.Files = []
   }
 }

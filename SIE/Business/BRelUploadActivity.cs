@@ -1,12 +1,19 @@
 ﻿using System.Collections.Generic;
 using SIE.Context;
+using SIE.Utils;
 
 namespace SIE.Business
 {
     public class BRelUploadActivity
     {
         private readonly SIEContext _context;
-        public BRelUploadActivity(SIEContext context) => _context = context;
+
+        private readonly URelUploadActivity _uRelUploadActivity;
+        public BRelUploadActivity(SIEContext context)
+        {
+            _context = context;
+            _uRelUploadActivity = new URelUploadActivity(context);
+        }
 
 
         public void Save(List<Document> documents, Activity activity)
@@ -26,6 +33,22 @@ namespace SIE.Business
             };
             _context.RelUploadActivity.Add(relUploadActivity);
             _context.SaveChanges();
+        }
+
+        private void Update(RelUploadActivity relUploadActivity)
+        {
+            _context.RelUploadActivity.Update(relUploadActivity);
+            _context.SaveChanges();
+        }
+
+        public void DeactivateByActivity(int activityId)
+        {
+            var relUploads = _uRelUploadActivity.GetByActivity(activityId);
+            foreach (var relUpload in relUploads)
+            {
+                relUpload.Active = false;
+                Update(relUpload);
+            }
         }
     }
 }

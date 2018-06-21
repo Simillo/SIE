@@ -10,6 +10,7 @@ using SIE.Models;
 using SIE.Utils;
 using SIE.Validations;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -29,8 +30,11 @@ namespace SIE.Controllers
         private readonly URoom _uRoom;
         private readonly UAnswer _uAnswer;
         private readonly URelUploadActivity _uRelUploadActivity;
+        private readonly URelUploadAnswer _uRelUploadAnswer;
 
-        public TeacherController(SIEContext context)
+        private readonly IConfiguration _configuration;
+
+        public TeacherController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bActivity = new BActivity(context);
@@ -43,6 +47,9 @@ namespace SIE.Controllers
             _uRoom = new URoom(context);
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
+            _uRelUploadAnswer = new URelUploadAnswer(context);
+
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -176,7 +183,12 @@ namespace SIE.Controllers
 
             var answers = _uAnswer.GetByActivity(activity.Id);
             var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
-            return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers, uploads), HttpStatusCode.OK, null));
+            var response = new MViewActivity(activity, null, answers, uploads)
+            {
+                Answers = answers?.Select(a => new MViewAnswer(a, _uRelUploadAnswer.GetByAnswer(a.Id))).ToList() ?? new List<MViewAnswer>()
+            };
+
+            return Ok(ResponseContent.Create(response, HttpStatusCode.OK, null));
         }
 
         [HttpPost]
@@ -215,12 +227,20 @@ namespace SIE.Controllers
             if (sumRoomActivities + activity.Weight > 100)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"O peso da atividade não pode ser maior que {100 - sumRoomActivities}, para não ultrapassar o limite da sala!"));
 
-
-
             var bdActivity = _bActivity.SaveOrUpdate(activity, room);
+
+            if (activity.Files != null)
+            {
+                var filesName = FileExtensions.CopyFromTo(activity.Files, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
+                var documents = _bDocument.Save(filesName, bdActivity.Person);
+                _bRelUploadActivity.DeactivateByActivity(activity.Id);
+                _bRelUploadActivity.Save(documents, bdActivity);
+            }
+
+            var msgTypePastTense = activity.Id > 0 ? "editou" : "criou";
             var msgType = activity.Id > 0 ? "editada" : "criada";
 
-            _bHistory.SaveHistory(authenticatedUserId, "Usuário criou uma nova atividade");
+            _bHistory.SaveHistory(authenticatedUserId, $"Usuário {msgTypePastTense} atividade");
 
             return Ok(ResponseContent.Create(bdActivity.Id, HttpStatusCode.Created, $"Atividade {msgType} com sucesso!"));
         }
@@ -311,34 +331,6 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedUserId, "Usuário avaliou uma resposta");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Resposta foi avaliada!"));
-        }
-
-        [HttpPost]
-        [Route("UploadActivity/{activityId}")]
-        public IActionResult UploadActivity(int activityId)
-        {
-
-            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            var activity = _uActivity.GetById(activityId);
-            if (activity == null)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A atividade não existe!"));
-
-            if (activity.Person.Id != authenticatedUserId)
-                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você não tem acesso a essa atividade!"));
-
-            if (activity.CurrentState != (int)EActivityState.Building)
-                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, $"Não é possível adicionar arquivos a essa atividade pois ela não está em construção!"));
-
-            var files = Request.Form.Files;
-
-            var filesName = Upload.Files(files);
-
-            var documents = _bDocument.Save(filesName, activity.Person);
-
-            _bRelUploadActivity.Save(documents, activity);
-
-            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, null));
-
         }
     }
 }

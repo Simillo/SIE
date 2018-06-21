@@ -18,5 +18,6 @@ namespace SIE.Context
         public DbSet<PasswordRecovery> PasswordRecovery { get; set; }
         public DbSet<Document> Document { get; set; }
         public DbSet<RelUploadActivity> RelUploadActivity { get; set; }
+        public DbSet<RelUploadAnswer> RelUploadAnswer { get; set; }
     }
 }

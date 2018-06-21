@@ -19,21 +19,15 @@
               :disabled='!canIEdit',
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
-          md-field
-            label Upload de arquivos
-            md-file(
-              v-model='upload',
-              multiple,
-              name='files',
-              @change='fnUpload($event.target.files)'
+
+          div(v-if='loadedFiles')
+            upload(
+              @update:files='files = $event',
+              :fileName='"atividade"',
+              :canUpload='canIEdit',
+              :files='files',
+              :title='"Upload de arquivo(s)"'
             )
-          div(
-            v-for='(item, index) in preViewUploads',
-            :key='index'
-            )
-            img(
-              :src='item',
-              v-if='isImage(item)')
 
           md-field(:class='getValidationClass("Description")')
             label(for='description') Descrição da atividade
@@ -73,41 +67,49 @@
             ) {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
 
         .room-content-activities-item(
-            v-for='(activity, index) in searched',
-            :key='activity.Id'
-          )
-            .activities-sub-head
-              span.activities-sub-title Entregue {{activity.SentDate | date}} por {{activity.Name}}
-            br
-            .activities-description-container
-              span.activities-description {{activity.Answer}}
-            br
-            .activities-actions
-              .activities-actions-item(@click.prevent='toggleGrade(index)')
-                md-icon.md-size note_add
-                  md-tooltip(md-direction='top') Avaliar
-              .activities-actions-grade(v-if='activity.Open')
-                md-field
-                  label(for='grade') Nota (máximo: {{form.Weight}})
-                  md-input#grade(
-                    name='grade',
-                    type='number',
-                    :max='form.Weight',
-                    v-model='activity.Grade'
-                  )
-                md-field
-                  label(for='feedback') Feedback
-                  md-input#feedback(
-                    name='feedback',
-                    v-model='activity.Feedback'
-                  )
-                .evaluate-actions
-                  .activities-actions-item(@click.prevent='evaluate(activity, index)')
-                    md-icon.md-size check
-                      md-tooltip(md-direction='top') Salvar
-                  .activities-actions-item(@click.prevent='toggleGrade(index)')
-                    md-icon.md-size close
-                      md-tooltip(md-direction='top') Cancelar
+          v-for='(activity, index) in searched',
+          :key='activity.Id'
+        )
+          .activities-sub-head
+            span.activities-sub-title Entregue {{activity.SentDate | date}} por {{activity.Name}}
+          br
+          .activities-description-container
+            span.activities-description {{activity.Answer}}
+          br
+          .activities-actions
+            .activities-actions-item(@click.prevent='toggleGrade(index)')
+              md-icon.md-size note_add
+                md-tooltip(md-direction='top') Avaliar
+            .activities-actions-grade(v-if='activity.Open')
+              md-field
+                label(for='grade') Nota (máximo: {{form.Weight}})
+                md-input#grade(
+                  name='grade',
+                  type='number',
+                  :max='form.Weight',
+                  v-model='activity.Grade'
+                )
+              md-field
+                label(for='feedback') Feedback
+                md-input#feedback(
+                  name='feedback',
+                  v-model='activity.Feedback'
+                )
+              .evaluate-actions
+                .activities-actions-item(@click.prevent='evaluate(activity, index)')
+                  md-icon.md-size check
+                    md-tooltip(md-direction='top') Salvar
+                .activities-actions-item(@click.prevent='toggleGrade(index)')
+                  md-icon.md-size close
+                    md-tooltip(md-direction='top') Cancelar
+          div(v-if='activity.loadedAttachments')
+            upload(
+              @update:files='activity.Attachments = $event',
+              :fileName='"atividade"',
+              :canUpload='false',
+              :files='activity.Attachments',
+              :title='"Arquivo(s) adicionado pelo aluno"'
+            )
 </template>
 
 <script>
@@ -130,9 +132,8 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
-      upload: '',
-      preViewUploads: [],
-      files: null,
+      loadedFiles: false,
+      files: [],
       search: '',
       searched: [],
       original: [],
@@ -160,15 +161,12 @@ export default {
   async created () {
     this.service = new TeacherService(this.$http)
     if (this.$route.params.activityId) this.loadActivity()
-    else this.loadRoom()
+    else {
+      this.loadRoom()
+      this.loadedFiles = true
+    }
   },
   methods: {
-    fnUpload (fileList) {
-      this.files = new FormData()
-      for (let i = 0; i < fileList.length; ++i) {
-        this.files.append(`file_${i}`, fileList[i], fileList[i].name)
-      }
-    },
     async loadActivity () {
       try {
         this.search = ''
@@ -183,9 +181,11 @@ export default {
           Weight: this.activity.Weight,
           ExpirationDate: this.activity.ExpirationDate
         }
-        this.preViewUploads = this.activity.Uploads.map(u => u.Path)
+        this.files = this.activity.Uploads
+        this.loadedFiles = true
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
+          a.loadedAttachments = a.Attachments.length > 0
           return a
         })
         this.original = [...this.searched]
@@ -202,6 +202,7 @@ export default {
       }
     },
     validate () {
+      console.log(this.files)
       this.$v.$touch()
       if (!this.$v.$invalid) {
         this.save()
@@ -210,9 +211,9 @@ export default {
     save () {
       const params = this.$route.params
       this.form.Id = params.activityId || 0
+      this.form.Files = this.files
       this.service.saveOrUpdateActivity(this.form, params.roomCode)
         .then(response => {
-          this.service.uploadActivities(this.files, response.body.entity)
           this.$router.push(`/teacher/room/${this.$route.params.roomCode}`)
         })
         .catch(err => {
@@ -237,9 +238,6 @@ export default {
         .then(() => {
           this.toggleGrade(index)
         })
-    },
-    isImage (image) {
-      return /\.(png|jpe?g)$/.test(image)
     }
   }
 }
@@ -277,7 +275,7 @@ export default {
   &:first-of-type {
     margin: 100px 0 20px;
   }
-  div {
+  div:not(.uploads) {
     margin: 5px;
     display: block;
   }

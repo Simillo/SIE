@@ -11,6 +11,6 @@ namespace SIE.Utils
         private readonly SIEContext _context;
         public URelUploadActivity(SIEContext context) => _context = context;
 
-        public List<RelUploadActivity> GetByActivity(int activityId) => _context.RelUploadActivity.Where(r => r.Activity.Id == activityId).ToList();
+        public List<RelUploadActivity> GetByActivity(int activityId) => _context.RelUploadActivity.Where(r => r.Activity.Id == activityId && r.Active).ToList();
     }
 }

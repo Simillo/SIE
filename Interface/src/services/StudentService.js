@@ -24,9 +24,10 @@ export default class {
   async loadActivity (roomCode, activityId) {
     return this._http.get(`student/LoadActivity/${roomCode}/${activityId}`)
   }
-  async answer (roomCode, activityId, answer) {
+  async answer (roomCode, activityId, answer, attachments) {
     return this._http.post(`student/Answer/${roomCode}/${activityId}`, {
-      Answer: answer
+      Answer: answer,
+      Attachments: attachments
     })
   }
 }

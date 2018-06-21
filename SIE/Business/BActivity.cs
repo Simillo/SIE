@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using SIE.Context;
 using SIE.Enums;
 using SIE.Models;
+using SIE.Utils;
 
 namespace SIE.Business
 {
     public class BActivity
     {
         private readonly SIEContext _context;
+        private readonly UActivity _uActivity;
 
-        public BActivity(SIEContext context) => _context = context;
+        public BActivity(SIEContext context)
+        {
+            _context = context;
+            _uActivity = new UActivity(context);
+        }
 
         public void SaveOrUpdate(Activity activity)
         {
@@ -20,19 +26,19 @@ namespace SIE.Business
                 Save(activity);
         }
 
-        public Activity SaveOrUpdate(MNewActivity newActivity, Room room)
+        public Activity SaveOrUpdate(MNewActivity mActivity, Room room)
         {
-            var activity = new Activity
-            {
-                Id = newActivity.Id,
-                ExpirationDate = newActivity.ExpirationDate ?? room.ExpirationDate,
-                Title = newActivity.Title,
-                Description = newActivity.Description,
-                PersonId = room.PersonId,
-                RoomId = room.Id,
-                CurrentState = (int) EActivityState.Building,
-                Weight = newActivity.Weight
-            };
+            var activity = new Activity();
+            if (mActivity.Id > 0)
+                activity = _uActivity.GetById(mActivity.Id);
+
+            activity.ExpirationDate = mActivity.ExpirationDate ?? room.ExpirationDate;
+            activity.Title = mActivity.Title;
+            activity.Description = mActivity.Description;
+            activity.PersonId = room.PersonId;
+            activity.RoomId = room.Id;
+            activity.CurrentState = (int) EActivityState.Building;
+            activity.Weight = mActivity.Weight;
 
             if (activity.Id > 0)
                 Update(activity);
