@@ -17,7 +17,6 @@ namespace SIE.Models
             Weight = activity.Weight;
             EndDate = activity.EndDate;
             Answer = new MAnswer(answer);
-            Answers = answers?.Select(a => new MViewAnswer(a)).ToList() ?? new List<MViewAnswer>();
             Uploads = uploads?.Select(u => u.Document.FileName).ToList() ?? new List<string>();
         }
 

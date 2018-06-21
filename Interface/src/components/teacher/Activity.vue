@@ -20,7 +20,7 @@
               v-model='form.Title')
             span.md-error(v-if='!$v.form.Title.required') Obrigatório!
 
-          div(v-if='loaded')
+          div(v-if='loadedFiles')
             upload(
               @update:files='files = $event',
               :fileName='"atividade"',
@@ -67,41 +67,49 @@
             ) {{isEditing ? 'Salvar Alterações' : 'Criar Atividade'}}
 
         .room-content-activities-item(
-            v-for='(activity, index) in searched',
-            :key='activity.Id'
-          )
-            .activities-sub-head
-              span.activities-sub-title Entregue {{activity.SentDate | date}} por {{activity.Name}}
-            br
-            .activities-description-container
-              span.activities-description {{activity.Answer}}
-            br
-            .activities-actions
-              .activities-actions-item(@click.prevent='toggleGrade(index)')
-                md-icon.md-size note_add
-                  md-tooltip(md-direction='top') Avaliar
-              .activities-actions-grade(v-if='activity.Open')
-                md-field
-                  label(for='grade') Nota (máximo: {{form.Weight}})
-                  md-input#grade(
-                    name='grade',
-                    type='number',
-                    :max='form.Weight',
-                    v-model='activity.Grade'
-                  )
-                md-field
-                  label(for='feedback') Feedback
-                  md-input#feedback(
-                    name='feedback',
-                    v-model='activity.Feedback'
-                  )
-                .evaluate-actions
-                  .activities-actions-item(@click.prevent='evaluate(activity, index)')
-                    md-icon.md-size check
-                      md-tooltip(md-direction='top') Salvar
-                  .activities-actions-item(@click.prevent='toggleGrade(index)')
-                    md-icon.md-size close
-                      md-tooltip(md-direction='top') Cancelar
+          v-for='(activity, index) in searched',
+          :key='activity.Id'
+        )
+          .activities-sub-head
+            span.activities-sub-title Entregue {{activity.SentDate | date}} por {{activity.Name}}
+          br
+          .activities-description-container
+            span.activities-description {{activity.Answer}}
+          br
+          .activities-actions
+            .activities-actions-item(@click.prevent='toggleGrade(index)')
+              md-icon.md-size note_add
+                md-tooltip(md-direction='top') Avaliar
+            .activities-actions-grade(v-if='activity.Open')
+              md-field
+                label(for='grade') Nota (máximo: {{form.Weight}})
+                md-input#grade(
+                  name='grade',
+                  type='number',
+                  :max='form.Weight',
+                  v-model='activity.Grade'
+                )
+              md-field
+                label(for='feedback') Feedback
+                md-input#feedback(
+                  name='feedback',
+                  v-model='activity.Feedback'
+                )
+              .evaluate-actions
+                .activities-actions-item(@click.prevent='evaluate(activity, index)')
+                  md-icon.md-size check
+                    md-tooltip(md-direction='top') Salvar
+                .activities-actions-item(@click.prevent='toggleGrade(index)')
+                  md-icon.md-size close
+                    md-tooltip(md-direction='top') Cancelar
+          div(v-if='activity.loadedAttachments')
+            upload(
+              @update:files='activity.Attachments = $event',
+              :fileName='"atividade"',
+              :canUpload='false',
+              :files='activity.Attachments',
+              :title='"Arquivo(s) adicionado pelo aluno"'
+            )
 </template>
 
 <script>
@@ -124,7 +132,7 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
-      loaded: false,
+      loadedFiles: false,
       files: [],
       search: '',
       searched: [],
@@ -155,7 +163,7 @@ export default {
     if (this.$route.params.activityId) this.loadActivity()
     else {
       this.loadRoom()
-      this.loaded = true
+      this.loadedFiles = true
     }
   },
   methods: {
@@ -174,9 +182,10 @@ export default {
           ExpirationDate: this.activity.ExpirationDate
         }
         this.files = this.activity.Uploads
-        this.loaded = true
+        this.loadedFiles = true
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
+          a.loadedAttachments = a.Attachments.length > 0
           return a
         })
         this.original = [...this.searched]
@@ -266,7 +275,7 @@ export default {
   &:first-of-type {
     margin: 100px 0 20px;
   }
-  div {
+  div:not(.uploads) {
     margin: 5px;
     display: block;
   }

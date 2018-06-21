@@ -30,6 +30,7 @@ namespace SIE.Controllers
         private readonly URoom _uRoom;
         private readonly UAnswer _uAnswer;
         private readonly URelUploadActivity _uRelUploadActivity;
+        private readonly URelUploadAnswer _uRelUploadAnswer;
 
         private readonly IConfiguration _configuration;
 
@@ -46,6 +47,7 @@ namespace SIE.Controllers
             _uRoom = new URoom(context);
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
+            _uRelUploadAnswer = new URelUploadAnswer(context);
 
             _configuration = configuration;
         }
@@ -181,7 +183,12 @@ namespace SIE.Controllers
 
             var answers = _uAnswer.GetByActivity(activity.Id);
             var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
-            return Ok(ResponseContent.Create(new MViewActivity(activity, null, answers, uploads), HttpStatusCode.OK, null));
+            var response = new MViewActivity(activity, null, answers, uploads)
+            {
+                Answers = answers?.Select(a => new MViewAnswer(a, _uRelUploadAnswer.GetByAnswer(a.Id))).ToList() ?? new List<MViewAnswer>()
+            };
+
+            return Ok(ResponseContent.Create(response, HttpStatusCode.OK, null));
         }
 
         [HttpPost]

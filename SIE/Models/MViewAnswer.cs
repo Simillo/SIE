@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using SIE.Context;
-using SIE.Migrations;
 
 namespace SIE.Models
 {
     public class MViewAnswer
     {
 
-        public MViewAnswer(Answer answer)
+        public MViewAnswer(Answer answer, List<RelUploadAnswer> attachments)
         {
             Id = answer.Id;
             Answer = answer.UserAnswer;
@@ -20,7 +17,7 @@ namespace SIE.Models
             EvaluatedDate = answer.EvaluatedDate;
             Feedback = answer.Feedback;
             Name = answer.Person.Name;
-
+            Attachments = attachments.Select(a => a.Document.FileName).ToList();
         }
         public int Id { get; set; }
         public string Answer { get; set; }
@@ -29,5 +26,6 @@ namespace SIE.Models
         public DateTime? EvaluatedDate { get; set; }
         public string Feedback { get; set; }
         public string Name { get; set; }
+        public List<string> Attachments { get; set; }
     }
 }
