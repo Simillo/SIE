@@ -10,7 +10,7 @@ import Register from '@/components/register/Register'
 import PasswordRecovery from '@/components/password-recovery/PasswordRecovery'
 
 // TEACHER
-import Teacher from '@/components/teacher/Teacher'
+import Dashboard from '@/components/teacher/Dashboard'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRoomsTeacher from '@/components/teacher/MyRooms'
 import RoomTeacher from '@/components/teacher/Room'
@@ -43,7 +43,7 @@ export default new Router({
       sidebar: EProfile.NotShown,
       path: '/teacher',
       name: 'Professor',
-      component: Teacher
+      component: Dashboard
     },
     {
       sidebar: EProfile.NotShown,

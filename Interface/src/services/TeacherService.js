@@ -43,4 +43,7 @@ export default class {
       }
     })
   }
+  async loadDashboard () {
+    return this._http.get('teacher/LoadDashboard')
+  }
 }
