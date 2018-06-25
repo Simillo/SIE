@@ -11,6 +11,11 @@
           .md-title Atividades
         md-card-content
           dashboard-pie(:data='data.activities', :options='options')
+      md-card(v-if='loaded.studentsXRoom')
+        md-card-header
+          .md-title Alunos x Sala
+        md-card-content
+          dashboard-bar(:data='data.studentsXRoom', :options='options')
 </template>
 
 <script>
@@ -18,22 +23,26 @@ import Teacher from './Teacher.vue'
 import TeacherService from '../../services/TeacherService.js'
 
 import DashboardPie from '../shared/DashboardPie.js'
+import DashboardBar from '../shared/DashboardBar.js'
 
 export default {
   components: {
     'dashboard-pie': DashboardPie,
+    'dashboard-bar': DashboardBar,
     'sidebar': Teacher
   },
   data () {
     return {
       loaded: {
         rooms: false,
-        activities: false
+        activities: false,
+        studentsXRoom: false
       },
       options: {responsive: false, maintainAspectRatio: false},
       data: {
         rooms: {},
-        activities: {}
+        activities: {},
+        studentsXRoom: {}
       }
     }
   },
@@ -43,7 +52,9 @@ export default {
       .then(res => {
         this.data.rooms = res.body.entity.rooms
         this.data.activities = res.body.entity.activities
+        this.data.studentsXRoom = res.body.entity.studentsXRoom
         this.loaded.rooms = true
+        this.loaded.studentsXRoom = true
         this.loaded.activities = true
       })
   }

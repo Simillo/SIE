@@ -7,7 +7,7 @@ using SIE.Models;
 
 namespace SIE.Dashboard
 {
-    public class ActivitiesTeacher : IDashboardGraph<Activity>
+    public class DashboardActivitiesTeacher : IDashboardGraph<Activity>
     {
         public MDashboard CreateGraph(List<Activity> activities)
         {

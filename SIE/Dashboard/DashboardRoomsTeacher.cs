@@ -7,7 +7,7 @@ using SIE.Models;
 
 namespace SIE.Dashboard
 {
-    public class RoomsTeacher : IDashboardGraph<Room>
+    public class DashboardRoomsTeacher : IDashboardGraph<Room>
     {
         public MDashboard CreateGraph(List<Room> rooms)
         {

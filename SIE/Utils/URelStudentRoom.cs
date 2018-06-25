@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using SIE.Context;
 
 namespace SIE.Utils
@@ -22,6 +21,12 @@ namespace SIE.Utils
             _context
                 .RelStudentRoom
                 .Where(r => r.Room.Id == roomId)
+                .ToList();
+
+        public List<RelStudentRoom> GetByRelByTeacher(int authenticatedUserId) => 
+            _context
+                .RelStudentRoom
+                .Where(r => r.Room.Person.Id == authenticatedUserId)
                 .ToList();
     }
 }
