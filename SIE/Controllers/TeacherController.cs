@@ -11,8 +11,8 @@ using SIE.Utils;
 using SIE.Validations;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using SIE.Dashboard;
 using SIE.Helpers;
-using SIE.Interfaces;
 
 namespace SIE.Controllers
 {
@@ -339,41 +339,15 @@ namespace SIE.Controllers
         public IActionResult LoadDashboard()
         {
             var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
-            var dashboard = new MDashboard();
 
             var rooms = _uRoom.GetByOwner(authenticatedUserId);
-            var roomsCount = new List<dynamic>();
-            var roomsColor = new List<string>();
-
-            if (rooms.Any(r => r.CurrentState == (int) ERoomState.Building))
+            var activities = _uActivity.GetByUser(authenticatedUserId);
+            var dashboards = new
             {
-                dashboard.labels.Add("Salas em construção");
-                roomsCount.Add(rooms.Count(r => r.CurrentState == (int) ERoomState.Building));
-                roomsColor.Add("#139A43");
-            }
-
-            if (rooms.Any(r => r.CurrentState == (int) ERoomState.Open))
-            {
-                roomsCount.Add(rooms.Count(r => r.CurrentState == (int)ERoomState.Open));
-                roomsColor.Add("#3454D1");
-                dashboard.labels.Add("Salas abertas");
-            }
-
-            if (rooms.Any(r => r.CurrentState == (int) ERoomState.Closed))
-            {
-                dashboard.labels.Add("Salas finalizadas");
-                roomsCount.Add(rooms.Count(r => r.CurrentState == (int)ERoomState.Closed));
-                roomsColor.Add("#F2DC5D");
-            }
-
-            dashboard.datasets.Add(new MDashboardDatasets
-            {
-                backgroundColor = roomsColor,
-                data = roomsCount
-            });
-
-
-            return Ok(ResponseContent.Create(dashboard, HttpStatusCode.OK, null));
+                rooms = new RoomsTeacher().CreateGraph(rooms),
+                activities = new ActivitiesTeacher().CreateGraph(activities)
+            };
+            return Ok(ResponseContent.Create(dashboards, HttpStatusCode.OK, null));
         }
     }
 }
