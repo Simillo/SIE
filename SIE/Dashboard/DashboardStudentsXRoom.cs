@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
+using SIE.Auxiliary;
 using SIE.Context;
 using SIE.Interfaces;
 using SIE.Models;
 
 namespace SIE.Dashboard
 {
-    public class DashboardStudentsXRoom : IDashboardGraph<RelStudentRoom>
+    public class DashboardStudentsXRoom : IDashboardGraph<Room>
     {
-        public MDashboard CreateGraph(List<RelStudentRoom> relStudentRooms)
+        public MDashboard CreateGraph(List<Room> rooms)
         {
             var dashboard = new MDashboard();
+            if (!rooms.Any()) return dashboard;
+
             dashboard.labels.Add("Sala");
 
-            var rooms = relStudentRooms.Select(r => r.Room).DistinctBy(r => r.Id).ToList();
-
-            var rnd = new Random();
             foreach (var room in rooms)
             {
-                var bgColor = $"#{rnd.Next(0x1000000):X6}";
+                var bgColor = ColorExtensions.RandomColorHex();
                 var dataset = new MDashboardDatasets
                 {
                     label = room.Name,

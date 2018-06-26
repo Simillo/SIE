@@ -344,12 +344,11 @@ namespace SIE.Controllers
 
             var rooms = _uRoom.GetByOwner(authenticatedUserId);
             var activities = _uActivity.GetByUser(authenticatedUserId);
-            var relStudentsRoom = _uRelStudentRoom.GetByRelByTeacher(authenticatedUserId);
             var dashboards = new
             {
                 rooms = new DashboardRoomsTeacher().CreateGraph(rooms),
                 activities = new DashboardActivitiesTeacher().CreateGraph(activities),
-                studentsXRoom = new DashboardStudentsXRoom().CreateGraph(relStudentsRoom)
+                studentsXRoom = new DashboardStudentsXRoom().CreateGraph(rooms)
             };
             return Ok(ResponseContent.Create(dashboards, HttpStatusCode.OK, null));
         }
