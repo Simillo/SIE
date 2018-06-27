@@ -24,14 +24,13 @@ namespace SIE.Tests.Controllers
 
             var person = new Person
             {
-                Id = 1,
                 BirthDate = DateTime.Now,
-                Cpf = "43252525259",
+                Cpf = "09505752164",
                 Email = "simillonakai@gmail.com",
                 Name = "Pessoa teste",
                 Password = "619bf74a84a52a1cb50a025654076dceb92a911c8929d8a9aec158c35ae359db",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
             _context.Person.Add(person);
             _context.SaveChanges();
@@ -43,15 +42,13 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
-                Institution = null,
-                Cpf = "84733187491",
+                Cpf = "43754264206",
                 Email = "email@do.professor.com",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -67,18 +64,17 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = new MInstitution
                 {
-                    Name = "UFLA"
+                    Name = "UFRA"
                 },
                 Cpf = "84733187491",
-                Email = "email@do.professor.com",
+                Email = "email2@do.professor.com",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -94,7 +90,6 @@ namespace SIE.Tests.Controllers
         {
             var institution = new Institution
             {
-                Id = 1,
                 Name = "UFLA"
             };
             _context.Institution.Add(institution);
@@ -102,18 +97,17 @@ namespace SIE.Tests.Controllers
 
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = new MInstitution
                 {
                     Name = "UFLA"
                 },
-                Cpf = "84733187491",
-                Email = "email@do.professor.com",
+                Cpf = "37551053654",
+                Email = "email3@do.professor.com",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -131,15 +125,14 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = null,
-                Cpf = "84733187491",
+                Cpf = "02820214428",
                 Email = "simillonakai@gmail.com",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -155,15 +148,14 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = null,
-                Cpf = "84733187491",
+                Cpf = "44268762060",
                 Email = "e-mailMuitoInválido",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -179,15 +171,14 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = null,
                 Cpf = "123",
-                Email = "email@ok.com",
+                Email = "email3@do.professor.com",
                 Name = "Nome professor",
                 Password = "123123a",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -202,15 +193,14 @@ namespace SIE.Tests.Controllers
         {
             var mPerson = new MPerson
             {
-                Id = 2,
                 BirthDate = DateTime.Now,
                 Institution = null,
-                Cpf = "84733187491",
-                Email = "email@ok.com",
+                Cpf = "52660410216",
+                Email = "email4@do.professor.com",
                 Name = "Nome professor",
                 Password = "11",
                 Profile = (int)EProfile.Teacher,
-                Sex = 1
+                Sex = (int)ESex.Male
             };
 
             var controller = new PersonController(_context, _configuration);
@@ -243,7 +233,7 @@ namespace SIE.Tests.Controllers
 
             var passwordRecovery = new PasswordRecovery
             {
-                Person = _context.Person.Find(1),
+                Person = _context.Person.FirstOrDefault(),
                 Active = false,
                 RequestDate = DateTime.Now,
                 ExpirationDate = DateTime.Now,

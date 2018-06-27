@@ -1,6 +1,8 @@
 # SIE
 ## Sistema Integrado Educacional
 
+[![Build Status](https://travis-ci.org/Simillo/SIE.svg?branch=master)](https://travis-ci.org/Simillo/SIE)
+
 ![SIE](/Interface/src/assets/logo.png)
 
 
