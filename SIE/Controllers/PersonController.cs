@@ -94,9 +94,6 @@ namespace SIE.Controllers
         [Route("GetInfoByToken/{token}")]
         public IActionResult GetInfoByToken(string token)
         {
-            if (HttpContext.Session.IsAuth())
-                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
-
             var passwordRecoveryRequest = _uRecoveryPassword.GetByToken(token);
 
             if (passwordRecoveryRequest == null)

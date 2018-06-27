@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIE", "SIE.csproj", "{29160E00-BFCE-4FB9-99CB-59DA52CC3251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIE.Scheduler", "..\SIE.Scheduler\SIE.Scheduler.csproj", "{34ED6751-52A7-40ED-8CBD-B7BB30BEF814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SIE.Scheduler", "..\SIE.Scheduler\SIE.Scheduler.csproj", "{34ED6751-52A7-40ED-8CBD-B7BB30BEF814}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIE.Tests", "..\SIE.Tests\SIE.Tests.csproj", "{F624456F-26E2-4219-B0A4-E1B024EB3153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{34ED6751-52A7-40ED-8CBD-B7BB30BEF814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34ED6751-52A7-40ED-8CBD-B7BB30BEF814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34ED6751-52A7-40ED-8CBD-B7BB30BEF814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F624456F-26E2-4219-B0A4-E1B024EB3153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F624456F-26E2-4219-B0A4-E1B024EB3153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F624456F-26E2-4219-B0A4-E1B024EB3153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F624456F-26E2-4219-B0A4-E1B024EB3153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
