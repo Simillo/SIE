@@ -3,4 +3,5 @@ mono: none
 dotnet: 2.1.301
 script:
   - dotnet build ./SIE/
+  - dotnet build ./SIE.Scheduler/
   - dotnet test ./SIE.Tests/
