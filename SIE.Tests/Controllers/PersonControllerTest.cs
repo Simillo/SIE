@@ -14,8 +14,8 @@ namespace SIE.Tests.Controllers
 {
     public class PersonControllerTest
     {
-        private SIEContext _context;
-        private IConfiguration _configuration;
+        private readonly SIEContext _context;
+        private readonly IConfiguration _configuration;
         public PersonControllerTest()
         {
             var builder = new DbContextOptionsBuilder<SIEContext>().UseInMemoryDatabase();
