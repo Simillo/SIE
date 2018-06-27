@@ -109,9 +109,6 @@ namespace SIE.Controllers
         [Route("Recovery/{email}")]
         public IActionResult Recovery(string email)
         {
-            if (HttpContext.Session.IsAuth())
-                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Você já está autenticado!"));
-
             var person = _uPerson.GetByEmail(email);
             if (person == null)
                 return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "E-mail não cadastrado no sistema!"));

@@ -15,11 +15,10 @@ namespace SIE.Tests.Controllers
     public class PersonControllerTest
     {
         private readonly SIEContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly PersonController _controller;
         public PersonControllerTest()
         {
             var builder = new DbContextOptionsBuilder<SIEContext>().UseInMemoryDatabase();
-            _configuration = new ConfigurationBuilder().Build();
             _context = new SIEContext(builder.Options);
 
             var person = new Person
@@ -34,6 +33,8 @@ namespace SIE.Tests.Controllers
             };
             _context.Person.Add(person);
             _context.SaveChanges();
+
+            _controller = new PersonController(_context, null);
         }
 
         #region Save (teacher, saving)
@@ -51,8 +52,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.OK, res.StatusCode);
@@ -77,8 +78,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.OK, res.StatusCode);
@@ -110,8 +111,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.OK, res.StatusCode);
@@ -135,8 +136,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
@@ -158,8 +159,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
@@ -181,8 +182,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
@@ -203,8 +204,8 @@ namespace SIE.Tests.Controllers
                 Sex = (int)ESex.Male
             };
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.Save(mPerson) as ObjectResult;
+           
+            var res = _controller.Save(mPerson) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
@@ -218,8 +219,8 @@ namespace SIE.Tests.Controllers
         {
             const string token = "Token não existente";
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.GetInfoByToken(token) as ObjectResult;
+           
+            var res = _controller.GetInfoByToken(token) as ObjectResult;
 
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.Unauthorized, res.StatusCode);
@@ -243,9 +244,129 @@ namespace SIE.Tests.Controllers
             _context.PasswordRecovery.Add(passwordRecovery);
             _context.SaveChanges();
 
-            var controller = new PersonController(_context, _configuration);
-            var res = controller.GetInfoByToken(token) as ObjectResult;
+           
+            var res = _controller.GetInfoByToken(token) as ObjectResult;
 
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.Unauthorized, res.StatusCode);
+            Assert.Equal("Essa solicitação já expirou!", ((MResponseContent)res.Value).message);
+        }
+        #endregion
+
+        #region RecoveryPassword
+        [Fact]
+        public void TestRecoveryConsigoRecuperarMinhaSenha()
+        {
+            var email = "simillonakai@gmail.com";
+            var res = _controller.Recovery(email) as ObjectResult;
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.OK, res.StatusCode);
+            Assert.Equal("Solicitação enviada com sucesso, verifique sua caixa de entrada!", ((MResponseContent)res.Value).message);
+        }
+
+        [Fact]
+        public void TestRecoveryNaoConsigoRecuperarMinhaSenhaComUsuarioNaoCadastrado()
+        {
+            var email = "usuario.nao.cadastrado@em.ai.lnao.com";
+            var res = _controller.Recovery(email) as ObjectResult;
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.Equal("E-mail não cadastrado no sistema!", ((MResponseContent)res.Value).message);
+        }
+
+        [Fact]
+        public void TestUpdatePasswordConsigoAtualizarMinhaSenha()
+        {
+            var token = "token válido para senha";
+            var passwordRecovery = new PasswordRecovery
+            {
+                ExpirationDate = DateTime.Now.AddDays(1),
+                Person = _context.Person.Find(1),
+                Token = token,
+                RequestDate = DateTime.Now,
+                Active = true,
+            };
+            _context.PasswordRecovery.Add(passwordRecovery);
+            _context.SaveChanges();
+
+            var updatePassword = new MUpdatePassword
+            {
+                Token = token,
+                Password = "123123a"
+            };
+
+            var res = _controller.UpdatePassword(updatePassword) as ObjectResult;
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.OK, res.StatusCode);
+            Assert.Equal("Senha alterada com sucesso!", ((MResponseContent)res.Value).message);
+        }
+
+        [Fact]
+        public void TestUpdatePasswordNaoConsigoAlterarASenhaComSenhaInvalida()
+        {
+            var token = "token válido para senha inválida";
+            var passwordRecovery = new PasswordRecovery
+            {
+                ExpirationDate = DateTime.Now.AddDays(1),
+                Person = _context.Person.Find(1),
+                Token = token,
+                RequestDate = DateTime.Now,
+                Active = true,
+            };
+            _context.PasswordRecovery.Add(passwordRecovery);
+            _context.SaveChanges();
+
+            var updatePassword = new MUpdatePassword
+            {
+                Token = token,
+                Password = "11"
+            };
+
+            var res = _controller.UpdatePassword(updatePassword) as ObjectResult;
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.Equal("A senha deve conter ao menos 6 caracteres!", ((MResponseContent)res.Value).message);
+        }
+
+        [Fact]
+        public void TestUpdatePasswordNaoConsigoAlterarASenhaDeUmTokenNaoExistente()
+        {
+            var token = "token não existente para alterar a senha";
+            var updatePassword = new MUpdatePassword
+            {
+                Token = token,
+                Password = "123123a"
+            };
+
+            var res = _controller.UpdatePassword(updatePassword) as ObjectResult;
+            Assert.NotNull(res);
+            Assert.Equal((int)HttpStatusCode.Unauthorized, res.StatusCode);
+            Assert.Equal("Essa solicitação não existe!", ((MResponseContent)res.Value).message);
+        }
+
+        [Fact]
+        public void TestUpdatePasswordNaoConsigoAlterarASenhaDeUmTokenInvalido()
+        {
+            var token = "token inválido para recuperar a senha";
+            var passwordRecovery = new PasswordRecovery
+            {
+                ExpirationDate = DateTime.Now,
+                CancelationDate = DateTime.Now,
+                Person = _context.Person.Find(1),
+                Token = token,
+                RequestDate = DateTime.Now,
+                Active = false,
+            };
+            _context.PasswordRecovery.Add(passwordRecovery);
+            _context.SaveChanges();
+
+            var updatePassword = new MUpdatePassword
+            {
+                Token = token,
+                Password = "123123a"
+            };
+
+            var res = _controller.UpdatePassword(updatePassword) as ObjectResult;
             Assert.NotNull(res);
             Assert.Equal((int)HttpStatusCode.Unauthorized, res.StatusCode);
             Assert.Equal("Essa solicitação já expirou!", ((MResponseContent)res.Value).message);
