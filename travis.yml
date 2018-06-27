@@ -1,8 +1,7 @@
 language: csharp
-solution: ./SIE/SIE.sln
-dotnet: 2.1.0
+mono: none
+dotnet: 2.0.0
 script:
-  - dotnet restore
   - dotnet build ./SIE/
   - dotnet build ./SIE.Scheduler/
   - dotnet test ./SIE.Tests/
