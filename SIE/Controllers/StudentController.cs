@@ -10,6 +10,7 @@ using SIE.Utils;
 using SIE.Validations;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using SIE.Dashboard;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -18,6 +19,8 @@ namespace SIE.Controllers
     [AuthorizeSIE(EProfile.Student)]
     public class StudentController : Controller
     {
+        private readonly SIEContext _context;
+
         private readonly BHistory _bHistory;
         private readonly BRelStudentRoom _bRelStudentRoom;
         private readonly BAnswer _bAnswer;
@@ -31,12 +34,15 @@ namespace SIE.Controllers
         private readonly URoom _uRoom;
         private readonly URelUploadActivity _uRelUploadActivity;
         private readonly URelUploadAnswer _uRelUploadAnswer;
+        private readonly UPerson _uPerson;
 
         private readonly IConfiguration _configuration;
 
 
         public StudentController(SIEContext context, IConfiguration configuration)
         {
+            _context = context;
+
             _bHistory = new BHistory(context);
             _bRelStudentRoom = new BRelStudentRoom(context);
             _bRoom = new BRoom(context);
@@ -50,8 +56,10 @@ namespace SIE.Controllers
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
             _uRelUploadAnswer = new URelUploadAnswer(context);
+            _uPerson = new UPerson(context);
 
             _configuration = configuration;
+
         }
 
         [HttpGet]
@@ -239,6 +247,20 @@ namespace SIE.Controllers
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário respondeu a uma atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade respondida!"));
+        }
+
+        [HttpGet]
+        [Route("LoadDashboard")]
+        public IActionResult LoadDashboard()
+        {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var person = _uPerson.GetById(authenticatedUserId);
+            var answers = _uAnswer.GetByStudent(authenticatedUserId);
+            var dashboards = new
+            {
+                answers = new DashboardAnswerStudent(_context, person).CreateGraph(answers),
+            };
+            return Ok(ResponseContent.Create(dashboards, HttpStatusCode.OK, null));
         }
     }
 }

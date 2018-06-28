@@ -17,6 +17,13 @@ namespace SIE.Utils
                 .Select(p => p.Room.Id)
                 .ToList();
 
+        public List<Room> GetRoomByPerson(int personId) =>
+            _context
+                .RelStudentRoom
+                .Where(r => r.Person.Id == personId && r.Active)
+                .Select(p => p.Room)
+                .ToList();
+
         public List<RelStudentRoom> GetByRoom(int roomId) =>
             _context
                 .RelStudentRoom
