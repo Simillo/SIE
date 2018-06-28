@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -186,7 +187,7 @@ namespace SIE.Controllers
 
             var answer = _uAnswer.GetByUser(activityId, authenticatedPersonId);
             var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
-            var attachments = _uRelUploadAnswer.GetByAnswer(answer.Id);
+            var attachments = answer != null ? _uRelUploadAnswer.GetByAnswer(answer.Id) : new List<RelUploadAnswer>();
             var response = new MViewActivity(activity, answer, null, uploads)
             {
                 Answer =
