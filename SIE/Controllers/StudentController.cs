@@ -211,6 +211,7 @@ namespace SIE.Controllers
         public IActionResult Answer([FromBody] MAnswer answer, string roomCode, int activityId)
         {
             var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var person = _uPerson.GetById(authenticatedPersonId);
             var activity = _uActivity.GetById(activityId);
             var room = _uRoom.GetByCode(roomCode);
             var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
@@ -240,7 +241,7 @@ namespace SIE.Controllers
             if (answer.Attachments != null)
             {
                 var filesName = FileExtensions.CopyFromTo(answer.Attachments, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
-                var documents = _bDocument.Save(filesName, answerDb.Person);
+                var documents = _bDocument.Save(filesName, person);
                 _bRelUploadAnswer.Save(documents, answerDb);
             }
 
