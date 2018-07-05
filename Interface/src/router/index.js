@@ -10,14 +10,14 @@ import Register from '@/components/register/Register'
 import PasswordRecovery from '@/components/password-recovery/PasswordRecovery'
 
 // TEACHER
-import Dashboard from '@/components/teacher/Dashboard'
+import DashboardTeacher from '@/components/teacher/Dashboard'
 import NewRoom from '@/components/teacher/NewRoom'
 import MyRoomsTeacher from '@/components/teacher/MyRooms'
 import RoomTeacher from '@/components/teacher/Room'
 import ActivityTeacher from '@/components/teacher/Activity'
 
 // STUDENT
-import Student from '@/components/student/Student'
+import DashboardStudent from '@/components/student/Dashboard'
 import Rooms from '@/components/student/Rooms'
 import MyRoomsStudent from '@/components/student/MyRooms'
 import RoomStudent from '@/components/student/Room'
@@ -43,7 +43,7 @@ export default new Router({
       sidebar: EProfile.NotShown,
       path: '/teacher',
       name: 'Professor',
-      component: Dashboard
+      component: DashboardTeacher
     },
     {
       sidebar: EProfile.NotShown,
@@ -95,7 +95,7 @@ export default new Router({
       sidebar: EProfile.NotShown,
       path: '/student',
       name: 'Estudante',
-      component: Student
+      component: DashboardStudent
     },
     {
       sidebar: EProfile.Student,

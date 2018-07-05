@@ -50,12 +50,13 @@ export default {
     const service = new TeacherService(this.$http)
     service.loadDashboard()
       .then(res => {
-        this.data.rooms = res.body.entity.rooms
-        this.data.activities = res.body.entity.activities
-        this.data.studentsXRoom = res.body.entity.studentsXRoom
-        this.loaded.rooms = true
-        this.loaded.studentsXRoom = true
-        this.loaded.activities = true
+        const dashboards = res.body.entity
+        this.data.rooms = dashboards.rooms
+        this.data.activities = dashboards.activities
+        this.data.studentsXRoom = dashboards.studentsXRoom
+        this.loaded.rooms = !!dashboards.rooms.labels.length
+        this.loaded.activities = !!dashboards.activities.labels.length
+        this.loaded.studentsXRoom = !!dashboards.studentsXRoom.labels.length
       })
   }
 }

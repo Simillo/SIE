@@ -107,7 +107,7 @@ export default {
           this.loadedFiles = this.files.length > 0
           this.form = res.body.entity.Answer
           this.attachments = this.form.Attachments
-          this.loadedAttachments = this.attachments.length > 0
+          this.loadedAttachments = this.canIAnswer || this.attachments.length > 0
           this.canIAnswer = !res.body.entity.Answer.Answer && res.body.entity.CurrentState === EActivityState.InProgress.ordinal
           this.labelAttachments = this.loadedAttachments ? 'Arquivo(s) anexado por você' : ''
         })

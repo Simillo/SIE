@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SIE.Auxiliary;
 using SIE.Business;
@@ -9,6 +10,7 @@ using SIE.Utils;
 using SIE.Validations;
 using System.Net;
 using Microsoft.Extensions.Configuration;
+using SIE.Dashboard;
 using SIE.Helpers;
 
 namespace SIE.Controllers
@@ -17,6 +19,8 @@ namespace SIE.Controllers
     [AuthorizeSIE(EProfile.Student)]
     public class StudentController : Controller
     {
+        private readonly SIEContext _context;
+
         private readonly BHistory _bHistory;
         private readonly BRelStudentRoom _bRelStudentRoom;
         private readonly BAnswer _bAnswer;
@@ -30,12 +34,15 @@ namespace SIE.Controllers
         private readonly URoom _uRoom;
         private readonly URelUploadActivity _uRelUploadActivity;
         private readonly URelUploadAnswer _uRelUploadAnswer;
+        private readonly UPerson _uPerson;
 
         private readonly IConfiguration _configuration;
 
 
         public StudentController(SIEContext context, IConfiguration configuration)
         {
+            _context = context;
+
             _bHistory = new BHistory(context);
             _bRelStudentRoom = new BRelStudentRoom(context);
             _bRoom = new BRoom(context);
@@ -49,8 +56,10 @@ namespace SIE.Controllers
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
             _uRelUploadAnswer = new URelUploadAnswer(context);
+            _uPerson = new UPerson(context);
 
             _configuration = configuration;
+
         }
 
         [HttpGet]
@@ -186,7 +195,7 @@ namespace SIE.Controllers
 
             var answer = _uAnswer.GetByUser(activityId, authenticatedPersonId);
             var uploads = _uRelUploadActivity.GetByActivity(activity.Id);
-            var attachments = _uRelUploadAnswer.GetByAnswer(answer.Id);
+            var attachments = answer != null ? _uRelUploadAnswer.GetByAnswer(answer.Id) : new List<RelUploadAnswer>();
             var response = new MViewActivity(activity, answer, null, uploads)
             {
                 Answer =
@@ -202,6 +211,7 @@ namespace SIE.Controllers
         public IActionResult Answer([FromBody] MAnswer answer, string roomCode, int activityId)
         {
             var authenticatedPersonId = HttpContext.Session.GetSessionPersonId();
+            var person = _uPerson.GetById(authenticatedPersonId);
             var activity = _uActivity.GetById(activityId);
             var room = _uRoom.GetByCode(roomCode);
             var roomsIds = _uRelStudentRoom.GetRoomIdByPersonId(authenticatedPersonId);
@@ -231,13 +241,27 @@ namespace SIE.Controllers
             if (answer.Attachments != null)
             {
                 var filesName = FileExtensions.CopyFromTo(answer.Attachments, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]);
-                var documents = _bDocument.Save(filesName, answerDb.Person);
+                var documents = _bDocument.Save(filesName, person);
                 _bRelUploadAnswer.Save(documents, answerDb);
             }
 
             _bHistory.SaveHistory(authenticatedPersonId, "Usuário respondeu a uma atividade");
 
             return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Atividade respondida!"));
+        }
+
+        [HttpGet]
+        [Route("LoadDashboard")]
+        public IActionResult LoadDashboard()
+        {
+            var authenticatedUserId = HttpContext.Session.GetSessionPersonId();
+            var person = _uPerson.GetById(authenticatedUserId);
+            var answers = _uAnswer.GetByStudent(authenticatedUserId);
+            var dashboards = new
+            {
+                answers = new DashboardAnswerStudent(_context, person).CreateGraph(answers),
+            };
+            return Ok(ResponseContent.Create(dashboards, HttpStatusCode.OK, null));
         }
     }
 }

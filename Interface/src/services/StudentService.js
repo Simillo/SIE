@@ -30,4 +30,7 @@ export default class {
       Attachments: attachments
     })
   }
+  async loadDashboard () {
+    return this._http.get(`student/LoadDashboard`)
+  }
 }
