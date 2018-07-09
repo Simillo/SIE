@@ -27,7 +27,7 @@ namespace SIE.Auxiliary
             session.SetString("_cpf", person.Cpf);
             session.SetString("_email", person.Email);
             session.SetInt32("_profile", person.Profile);
-            session.SetString("_photo", person.PhotoPath ?? "../../assets/logo.png");
+            session.SetString("_photo", person.PhotoPath ?? "/static/logo.png");
         }
 
         public static int GetSessionPersonId(this ISession session) => session.GetInt32("_id") ?? 0;

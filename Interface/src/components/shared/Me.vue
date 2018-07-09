@@ -1,5 +1,5 @@
 <template lang='pug'>
-  box(:height='"450px"')
+  box(:height='"535px"')
     form(
       novalidate,
       @submit.prevent='validate'
@@ -41,14 +41,16 @@
         md-input#password(
           type='password',
           v-model='form.Password')
-      upload(
-        :multiple='false',
-        @update:files='photo = $event',
-        :fileName='"foto"',
-        :canUpload='true',
-        :files='photo',
-        :title='"Upload de foto"'
-      )
+      div(v-if='loaded')
+        upload(
+          :preview='true',
+          :multiple='false',
+          @update:files='photo = $event',
+          :fileName='"foto"',
+          :canUpload='true',
+          :files='photo',
+          :title='"Foto de perfil"'
+        )
       div
         router-link(:to='backDirection')
           md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -62,9 +64,7 @@ import Box from './Box.vue'
 import EProfile from '../../enums/EProfile.js'
 import Person from '../../domain/Person'
 import { validationMixin } from 'vuelidate'
-import {
-  required
-} from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
 import PersonService from '../../services/PersonService'
 import InstitutionService from '../../services/InstitutionService'
@@ -76,6 +76,7 @@ export default {
   mixins: [validationMixin],
   data () {
     return {
+      loaded: false,
       form: new Person(),
       institutions: [],
       viewInstitution: null,
@@ -99,6 +100,8 @@ export default {
     async loadData () {
       const res = await this.service.me()
       this.form = res.body.entity
+      this.photo.push(res.body.entity.Photo)
+      this.loaded = true
       this.backDirection = this.form.Profile === EProfile.Teacher.ordinal ? '/teacher' : '/student'
       if (this.form.Institution.Id !== 0) this.viewInstitution = this.form.Institution.Name
     },

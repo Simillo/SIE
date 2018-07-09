@@ -18,23 +18,34 @@
         v-for='(file, index) in fileList',
         :key='index'
       )
-        a.file-list-item-link(
-          :href='file',
-          target='_blank'
-        ) {{generateName(file, index)}}
-        span.file-list-item-icon(
-          @click='deleteFile(index)',
-          v-if='canUpload'
+        div(v-if='!preview')
+          a.file-list-item-link(
+            :href='file',
+            target='_blank'
+          ) {{generateName(file, index)}}
+          span.file-list-item-icon(
+            @click='deleteFile(index)',
+            v-if='canUpload'
+          )
+            md-tooltip.margin-tooltip Excluir
+            md-icon close
+        div(
+          v-else,
+          @click='deleteFile(index)'
         )
-          md-tooltip.margin-tooltip Excluir
-          md-icon close
+          md-avatar
+            md-tooltip(md-direction='right') Excluir
+            img(
+              v-if='!multiple',
+              :src='file'
+              )
 
 </template>
 
 <script>
 import UploadService from '../../services/UploadService.js'
 export default {
-  props: ['fileName', 'canUpload', 'files', 'title', 'multiple'],
+  props: ['fileName', 'canUpload', 'files', 'title', 'multiple', 'preview'],
   data () {
     return {
       fileList: [],
@@ -45,6 +56,7 @@ export default {
   created () {
     this.fileList = this.files
     this.service = new UploadService(this.$http)
+    if (!this.multiple && this.fileList.length) this.enabled = false
   },
   methods: {
     async fnUpload (files) {
@@ -94,6 +106,11 @@ export default {
     padding: 5px 0 5px;
     border: 1px solid #999;
     margin: 10px;
+    .img-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+    }
     .file-list-item-icon {
       cursor: pointer;
       margin-left: 10px;
@@ -105,5 +122,11 @@ export default {
       }
     }
   }
+}
+.md-avatar {
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
 }
 </style>

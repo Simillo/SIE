@@ -57,7 +57,8 @@ namespace SIE.Controllers
                     Id = person.Institution?.Id ?? 0,
                     Name = person.Institution?.Name
                 },
-                Profile = person.Profile
+                Profile = person.Profile,
+                Photo = person.PhotoPath
             };
             return Ok(ResponseContent.Create(mPerson, HttpStatusCode.OK, null));
         }
