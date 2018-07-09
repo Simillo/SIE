@@ -25,6 +25,8 @@ namespace SIE.Controllers
         private readonly UPerson _uPerson;
         private readonly UPasswordRecovery _uRecoveryPassword;
         private readonly UInstitution _uInstitution;
+
+        private readonly IConfiguration _configuration;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
@@ -34,6 +36,8 @@ namespace SIE.Controllers
             _uPerson = new UPerson(context);
             _uRecoveryPassword = new UPasswordRecovery(context);
             _uInstitution = new UInstitution(context);
+
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -78,11 +82,17 @@ namespace SIE.Controllers
 
             if (mPerson.Institution != null && mPerson.Institution.Name != person.Institution?.Name && !string.IsNullOrEmpty(mPerson.Institution.Name))
             {
-                var institution = _uInstitution.GetExact(mPerson.Institution.Name) ?? _bInstitution.Save(mPerson.Institution.Name);
-                person.Institution = institution;
-            } else if (string.IsNullOrEmpty(mPerson.Institution?.Name) && !string.IsNullOrEmpty(person.Institution?.Name))
+                person.Institution = _uInstitution.GetExact(mPerson.Institution.Name) ?? _bInstitution.Save(mPerson.Institution.Name);
+            }
+            else if (string.IsNullOrEmpty(mPerson.Institution?.Name) && !string.IsNullOrEmpty(person.Institution?.Name))
             {
                 person.Institution = null;
+            }
+
+            if (!string.IsNullOrEmpty(mPerson.Photo))
+            {
+                var file = FileExtensions.CopyFromTo(new List<string> {mPerson.Photo }, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]).FirstOrDefault();
+                person.PhotoPath = file;
             }
 
             person.Name = mPerson.Name;

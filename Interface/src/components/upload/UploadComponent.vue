@@ -1,12 +1,18 @@
 <template lang='pug'>
   .uploads
     span.title {{title}}
-    md-field(v-if='canUpload')
-      md-file(
-        multiple,
-        name='files',
-        @change='fnUpload($event.target.files)'
-      )
+    div(v-if='enabled')
+      md-field(v-if='multiple')
+        md-file(
+          multiple,
+          name='files',
+          @change='fnUpload($event.target.files)'
+        )
+      md-field(v-else)
+        md-file(
+          name='files',
+          @change='fnUpload($event.target.files)'
+        )
     .file-list
       .file-list-item(
         v-for='(file, index) in fileList',
@@ -28,11 +34,12 @@
 <script>
 import UploadService from '../../services/UploadService.js'
 export default {
-  props: ['fileName', 'canUpload', 'files', 'title'],
+  props: ['fileName', 'canUpload', 'files', 'title', 'multiple'],
   data () {
     return {
       fileList: [],
-      form: new FormData()
+      form: new FormData(),
+      enabled: this.canUpload
     }
   },
   created () {
@@ -50,13 +57,16 @@ export default {
       const response = await this.service.upload(filesForm)
       this.fileList = response.data.entity
       this.$emit('update:files', this.fileList)
+      if (!this.multiple) this.enabled = false
     },
     generateName (file, index) {
       const extension = file.match(/\.(.*)$/gi)
-      return `${this.fileName}_${index + 1}${extension}`
+      if (this.multiple) return `${this.fileName}_${index + 1}${extension}`
+      return `${this.fileName}${extension}`
     },
     deleteFile (index) {
       this.fileList.splice(index, 1)
+      if (!this.multiple) this.enabled = true
     }
   }
 }

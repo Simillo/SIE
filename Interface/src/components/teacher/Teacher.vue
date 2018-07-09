@@ -23,7 +23,7 @@
             md-align-trigger
           )
             img.my-photo(
-              src='../../assets/logo.png',
+              :src='person.Photo',
               md-menu-trigger
             )
             md-menu-content

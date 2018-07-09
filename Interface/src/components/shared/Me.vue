@@ -1,5 +1,5 @@
 <template lang='pug'>
-  box(:height='"350px"')
+  box(:height='"450px"')
     form(
       novalidate,
       @submit.prevent='validate'
@@ -41,6 +41,14 @@
         md-input#password(
           type='password',
           v-model='form.Password')
+      upload(
+        :multiple='false',
+        @update:files='photo = $event',
+        :fileName='"foto"',
+        :canUpload='true',
+        :files='photo',
+        :title='"Upload de foto"'
+      )
       div
         router-link(:to='backDirection')
           md-button.md-raised.md-primary.no-margin.float-left.pull-bottom Voltar
@@ -71,7 +79,8 @@ export default {
       form: new Person(),
       institutions: [],
       viewInstitution: null,
-      backDirection: ''
+      backDirection: '',
+      photo: []
     }
   },
   validations: {
@@ -96,6 +105,7 @@ export default {
     save () {
       if (this.viewInstitution) this.form.Institution.Name = this.viewInstitution
       this.form.Profile = Number(this.profileNumber)
+      this.form.Photo = this.photo[0]
       this.service.updatePerson(this.form)
         .then(() => this.$router.push(this.backDirection))
     },

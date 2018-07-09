@@ -13,7 +13,8 @@ namespace SIE.Auxiliary
             {
                 Name = session.GetString("_name"),
                 Email = session.GetString("_email"),
-                Cpf = session.GetString("_cpf")
+                Cpf = session.GetString("_cpf"),
+                Photo = session.GetString("_photo")
             };
         }
 
@@ -26,6 +27,7 @@ namespace SIE.Auxiliary
             session.SetString("_cpf", person.Cpf);
             session.SetString("_email", person.Email);
             session.SetInt32("_profile", person.Profile);
+            session.SetString("_photo", person.PhotoPath ?? "../../assets/logo.png");
         }
 
         public static int GetSessionPersonId(this ISession session) => session.GetInt32("_id") ?? 0;

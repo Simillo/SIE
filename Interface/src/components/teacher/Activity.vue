@@ -22,6 +22,7 @@
 
           div(v-if='loadedFiles')
             upload(
+              :multiple='true',
               @update:files='files = $event',
               :fileName='"atividade"',
               :canUpload='canIEdit',
@@ -104,6 +105,7 @@
                     md-tooltip(md-direction='top') Cancelar
           div(v-if='activity.loadedAttachments')
             upload(
+              :multiple='true',
               @update:files='activity.Attachments = $event',
               :fileName='"atividade"',
               :canUpload='false',
