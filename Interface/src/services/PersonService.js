@@ -2,9 +2,8 @@ export default class {
   constructor (http) {
     this._http = http
   }
-  async loadPersons () {
-    const res = await this._resource.query()
-    return res.json()
+  async me () {
+    return this._http.get('person/Me')
   }
   async savePerson (person) {
     return this._http.post('person/Save', person)
@@ -24,5 +23,8 @@ export default class {
   }
   async getInfoByToken (token) {
     return this._http.get(`person/GetInfoByToken/${token}`)
+  }
+  async updatePerson (person) {
+    return this._http.patch('person/Update', person)
   }
 }

@@ -23,6 +23,9 @@ import MyRoomsStudent from '@/components/student/MyRooms'
 import RoomStudent from '@/components/student/Room'
 import ActivityStudent from '@/components/student/Activity'
 
+// COMMON
+import Me from '@/components/shared/Me'
+
 Vue.use(Router)
 
 export default new Router({
@@ -124,6 +127,12 @@ export default new Router({
       path: '/student/room/:roomCode/activity/:activityId',
       name: 'Atividade estudante',
       component: ActivityStudent
+    },
+    {
+      sidebar: EProfile.NotShown,
+      path: '/me',
+      name: 'Meu perfil',
+      component: Me
     }
   ]
 })

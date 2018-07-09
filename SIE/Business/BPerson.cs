@@ -55,6 +55,9 @@ namespace SIE.Business
 
         public void Update(Person person)
         {
+            if (string.IsNullOrEmpty(person.Institution?.Name))
+                person.Institution = null;
+
             _context.Person.Update(person);
             _context.SaveChanges();
         }
@@ -66,7 +69,7 @@ namespace SIE.Business
 
         public Person SearchForPerson(MLogin login)
         {
-            if (!login.Email.ValidEmail()) return null;
+            if (!login.Email.IsValidEmail()) return null;
 
             var person = _uPerson.GetByEmail(login.Email);
             if (person != null && person.Password == login.Password.Sha256Hash())

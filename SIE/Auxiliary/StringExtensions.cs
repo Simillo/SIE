@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SIE.Auxiliary
 {
@@ -42,7 +43,12 @@ namespace SIE.Auxiliary
             return cpf.EndsWith(digito);
         }
 
-        public static bool ValidEmail(this string email)
+        public static bool IsValidPassord(this string password) => 
+            password.Length >= 6 &&
+            Regex.Matches(password, @"[a-z]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Count > 0 &&
+            Regex.Matches(password, @"[0-9]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant).Count > 0;
+
+        public static bool IsValidEmail(this string email)
         {
             var e = new EmailAddressAttribute();
             return e.IsValid(email);
