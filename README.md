@@ -123,3 +123,11 @@ Para executar o Job Scheduler do sistema:
 * Components Single-File
 * Código deverá ser escrito em inglês, salvo mensagens de retorno ao usuário
 * Não enviar mensagem de feedback diretamente pelo Client
+
+### Branches
+* Atividades, correções e qualquer tipo de alteração deve ser criado uma branch separada e nela especificar as mudanças.
+* Travis CI deve passar nos testes.
+
+### Commits
+* Commits precisos e diretos se possível referenciando ao problema ou atividade.
+  * Exemplo: `tg-01 Tela de cadastro realizada`.
