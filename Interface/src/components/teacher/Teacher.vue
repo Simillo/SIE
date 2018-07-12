@@ -27,8 +27,8 @@
               md-menu-trigger
             )
             md-menu-content
-              md-menu-item(@click.prevent='')
-                router-link(to='/me') Meu perfil
+              md-menu-item(@click.prevent='$router.push("/me")')
+                span Meu perfil
               md-menu-item(@click.prevent='logout') Sair
       md-list.sidebar-list
         md-list-item.sidebar-item(

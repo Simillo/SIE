@@ -16,6 +16,7 @@ namespace SIE.Models
         public int Sex { get; set; }
         public string Password { get; set; }
         public int Profile { get; set; }
+        public string Photo { get; set; }
         public void ListErrors(UPerson uPerson, ref List<MModelError> errors)
         {
             if (!Email.IsValidEmail())
