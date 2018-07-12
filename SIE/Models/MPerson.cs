@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.CodeAnalysis.Emit;
 using SIE.Auxiliary;
-using SIE.Context;
 using SIE.Utils;
 
 namespace SIE.Models
@@ -19,9 +16,10 @@ namespace SIE.Models
         public int Sex { get; set; }
         public string Password { get; set; }
         public int Profile { get; set; }
+        public string Photo { get; set; }
         public void ListErrors(UPerson uPerson, ref List<MModelError> errors)
         {
-            if (!Email.ValidEmail())
+            if (!Email.IsValidEmail())
             {
                 errors.Add(new MModelError
                 {
@@ -50,7 +48,7 @@ namespace SIE.Models
                 });
             }
 
-            if (Password.Length < 6)
+            if (!Password.IsValidPassord())
             {
                 errors.Add(new MModelError
                 {

@@ -32,7 +32,6 @@ namespace SIE.Controllers
         private readonly UAnswer _uAnswer;
         private readonly URelUploadActivity _uRelUploadActivity;
         private readonly URelUploadAnswer _uRelUploadAnswer;
-        private readonly URelStudentRoom _uRelStudentRoom;
 
         private readonly IConfiguration _configuration;
 
@@ -50,7 +49,6 @@ namespace SIE.Controllers
             _uAnswer = new UAnswer(context);
             _uRelUploadActivity = new URelUploadActivity(context);
             _uRelUploadAnswer = new URelUploadAnswer(context);
-            _uRelStudentRoom = new URelStudentRoom(context);
 
             _configuration = configuration;
         }

@@ -22,6 +22,8 @@
 
           div(v-if='loadedFiles')
             upload(
+              :preview='false',
+              :multiple='true',
               @update:files='files = $event',
               :fileName='"atividade"',
               :canUpload='canIEdit',
@@ -104,11 +106,13 @@
                     md-tooltip(md-direction='top') Cancelar
           div(v-if='activity.loadedAttachments')
             upload(
+              :preview='false',
+              :multiple='true',
               @update:files='activity.Attachments = $event',
               :fileName='"atividade"',
               :canUpload='false',
               :files='activity.Attachments',
-              :title='"Arquivo(s) adicionado pelo aluno"'
+              :title='"Arquivo(s) adicionado(s) pelo aluno"'
             )
 </template>
 
@@ -182,7 +186,7 @@ export default {
           ExpirationDate: this.activity.ExpirationDate
         }
         this.files = this.activity.Uploads
-        this.loadedFiles = true
+        this.loadedFiles = this.activity.Uploads.length > 0
         this.searched = this.activity.Answers.map(a => {
           a.Open = false
           a.loadedAttachments = a.Attachments.length > 0

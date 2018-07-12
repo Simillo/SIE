@@ -10,7 +10,6 @@ using SIE.Context;
 using SIE.Enums;
 using SIE.Helpers;
 using SIE.Models;
-using SIE.Services;
 using SIE.Utils;
 
 namespace SIE.Controllers
@@ -21,16 +20,91 @@ namespace SIE.Controllers
         private readonly BHistory _bHistory;
         private readonly BPerson _bPerson;
         private readonly BPasswordRecovery _bPasswordRecovery;
+        private readonly BInstitution _bInstitution;
+
         private readonly UPerson _uPerson;
         private readonly UPasswordRecovery _uRecoveryPassword;
+        private readonly UInstitution _uInstitution;
+
+        private readonly IConfiguration _configuration;
         public PersonController(SIEContext context, IConfiguration configuration)
         {
             _bHistory = new BHistory(context);
             _bPerson = new BPerson(context);
             _bPasswordRecovery = new BPasswordRecovery(context, configuration);
+            _bInstitution = new BInstitution(context);
             _uPerson = new UPerson(context);
             _uRecoveryPassword = new UPasswordRecovery(context);
+            _uInstitution = new UInstitution(context);
+
+            _configuration = configuration;
         }
+
+        [HttpGet]
+        [Route("Me")]
+        public IActionResult Me()
+        {
+            if (!HttpContext.Session.IsAuth())
+                return StatusCode((int) HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Não autorizado!"));
+            var person = _uPerson.GetById(HttpContext.Session.GetSessionPersonId());
+            var mPerson = new MPerson
+            {
+                Name = person.Name,
+                Cpf = person.Cpf,
+                Email = person.Email,
+                Institution = new MInstitution
+                {
+                    Id = person.Institution?.Id ?? 0,
+                    Name = person.Institution?.Name
+                },
+                Profile = person.Profile,
+                Photo = person.PhotoPath
+            };
+            return Ok(ResponseContent.Create(mPerson, HttpStatusCode.OK, null));
+        }
+
+        [HttpPatch]
+        [Route("Update")]
+        public IActionResult Update([FromBody] MPersonUpdate mPerson)
+        {
+            if(!HttpContext.Session.IsAuth())
+                return StatusCode((int)HttpStatusCode.Unauthorized, ResponseContent.Create(null, HttpStatusCode.Unauthorized, "Não autorizado!"));
+
+            if (string.IsNullOrEmpty(mPerson.Name))
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "Seu nome não pode estar em vazio!"));
+
+            if (!string.IsNullOrEmpty(mPerson.Password) && !mPerson.Password.IsValidPassord())
+                return BadRequest(ResponseContent.Create(null, HttpStatusCode.BadRequest, "A senha deve conter ao menos 6 caracteres, dentre eles, uma letra e um número!"));
+
+            var person = _uPerson.GetById(HttpContext.Session.GetSessionPersonId());
+
+            if (!string.IsNullOrEmpty(mPerson.Password))
+                person.Password = mPerson.Password.Sha256Hash();
+
+            if (mPerson.Institution != null && mPerson.Institution.Name != person.Institution?.Name && !string.IsNullOrEmpty(mPerson.Institution.Name))
+            {
+                person.Institution = _uInstitution.GetExact(mPerson.Institution.Name) ?? _bInstitution.Save(mPerson.Institution.Name);
+            }
+            else if (string.IsNullOrEmpty(mPerson.Institution?.Name) && !string.IsNullOrEmpty(person.Institution?.Name))
+            {
+                person.Institution = null;
+            }
+
+            if (!string.IsNullOrEmpty(mPerson.Photo))
+            {
+                var file = FileExtensions.CopyFromTo(new List<string> {mPerson.Photo }, _configuration["Directory:TEMP"], _configuration["Directory:UPLOAD"]).FirstOrDefault();
+                person.PhotoPath = file;
+            }
+
+            person.Name = mPerson.Name;
+
+            _bPerson.Update(person);
+            _bHistory.SaveHistory(person.Id, "Usuário editou seu cadastro");
+
+            HttpContext.Session.Authenticate(person);
+            return Ok(ResponseContent.Create(null, HttpStatusCode.OK, "Usuário editado com sucesso!"));
+        }
+
 
         [HttpPost]
         [Route("Save")]
@@ -139,7 +213,9 @@ namespace SIE.Controllers
 
             var newPerson = passwordRecovery.Person;
             newPerson.Password = updatePassword.Password.Sha256Hash();
+
             _bPerson.Update(newPerson);
+
             passwordRecovery.RecoveryDate = DateTime.Now;
             passwordRecovery.Active = false;
             _bPasswordRecovery.Update(passwordRecovery);

@@ -2,6 +2,6 @@ import { Enum } from 'enumify'
 
 class EProfile extends Enum {}
 
-EProfile.initEnum(['NotShown', 'Teacher', 'Student'])
+EProfile.initEnum(['Teacher', 'Student', 'NotShown'])
 
 export default EProfile

@@ -21,6 +21,8 @@
       .room-content
         div(v-if='loadedFiles && files.length > 0')
           upload(
+            :preview='false',
+            :multiple='true',
             @update:files='files = $event',
             :fileName='"atividade"',
             :canUpload='false',
@@ -41,6 +43,8 @@
             span.md-error(v-if='!$v.form.Answer.required') Obrigatório!
           div(v-if='loadedAttachments')
             upload(
+              :preview='false',
+              :multiple='true'
               @update:files='attachments = $event',
               :fileName='"anexo"',
               :canUpload='canIAnswer',

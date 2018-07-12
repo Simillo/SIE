@@ -1,43 +1,62 @@
 <template lang='pug'>
   .uploads
     span.title {{title}}
-    md-field(v-if='canUpload')
-      md-file(
-        multiple,
-        name='files',
-        @change='fnUpload($event.target.files)'
-      )
+    div(v-if='enabled')
+      md-field(v-if='multiple')
+        md-file(
+          multiple,
+          name='files',
+          @change='fnUpload($event.target.files)'
+        )
+      md-field(v-else)
+        md-file(
+          name='files',
+          @change='fnUpload($event.target.files)'
+        )
     .file-list
       .file-list-item(
         v-for='(file, index) in fileList',
         :key='index'
       )
-        a.file-list-item-link(
-          :href='file',
-          target='_blank'
-        ) {{generateName(file, index)}}
-        span.file-list-item-icon(
-          @click='deleteFile(index)',
-          v-if='canUpload'
+        div(v-if='!preview')
+          a.file-list-item-link(
+            :href='file',
+            target='_blank'
+          ) {{generateName(file, index)}}
+          span.file-list-item-icon(
+            @click='deleteFile(index)',
+            v-if='canUpload'
+          )
+            md-tooltip.margin-tooltip Excluir
+            md-icon close
+        div(
+          v-else,
+          @click='deleteFile(index)'
         )
-          md-tooltip.margin-tooltip Excluir
-          md-icon close
+          md-avatar
+            md-tooltip(md-direction='right') Excluir
+            img(
+              v-if='!multiple',
+              :src='file'
+              )
 
 </template>
 
 <script>
 import UploadService from '../../services/UploadService.js'
 export default {
-  props: ['fileName', 'canUpload', 'files', 'title'],
+  props: ['fileName', 'canUpload', 'files', 'title', 'multiple', 'preview'],
   data () {
     return {
       fileList: [],
-      form: new FormData()
+      form: new FormData(),
+      enabled: this.canUpload
     }
   },
   created () {
     this.fileList = this.files
     this.service = new UploadService(this.$http)
+    if (!this.multiple && this.fileList.length) this.enabled = false
   },
   methods: {
     async fnUpload (files) {
@@ -50,13 +69,16 @@ export default {
       const response = await this.service.upload(filesForm)
       this.fileList = response.data.entity
       this.$emit('update:files', this.fileList)
+      if (!this.multiple) this.enabled = false
     },
     generateName (file, index) {
       const extension = file.match(/\.(.*)$/gi)
-      return `${this.fileName}_${index + 1}${extension}`
+      if (this.multiple) return `${this.fileName}_${index + 1}${extension}`
+      return `${this.fileName}${extension}`
     },
     deleteFile (index) {
       this.fileList.splice(index, 1)
+      if (!this.multiple) this.enabled = true
     }
   }
 }
@@ -84,6 +106,11 @@ export default {
     padding: 5px 0 5px;
     border: 1px solid #999;
     margin: 10px;
+    .img-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+    }
     .file-list-item-icon {
       cursor: pointer;
       margin-left: 10px;
@@ -95,5 +122,11 @@ export default {
       }
     }
   }
+}
+.md-avatar {
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
 }
 </style>

@@ -25,5 +25,6 @@ namespace SIE.Context
         public string Password{ get; set; }
         [Required]
         public int Profile { get; set; } 
+        public string PhotoPath { get; set; }
     }
 }
